@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Wide and Deep on Abdullah Al Mamun</title>
+    <link>//localhost:1313/tags/wide-and-deep/</link>
+    <description>Recent content in Wide and Deep on Abdullah Al Mamun</description>
+    <generator>Hugo -- 0.145.0</generator>
+    <language>en</language>
+    <copyright>[newabdullah 2025]</copyright>
+    <lastBuildDate>Wed, 12 Mar 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/tags/wide-and-deep/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Evaluation of RecSys - Part 3</title>
+      <link>//localhost:1313/posts/the-evaluation-of-recsys-part-3/</link>
+      <pubDate>Wed, 12 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/posts/the-evaluation-of-recsys-part-3/</guid>
+      <description>&lt;h1 id=&#34;the-evaluation-of-recommendation-systems---part-3&#34;&gt;The Evaluation of Recommendation Systems - Part 3&lt;/h1&gt;
+&lt;h2 id=&#34;context-why-this-post-matters-who-its-for-and-what-youll-learn&#34;&gt;Context: Why This Post Matters, Who It’s For, and What You’ll Learn&lt;/h2&gt;
+&lt;p&gt;Welcome to Part 3 of our four-part series on evaluating recommendation systems (RecSys)! In the previous installments, we laid the groundwork: Part 1 introduced foundational techniques like collaborative filtering (CF) and Matrix Factorization (MF), which excelled at capturing user-item interactions but assumed linearity, missing complex patterns. Part 2 explored Factorization Machines (FM) and XGBoost, which tackled sparse data and non-linear ranking but fell short on higher-order interactions and sequential behaviors. By 2016, these limitations spurred a seismic shift toward deep neural networks (DNNs), which transformed RecSys by learning intricate feature interactions, automating feature engineering, and addressing diverse tasks like sequential recommendations and multi-task optimization. This post traces that evolution from 2016 to 2023, diving into Neural Collaborative Filtering (NCF), Wide &amp;amp; Deep Learning, DeepFM, Deep Interest Network (DIN), Deep Learning Recommendation Model (DLRM), and Adaptive Task-to-Task Fusion (AdaTT). It’s tailored for data scientists, ML engineers, and tech professionals—particularly those designing large-scale RecSys in domains like e-commerce, streaming, and advertising—who need a deep, technical understanding of these advancements.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
