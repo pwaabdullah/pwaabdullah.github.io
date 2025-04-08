@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>The Evaluation of RecSys - Part 3 | Abdullah Al Mamun</title>
+<meta name="keywords" content="recommendation systems, deep learning, neural collaborative filtering, wide and deep, deepfm, din, dlrm, multi-task learning">
+<meta name="description" content="The Evaluation of Recommendation Systems - Part 3
+Context: Why This Post Matters, Who It’s For, and What You’ll Learn
+Welcome to Part 3 of our four-part series on evaluating recommendation systems (RecSys)! In the previous installments, we laid the groundwork: Part 1 introduced foundational techniques like collaborative filtering (CF) and Matrix Factorization (MF), which excelled at capturing user-item interactions but assumed linearity, missing complex patterns. Part 2 explored Factorization Machines (FM) and XGBoost, which tackled sparse data and non-linear ranking but fell short on higher-order interactions and sequential behaviors. By 2016, these limitations spurred a seismic shift toward deep neural networks (DNNs), which transformed RecSys by learning intricate feature interactions, automating feature engineering, and addressing diverse tasks like sequential recommendations and multi-task optimization. This post traces that evolution from 2016 to 2023, diving into Neural Collaborative Filtering (NCF), Wide &amp; Deep Learning, DeepFM, Deep Interest Network (DIN), Deep Learning Recommendation Model (DLRM), and Adaptive Task-to-Task Fusion (AdaTT). It’s tailored for data scientists, ML engineers, and tech professionals—particularly those designing large-scale RecSys in domains like e-commerce, streaming, and advertising—who need a deep, technical understanding of these advancements.">
+<meta name="author" content="">
+<link rel="canonical" href="//localhost:1313/posts/the-evaluation-of-recsys-part-3/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.36ab24e4c1b924360adfc391166b0e8914323d9d6ffa42a50f9c6c435c5e1831.css" integrity="sha256-Nqsk5MG5JDYK38ORFmsOiRQyPZ1v&#43;kKlD5xsQ1xeGDE=" rel="preload stylesheet" as="style">
+<link rel="icon" href="//localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="//localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="//localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="//localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="//localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="//localhost:1313/posts/the-evaluation-of-recsys-part-3/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="//localhost:1313/" accesskey="h" title="Abdullah Al Mamun (Alt + H)">Abdullah Al Mamun</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="//localhost:1313/archives" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/about" title="About Me">
+                    <span>About Me</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      The Evaluation of RecSys - Part 3
+    </h1>
+    <div class="post-meta"><span title='2025-03-12 00:00:00 +0000 UTC'>March 12, 2025</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h1 id="the-evaluation-of-recommendation-systems---part-3">The Evaluation of Recommendation Systems - Part 3<a hidden class="anchor" aria-hidden="true" href="#the-evaluation-of-recommendation-systems---part-3">#</a></h1>
+<h2 id="context-why-this-post-matters-who-its-for-and-what-youll-learn">Context: Why This Post Matters, Who It’s For, and What You’ll Learn<a hidden class="anchor" aria-hidden="true" href="#context-why-this-post-matters-who-its-for-and-what-youll-learn">#</a></h2>
+<p>Welcome to Part 3 of our four-part series on evaluating recommendation systems (RecSys)! In the previous installments, we laid the groundwork: Part 1 introduced foundational techniques like collaborative filtering (CF) and Matrix Factorization (MF), which excelled at capturing user-item interactions but assumed linearity, missing complex patterns. Part 2 explored Factorization Machines (FM) and XGBoost, which tackled sparse data and non-linear ranking but fell short on higher-order interactions and sequential behaviors. By 2016, these limitations spurred a seismic shift toward deep neural networks (DNNs), which transformed RecSys by learning intricate feature interactions, automating feature engineering, and addressing diverse tasks like sequential recommendations and multi-task optimization. This post traces that evolution from 2016 to 2023, diving into Neural Collaborative Filtering (NCF), Wide &amp; Deep Learning, DeepFM, Deep Interest Network (DIN), Deep Learning Recommendation Model (DLRM), and Adaptive Task-to-Task Fusion (AdaTT). It’s tailored for data scientists, ML engineers, and tech professionals—particularly those designing large-scale RecSys in domains like e-commerce, streaming, and advertising—who need a deep, technical understanding of these advancements.</p>
+<h2 id="recap-where-we-left-off">Recap: Where We Left Off<a hidden class="anchor" aria-hidden="true" href="#recap-where-we-left-off">#</a></h2>
+<p>In Part 2, we saw how FM extended MF by modeling pairwise feature interactions, making it a powerhouse for sparse settings like click-through rate (CTR) prediction. Its prediction function, ( \hat{y}(\mathbf{x}) = w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^n \sum_{j=i+1}^n \langle v_i, v_j \rangle x_i x_j ), captured second-order relationships efficiently but couldn’t handle higher-order interactions or non-linear patterns beyond its linear assumptions. XGBoost, meanwhile, leveraged tree ensembles to rank items based on non-linear feature combinations, shining in tasks like top-N recommendations. Yet, it struggled with high-dimensional sparse data and required extensive manual feature engineering, limiting its scalability. These gaps—missing deep non-linearities, higher-order interactions, and sequential modeling—paved the way for DNNs, which, starting in 2016, redefined RecSys by learning complex patterns directly from raw data.</p>
+<h2 id="the-big-picture-the-deep-learning-revolution-in-recsys">The Big Picture: The Deep Learning Revolution in RecSys<a hidden class="anchor" aria-hidden="true" href="#the-big-picture-the-deep-learning-revolution-in-recsys">#</a></h2>
+<p>Picture a recommendation system as a guide helping you navigate a vast library. In Part 2, our guide used simple rules: FM paired clues like your reading history with book traits, while XGBoost ranked options by studying everyone’s preferences. But what if your interests shift over time (say, from mysteries to sci-fi), or the guide needs to predict both what you’ll read and whether you’ll buy it? These earlier methods faltered. DNNs emerged as a smarter guide, capable of deciphering intricate patterns, tracking sequential behaviors, and juggling multiple goals. From 2016’s Wide &amp; Deep to 2023’s AdaTT, this era saw RecSys evolve to handle complex user behaviors with unprecedented accuracy, shaping modern systems in companies like Google, Alibaba, and Facebook.</p>
+<h2 id="deep-dive-the-evolution-of-dnns-in-recsys">Deep Dive: The Evolution of DNNs in RecSys<a hidden class="anchor" aria-hidden="true" href="#deep-dive-the-evolution-of-dnns-in-recsys">#</a></h2>
+<p>Let’s explore this journey, starting with Neural Collaborative Filtering, which kicked off the DNN era by rethinking how we model user-item interactions.</p>
+<h3 id="neural-collaborative-filtering-ncf-2017">Neural Collaborative Filtering (NCF, 2017)<a hidden class="anchor" aria-hidden="true" href="#neural-collaborative-filtering-ncf-2017">#</a></h3>
+<p>Traditional MF, a staple from Part 1, predicts user-item interactions via a dot product: ( \hat{r}_{ui} = p_u^T q_i ), where ( p_u ) and ( q_i ) are latent vectors for user ( u ) and item ( i ). This worked well for explicit ratings but assumed linearity, missing non-linear patterns in implicit feedback like clicks or views. In 2017, He et al. proposed Neural Collaborative Filtering (NCF) to overcome this, replacing the dot product with a neural network to capture complex, non-linear relationships. The motivation was clear: real-world preferences aren’t linear—liking sci-fi movies doesn’t linearly predict liking sci-fi books—and DNNs, fresh from successes in vision and NLP, offered a way to model these nuances.</p>
+<p>NCF’s architecture comes in three flavors. First, the inputs are simple: one-hot encoded user ID ( \mathbf{u} ) and item ID ( \mathbf{i} ), mapped to dense embeddings ( \mathbf{p}_u ) and ( \mathbf{q}_i \in \mathbb{R}^{32} ) via lookup tables. The Generalized Matrix Factorization (GMF) variant mimics MF but with a neural twist: it computes an element-wise product ( \mathbf{p}_u \odot \mathbf{q}<em>i ), feeds it through a linear layer with weights ( \mathbf{w} ), and applies a sigmoid activation to output a probability: ( \hat{y}</em>{ui} = \sigma(\mathbf{w}^T (\mathbf{p}_u \odot \mathbf{q}_i)) ). This retains MF’s linear interaction but learns the weighting neurally. The Multi-Layer Perceptron (MLP) variant takes a different tack, concatenating the embeddings into ( [\mathbf{p}_u, \mathbf{q}_i] ) and passing them through three fully connected layers (e.g., 256, 128, 64 neurons) with ReLU activations: ( \mathbf{z}_1 = \text{ReLU}(\mathbf{W}_1 [\mathbf{p}<em>u, \mathbf{q}<em>i] + \mathbf{b}<em>1) ), followed by more layers, ending in a prediction layer. This captures non-linear interactions unavailable to MF. Finally, Neural Matrix Factorization (NeuMF) combines both, concatenating GMF’s and MLP’s penultimate outputs and applying a final linear layer: ( \hat{y}</em>{ui} = \sigma(\mathbf{w}^T [\mathbf{z}</em>{\text{GMF}}, \mathbf{z}</em>{\text{MLP}}]) ). This hybrid leverages both linear and non-linear modeling.</p>
+<p>For implicit feedback (e.g., clicks), NCF uses binary cross-entropy as its loss: ( L = -\sum_{(u,i) \in D} [y_{ui} \log(\hat{y}<em>{ui}) + (1-y</em>{ui}) \log(1-\hat{y}<em>{ui})] ), where ( y</em>{ui} = 1 ) for observed interactions and 0 otherwise. Since unobserved pairs vastly outnumber observed ones, negative sampling (e.g., 4 negatives per positive) keeps training feasible. The optimizer is Adam, with a learning rate of 0.001, balancing speed and stability. On the MovieLens 1M dataset, NeuMF achieved a Hit Ratio@10 of 0.71, beating MF’s 0.67 by 6%, thanks to its ability to model non-linear patterns. Compared to MLP alone (0.69), NeuMF’s fusion of GMF’s linearity and MLP’s depth proved superior. The special change—swapping a dot product for a neural network—unlocked this flexibility, though NCF ignores auxiliary features like user demographics and can’t model sequential behaviors.</p>
+<h3 id="wide--deep-learning-2016">Wide &amp; Deep Learning (2016)<a hidden class="anchor" aria-hidden="true" href="#wide--deep-learning-2016">#</a></h3>
+<p>NCF’s focus on user-item pairs left out contextual features and struggled with generalization in sparse, diverse settings. Enter Wide &amp; Deep Learning, proposed by Cheng et al. at Google in 2016, designed for app recommendations on Google Play. The problem was twofold: linear models like logistic regression memorized specific patterns (e.g., “user installed app A”) but couldn’t generalize to unseen data, while DNNs generalized well but missed rare, critical interactions. Wide &amp; Deep combined a linear “wide” model for memorization with a DNN “deep” model for generalization, aiming to balance both.</p>
+<p>The architecture starts with inputs: sparse features (e.g., user ID, app ID) mapped to embeddings (e.g., 32 dimensions) and dense features (e.g., user age) fed raw. The wide component is a linear model: ( \mathbf{y}<em>{\text{wide}} = \mathbf{w}^T \mathbf{x} + b ), where ( \mathbf{x} ) includes raw features and hand-crafted cross-features (e.g., “user installed app A AND app B”), capturing low-order interactions. Designing these cross-features required domain expertise, a key modification over pure DNNs. The deep component is an MLP with three hidden layers (1024, 512, 256 neurons) using ReLU: ( \mathbf{z}<em>1 = \text{ReLU}(\mathbf{W}<em>1 \mathbf{e} + \mathbf{b}<em>1) ), where ( \mathbf{e} ) concatenates embeddings and dense inputs, learning higher-order interactions. The outputs merge via a weighted sum: ( \hat{y} = \sigma(\mathbf{w}</em>{\text{wide}}^T \mathbf{y}</em>{\text{wide}} + \mathbf{w}</em>{\text{deep}}^T \mathbf{z}</em>{\text{deep}} + b) ), yielding a click probability.</p>
+<p>The loss is logistic (binary cross-entropy), optimized differently per component: FTRL with L1 regularization for the wide part (encouraging sparsity) and AdaGrad for the deep part (adapting to dense gradients). On Google Play, Wide &amp; Deep boosted app installations by 3.9% over a wide-only model and 1% over a deep-only model, proving the hybrid’s value. Unlike NCF, it leverages auxiliary features, but the manual engineering of cross-features limits scalability, and it doesn’t address sequential data or higher-order interactions beyond the wide part.</p>
+<h3 id="deepfm-2017">DeepFM (2017)<a hidden class="anchor" aria-hidden="true" href="#deepfm-2017">#</a></h3>
+<p>Wide &amp; Deep’s reliance on manual feature engineering was a bottleneck, especially for large-scale systems with thousands of features. In 2017, Guo et al. introduced DeepFM, targeting CTR prediction in online advertising (e.g., Criteo dataset), by combining Factorization Machines (FM) with a DNN to automate feature interactions. FM’s strength was modeling pairwise interactions efficiently, but it missed higher-order patterns; DeepFM extended it to capture both low- and high-order interactions without human intervention.</p>
+<p>DeepFM’s inputs are sparse features (e.g., user ID, ad ID) mapped to embeddings ( \mathbf{v}<em>i \in \mathbb{R}^{10} ). The FM component computes: ( \mathbf{y}</em>{\text{FM}} = w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^n \sum_{j=i+1}^n \langle \mathbf{v}_i, \mathbf{v}_j \rangle x_i x_j ), capturing second-order interactions via dot products. The deep component, an MLP with three 200-neuron layers and ReLU, takes the same embeddings: ( \mathbf{z}<em>1 = \text{ReLU}(\mathbf{W}<em>1 \mathbf{v} + \mathbf{b}<em>1) ), learning higher-order interactions. Sharing embeddings between FM and DNN ensures consistency and efficiency—a key design choice. The final output combines both: ( \hat{y} = \sigma(\mathbf{y}</em>{\text{FM}} + \mathbf{w}</em>{\text{deep}}^T \mathbf{z}</em>{\text{deep}}) ).</p>
+<p>The loss is binary cross-entropy, optimized with Adam (learning rate 0.001). On Criteo, DeepFM hit an AUC of 0.801, edging out Wide &amp; Deep (0.799) and FM (0.785), as it automated feature engineering while retaining FM’s strengths. This modification—replacing Wide &amp; Deep’s manual cross-features with FM—made it scalable, though it still overlooks sequential user behaviors critical for dynamic settings like e-commerce.</p>
+<h3 id="deep-interest-network-din-2017">Deep Interest Network (DIN, 2017)<a hidden class="anchor" aria-hidden="true" href="#deep-interest-network-din-2017">#</a></h3>
+<p>DeepFM’s static modeling couldn’t capture how user interests evolve, say, during an e-commerce browsing session. Zhou et al. at Alibaba introduced the Deep Interest Network (DIN) in 2017 to address this, using an attention mechanism to weigh historical behaviors based on their relevance to a candidate item. Proposed for ad recommendations, DIN recognized that not all past interactions (e.g., clicked items) equally inform the next click, necessitating a dynamic approach.</p>
+<p>DIN’s inputs include a user’s behavior sequence ( S_u = {v_1, v_2, \ldots, v_T} ) (e.g., clicked items), a candidate ad ( v_a ), and context features, all mapped to embeddings. The core innovation is the attention mechanism: for each historical item ( v_i ), it computes a weight ( \alpha_i = f(\mathbf{v}_i, \mathbf{v}_a) ) using a small MLP: ( f(\mathbf{v}_i, \mathbf{v}_a) = \text{ReLU}(\mathbf{W} [\mathbf{v}_i, \mathbf{v}_a, \mathbf{v}_i \odot \mathbf{v}_a] + \mathbf{b}) ). This weights items by relevance, forming a user interest vector ( \mathbf{s}<em>u = \sum</em>{i=1}^T \alpha_i \mathbf{v}<em>i ). This vector, the candidate embedding, and context embeddings feed into an MLP with three layers (200, 80, 2 neurons) and ReLU, ending in a sigmoid output: ( \hat{y} = \sigma(\mathbf{w}^T \mathbf{z}</em>{\text{deep}}) ).</p>
+<p>The loss is binary cross-entropy, optimized with Adam (learning rate 0.001). On Alibaba’s dataset, DIN’s AUC of 0.82 beat DeepFM’s 0.80 by 2%, highlighting attention’s power in sequential modeling. Unlike DeepFM, DIN adapts to temporal dynamics, but it’s tailored to single-task CTR prediction, not multi-objective scenarios.</p>
+<h3 id="deep-learning-recommendation-model-dlrm-2019">Deep Learning Recommendation Model (DLRM, 2019)<a hidden class="anchor" aria-hidden="true" href="#deep-learning-recommendation-model-dlrm-2019">#</a></h3>
+<p>DIN’s single-tower design wasn’t built for the massive scale and diverse features of systems like Facebook’s ad platform. In 2019, Naumov et al. proposed DLRM, a multi-tower architecture for CTR prediction, explicitly modeling pairwise interactions for scalability and interpretability. The need arose from handling billions of sparse features (e.g., ad IDs) alongside dense ones (e.g., user stats), where implicit modeling slowed training.</p>
+<p>DLRM’s inputs split into dense features (e.g., user age) and sparse features (e.g., user ID), mapped to embeddings. The dense tower is an MLP with three layers (512, 256, 128 neurons) and ReLU, processing continuous inputs. The sparse tower computes pairwise dot products between embeddings: ( \mathbf{z}_{ij} = \mathbf{v}_i^T \mathbf{v}_j ), forming an interaction vector. These outputs concatenate with the dense tower’s result, feeding a top MLP (128, 1 neurons) with ReLU and sigmoid: ( \hat{y} = \sigma(\mathbf{w}^T \mathbf{z}) ).</p>
+<p>The loss is binary cross-entropy, optimized with Adam or SGD. On Criteo, DLRM’s AUC of 0.802 slightly topped DeepFM’s 0.801, with better scalability from its parallel towers—a key change over single-tower designs. However, it focuses on single-task CTR, not multi-task or sequential needs.</p>
+<h3 id="adaptive-task-to-task-fusion-adatt-2023">Adaptive Task-to-Task Fusion (AdaTT, 2023)<a hidden class="anchor" aria-hidden="true" href="#adaptive-task-to-task-fusion-adatt-2023">#</a></h3>
+<p>DLRM’s single-task focus couldn’t handle multi-objective RecSys, like predicting CTR and conversion rate (CVR) together. Multi-Task Learning (MTL) emerged to share representations across tasks, but task conflicts often hurt performance. Yang et al.’s AdaTT, introduced in 2023 at Kuaishou, tackled this with an adaptive task-to-task fusion network, dynamically balancing task interactions.</p>
+<p>AdaTT’s inputs—shared features (e.g., user ID, item ID)—map to embeddings feeding a shared bottom MLP: ( \mathbf{z}_{\text{shared}} = \text{ReLU}(\mathbf{W} \mathbf{e} + \mathbf{b}) ). Task-specific towers (e.g., CTR, CVR) process this into ( \mathbf{z}<em>t = \text{MLP}<em>t(\mathbf{z}</em>{\text{shared}}) ). The innovation is an attention-based fusion: ( \mathbf{z}<em>t&rsquo; = \sum</em>{s \neq t} \alpha</em>{ts} \mathbf{z}<em>s ), where ( \alpha</em>{ts} ) weights contributions from other tasks, computed via a task-to-task attention MLP. Outputs are per-task sigmoids: ( \hat{y}_t = \sigma(\mathbf{w}_t^T \mathbf{z}_t&rsquo;) ).</p>
+<p>The loss is a weighted sum: ( L = \sum_t \lambda_t L_t ) (binary cross-entropy per task), optimized with Adam. On Kuaishou’s dataset, AdaTT lifted CTR AUC by 1.5% and CVR AUC by 2% over single-task models, thanks to its adaptive fusion—a leap over static MTL. Its complexity, though, demands careful tuning.</p>
+<h2 id="conclusion-whats-next">Conclusion: What’s Next<a hidden class="anchor" aria-hidden="true" href="#conclusion-whats-next">#</a></h2>
+<p>From NCF’s non-linear leap to AdaTT’s multi-task finesse, DNNs have reshaped RecSys, each model solving a prior limitation: NCF broke linearity, Wide &amp; Deep merged memorization and generalization, DeepFM automated engineering, DIN added sequence, DLRM scaled up, and AdaTT tackled multiple goals. Part 4 will explore graph neural networks and transformers, pushing RecSys further into complex, real-time domains.</p>
+<h2 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h2>
+<ul>
+<li>He, X., et al. (2017). Neural Collaborative Filtering. <em>arXiv:1708.05031</em>.</li>
+<li>Cheng, H.-T., et al. (2016). Wide &amp; Deep Learning for Recommender Systems. <em>arXiv:1606.07792</em>.</li>
+<li>Guo, H., et al. (2017). DeepFM: A Factorization-Machine Based Neural Network for CTR Prediction. <em>arXiv:1703.04247</em>.</li>
+<li>Zhou, G., et al. (2017). Deep Interest Network for Click-Through Rate Prediction. <em>arXiv:1706.06978</em>.</li>
+<li>Naumov, M., et al. (2019). Deep Learning Recommendation Model for Personalization and Recommendation Systems. <em>arXiv:1906.00091</em>.</li>
+<li>Yang, S., et al. (2023). AdaTT: Adaptive Task-to-Task Fusion Network for Multitask Learning in Recommendations. <em>arXiv:2304.04959</em>.</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="//localhost:1313/tags/recommendation-systems/">Recommendation Systems</a></li>
+      <li><a href="//localhost:1313/tags/deep-learning/">Deep Learning</a></li>
+      <li><a href="//localhost:1313/tags/neural-collaborative-filtering/">Neural Collaborative Filtering</a></li>
+      <li><a href="//localhost:1313/tags/wide-and-deep/">Wide and Deep</a></li>
+      <li><a href="//localhost:1313/tags/deepfm/">Deepfm</a></li>
+      <li><a href="//localhost:1313/tags/din/">Din</a></li>
+      <li><a href="//localhost:1313/tags/dlrm/">Dlrm</a></li>
+      <li><a href="//localhost:1313/tags/multi-task-learning/">Multi-Task Learning</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>© [newabdullah 2025]</span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

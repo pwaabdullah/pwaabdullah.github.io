@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>The Evaluation of RecSys - Part 2 | Abdullah Al Mamun</title>
+<meta name="keywords" content="recommendation systems, machine learning, factorization machines, xgboost">
+<meta name="description" content=" ">
+<meta name="author" content="Abdullah Al Mamun">
+<link rel="canonical" href="//localhost:1313/posts/the-evaluation-of-recsys-part2/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.36ab24e4c1b924360adfc391166b0e8914323d9d6ffa42a50f9c6c435c5e1831.css" integrity="sha256-Nqsk5MG5JDYK38ORFmsOiRQyPZ1v&#43;kKlD5xsQ1xeGDE=" rel="preload stylesheet" as="style">
+<link rel="icon" href="//localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="//localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="//localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="//localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="//localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="//localhost:1313/posts/the-evaluation-of-recsys-part2/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="//localhost:1313/" accesskey="h" title="Abdullah Al Mamun (Alt + H)">Abdullah Al Mamun</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="//localhost:1313/archives" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/about" title="About Me">
+                    <span>About Me</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="//localhost:1313/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      The Evaluation of RecSys - Part 2
+    </h1>
+    <div class="post-description">
+       
+    </div>
+    <div class="post-meta"><span title='2025-03-11 00:00:00 +0000 UTC'>March 11, 2025</span>&nbsp;·&nbsp;Abdullah Al Mamun
+
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#1-recap" aria-label="1. Recap">1. Recap</a></li>
+                <li>
+                    <a href="#2-in-layman-terms" aria-label="2. In Layman terms">2. In Layman terms</a></li>
+                <li>
+                    <a href="#3-prerequisites" aria-label="3. Prerequisites">3. Prerequisites</a></li>
+                <li>
+                    <a href="#4-deep-dive" aria-label="4. Deep Dive">4. Deep Dive</a><ul>
+                        
+                <li>
+                    <a href="#41-factorization-machines-fm" aria-label="4.1 Factorization Machines (FM)">4.1 Factorization Machines (FM)</a></li>
+                <li>
+                    <a href="#42-gradient-boosted-trees-xgboost" aria-label="4.2 Gradient Boosted Trees (XGBoost)">4.2 Gradient Boosted Trees (XGBoost)</a></li></ul>
+                </li>
+                <li>
+                    <a href="#6-conclusion" aria-label="6. Conclusion">6. Conclusion</a></li>
+                <li>
+                    <a href="#7-references" aria-label="7. References">7. References</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>Welcome to Part 2 of RecSys series! In <a href="link-to-part-1">Part 1</a>, we traced the evolution of RecSys from content-based filtering (CBF) to collaborative filtering (CF), and finally to Matrix Factorization (MF), which introduced latent factor models to tackle sparsity and scalability. However, MF’s linear assumptions and struggles with implicit feedback (e.g., clicks, views) set the stage for more advanced techniques. In this post, we dive into two pivotal methods from the 2010-2015 era: <strong>Factorization Machines (FM)</strong> and <strong>Gradient Boosted Trees (XGBoost)</strong>.</p>
+<p>In Part 2, you’ll learn how FM generalizes MF to handle diverse data types, how XGBoost leverages decision trees for ranking, and the strengths and limitations of each.</p>
+<h2 id="1-recap">1. Recap<a hidden class="anchor" aria-hidden="true" href="#1-recap">#</a></h2>
+<p>In Part 1, we explored the foundational stages of RecSys:</p>
+<ul>
+<li><strong>CBF</strong> based on features (e.g., movie genres) but struggled with diversity.</li>
+<li><strong>CF</strong> leveraged user-item interactions, introducing neighborhood methods and latent factor models.</li>
+<li><strong>MF</strong> modeled users and items in a latent space, predicting ratings as  \(\hat{r}_{ui} = p_u^T q_i\). However, MF assumed linear interactions and worked best with explicit feedback (ratings) only, failed to capture implicit feedback like clicks or views.</li>
+</ul>
+<p>These limitations prompted the 2010-2015 era, where machine learning techniques like FM and XGBoost emerged to handle more complex patterns.</p>
+<h2 id="2-in-layman-terms">2. In Layman terms<a hidden class="anchor" aria-hidden="true" href="#2-in-layman-terms">#</a></h2>
+<p>Imagine you’re shopping in a store for a jacket. In Part 1, MF was like a salesman who suggested jackets based on your ratings, guessing your taste with simple categories like “likes warm jackets” or “prefers casual style.” It worked well when you rated items, but what if you never rating? or what if the assistant only knows you <em>clicked</em> on a jacket or <em>viewed</em> its picture? MF struggles here because it’s too rigid. Enter <strong>Factorization Machines (FM)</strong> and <strong>XGBoost</strong>—two smarter assistants who arrived around 2010 to fix this.</p>
+<ul>
+<li>
+<p><strong>FM:</strong> It&rsquo;s like a smart salesman who looks at everything—you clicked, the weather, and your profile (e.g., you’re a runner), mixing these clues to suggest a waterproof running jacket if it’s rainy. It’s flexible and can handle all kinds of hints, not just ratings.</p>
+</li>
+<li>
+<p><strong>XGBoost:</strong> XGBoost is like a super-smart friend who learns from everyone’s shopping habits to suggest the perfect jacket. It builds a decision flowchart (Actually TREE): “If you like bright colors, and it’s winter, and you often buy on weekends, then try this red parka.” It improves its suggestions step by step.</p>
+</li>
+</ul>
+<p>These assistants are more flexible than MF, handling messy data and complex patterns, but they have limits, which we’ll explore as we move toward deep learning in Part 3.</p>
+<h2 id="3-prerequisites">3. Prerequisites<a hidden class="anchor" aria-hidden="true" href="#3-prerequisites">#</a></h2>
+<ul>
+<li><strong>Dot product</strong> combines two vectors to measure similarity—think of it as a handshake between features (e.g., user preferences and item traits).</li>
+<li><strong>Loss function</strong> measures prediction errors (e.g., squared error:  \((y - \hat{y})^2\)), regularization prevents overfitting, and optimization (e.g., gradient descent) minimizes the loss.</li>
+<li><strong>One-hot encoding</strong> transforming raw data (e.g., user IDs, item categories) into usable inputs.</li>
+<li>From Part 1, recall MF models ratings as  \(\hat{r}_{ui} = p_u^T q_i\), where  \(p_u\) and  \(q_i\) are latent vectors, but it struggles with implicit feedback.</li>
+</ul>
+<p>For more on these topics, check out <a href="https://www.khanacademy.org/math/linear-algebra">Linear Algebra Basics</a> or <a href="https://www.coursera.org/learn/machine-learning">Intro to Machine Learning</a>.</p>
+<h2 id="4-deep-dive">4. Deep Dive<a hidden class="anchor" aria-hidden="true" href="#4-deep-dive">#</a></h2>
+<h3 id="41-factorization-machines-fm">4.1 Factorization Machines (FM)<a hidden class="anchor" aria-hidden="true" href="#41-factorization-machines-fm">#</a></h3>
+<p>FM, introduced by Steffen Rendle in 2010, generalizes Matrix Factorization to model interactions between any features, not just users and items. It excels in sparse, high, dimensional settings like CTR prediction in online advertising, where data includes implicit feedback (clicks, views) and diverse features (user demographics, ad categories, context). FM’s ability to capture pairwise feature interactions without manual engineering made it a cornerstone for RecSys.</p>
+<p><strong>How It Works:</strong><br>
+FM models a prediction (e.g., click probability) as a combination of linear and pairwise feature interactions. For a feature vector  \(\mathbf{x} \in \mathbb{R}^n\) (where  \(n\) is the number of features), the prediction is:</p>
+<p>$$
+\hat{y}(\mathbf{x}) = w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^n \sum_{j=i+1}^n \langle v_i, v_j \rangle x_i x_j
+$$</p>
+<ul>
+<li> \(w_0\): Global bias.</li>
+<li> \(w_i\): Weight for feature  \(x_i\).</li>
+<li> \(\langle v_i, v_j \rangle = v_i^T v_j\): Dot product of latent vectors  \(v_i, v_j \in \mathbb{R}^k\), modeling the interaction between features  \(x_i\) and  \(x_j\).</li>
+<li> \(k\): Number of latent factors (typically 10-100).</li>
+</ul>
+<p>This captures both linear effects ( \(w_i x_i\)) and pairwise interactions ( \(\langle v_i, v_j \rangle x_i x_j\)). For example, in CTR prediction,  \(x_i\) might indicate the user,  \(x_j\) the ad, and their interaction reflects compatibility.</p>
+<p><strong>Connection to MF:</strong><br>
+If  \(\mathbf{x}\) encodes only user  \(u\) and item  \(i\) (e.g.,  \(x_u = 1\),  \(x_i = 1\), all others 0), FM reduces to MF:
+$$
+\hat{y}(\mathbf{x}) = w_0 + w_u + w_i + \langle v_u, v_i \rangle
+$$
+Here,  \(\langle v_u, v_i \rangle\) mirrors MF’s  \(p_u^T q_i\), but FM’s generality allows modeling additional features like user age or ad category.</p>
+<p><strong>Loss Function:</strong><br>
+FM supports regression (rating prediction) or classification (click prediction). For regression:</p>
+<p>$$
+L = \sum_{(\mathbf{x}, y) \in D} (y - \hat{y}(\mathbf{x}))^2 + \lambda (| \mathbf{w} |_2^2 + | V |_F^2)
+$$</p>
+<p>For classification (CTR):</p>
+<p>$$
+L = \sum_{(\mathbf{x}, y) \in D} \log(1 + \exp(-y \hat{y}(\mathbf{x}))) + \lambda (| \mathbf{w} |_2^2 + | V |_F^2)
+$$</p>
+<ul>
+<li> \(D\): Training data.</li>
+<li> \(y\): Target (e.g., 1 for click, -1 for no click).</li>
+<li> \(\lambda\): Regularization to prevent overfitting.</li>
+<li> \(V\): Matrix of latent vectors  \(v_i\).</li>
+</ul>
+<p><strong>Optimization:</strong><br>
+Rendle (2010) proposes three methods:</p>
+<ul>
+<li><strong>Stochastic Gradient Descent (SGD):</strong> Updates parameters incrementally for each sample, ideal for large datasets.</li>
+<li><strong>Alternating Least Squares (ALS):</strong> Optimizes one parameter at a time, better for batch processing.</li>
+<li><strong>Markov Chain Monte Carlo (MCMC):</strong> A Bayesian approach, offering uncertainty estimates but slower.<br>
+SGD is often preferred for scalability, with updates like:</li>
+</ul>
+<p>$$
+w_i \leftarrow w_i - \eta \frac{\partial L}{\partial w_i}, \quad v_i \leftarrow v_i - \eta \frac{\partial L}{\partial v_i}
+$$</p>
+<ul>
+<li> \(\eta\): Learning rate.</li>
+</ul>
+<p><strong>Input and Output:</strong></p>
+<ul>
+<li><strong>Input:</strong> Sparse feature vector  \(\mathbf{x}\) (e.g., one-hot encoded user ID, item ID, context).</li>
+<li><strong>Output:</strong> Predicted score (e.g., click probability, rating).</li>
+</ul>
+<p><strong>Real-World Example:</strong><br>
+At Meta Ads, FM might model user-ad interactions by combining user demographics (e.g., age, location), ad features (e.g., category, keyword), and context (e.g., device type), predicting the likelihood of a click to optimize ad placement.</p>
+<p><strong>Takeaways:</strong></p>
+<ul>
+<li>Captures pairwise feature interactions.</li>
+<li>Scales well in sparse, high-dimensional data.</li>
+<li>Excels in CTR prediction and implicit feedback tasks.</li>
+</ul>
+<p><strong>Features:</strong> Handles both explicit and implicit feedback, scales to high-dimensional sparse data, captures feature interactions without manual engineering.</p>
+<p><strong>Limitations:</strong> Limited to pairwise interactions, misses higher-order patterns (e.g., user-item-context triplets), and assumes linear combinations, which may not capture deep non-linearities.</p>
+<p><strong>Led to:</strong> Deep learning models like DeepFM (2017), which combine FM with neural networks to learn higher-order interactions.</p>
+<h3 id="42-gradient-boosted-trees-xgboost">4.2 Gradient Boosted Trees (XGBoost)<a hidden class="anchor" aria-hidden="true" href="#42-gradient-boosted-trees-xgboost">#</a></h3>
+<p>XGBoost, introduced by Chen &amp; Guestrin in 2016, leverages an ensemble of decision trees for ranking tasks in RecSys, excelling in search (e.g., Bing) and online advertising. It addresses MF and FM’s limitations in capturing non-linear patterns, using second-order optimization for efficiency and scalability.</p>
+<p><strong>How It Works:</strong><br>
+XGBoost builds a sequence of decision trees, each correcting the errors of the previous ones. For RecSys, it’s often used in learning-to-rank tasks (e.g., ranking search results or videos). Features include user behavior (clicks, watch time), item metadata (category, tags), and context (time, device). The prediction is:</p>
+<p>$$
+\hat{y}<em>i = \sum</em>{t=1}^T f_t(\mathbf{x}_i)
+$$</p>
+<ul>
+<li> \(T\): Number of trees.</li>
+<li> \(f_t\): Output of the  \(t\)-th tree for input  \(\mathbf{x}_i\).</li>
+</ul>
+<p><strong>Loss Function:</strong><br>
+XGBoost optimizes a regularized objective:</p>
+<p>$$
+L = \sum_{i=1}^N l(y_i, \hat{y}<em>i) + \sum</em>{t=1}^T \Omega(f_t)
+$$</p>
+<ul>
+<li> \(l(y_i, \hat{y}_i)\): Loss, e.g., squared loss for regression, or pairwise ranking loss (e.g., LambdaRank).</li>
+<li> \(\Omega(f_t) = \gamma T + \frac{1}{2} \lambda \| \mathbf{w}_t \|_2^2\): Regularization, where  \(T\) is the number of leaves, and  \(\mathbf{w}_t\) are leaf weights.</li>
+</ul>
+<p>For ranking, it uses pairwise loss:</p>
+<p>$$
+L = \sum_{(i,j) \in P} \log(1 + \exp(-(\hat{y}_i - \hat{y}_j)))
+$$</p>
+<p>where  \(P\) is the set of relevant-irrelevant pairs. XGBoost uses a second-order approximation:</p>
+<p>$$
+L \approx \sum_{i=1}^N \left[ l(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(\mathbf{x}_i) + \frac{1}{2} h_i f_t(\mathbf{x}_i)^2 \right] + \Omega(f_t)
+$$</p>
+<ul>
+<li> \(g_i = \frac{\partial l}{\partial \hat{y}_i^{(t-1)}}\),  \(h_i = \frac{\partial^2 l}{\partial (\hat{y}_i^{(t-1)})^2}\).</li>
+</ul>
+<p>This enables efficient tree construction, with features like column sampling and parallel processing for scalability.</p>
+<p><strong>Input and Output:</strong></p>
+<ul>
+<li><strong>Input:</strong> Feature vectors (numerical or categorical, e.g., user watch time, item category).</li>
+<li><strong>Output:</strong> Ranking scores for items.</li>
+</ul>
+<p><strong>Real-World Example:</strong><br>
+At Bing, XGBoost ranks search results by modeling features like query relevance, user click history, and page quality, ensuring the most relevant results appear at the top.</p>
+<p><strong>Key Takeaways (XGBoost in 3 Points):</strong></p>
+<ul>
+<li>Captures non-linear patterns via tree ensembles.</li>
+<li>Robust to missing data and interpretable (feature importance).</li>
+<li>Excels in ranking tasks like search and ads.</li>
+</ul>
+<p><strong>Features:</strong> Captures non-linear patterns, handles mixed feature types via tree splits, robust to missing data, interpretable (feature importance scores).<br>
+<strong>Limitations:</strong> Struggles with extremely high-dimensional sparse data (e.g., one-hot encoded user/item IDs), computationally expensive for large datasets, requires careful feature engineering.</p>
+<p><strong>Led to:</strong> Neural Collaborative Filtering (NCF) and other deep learning methods that automatically learn feature representations.</p>
+<h2 id="6-conclusion">6. Conclusion<a hidden class="anchor" aria-hidden="true" href="#6-conclusion">#</a></h2>
+<p>Part 2 has taken us from MF to FM’s flexible feature interactions and XGBoost’s non-linear ranking power. FM excels in CTR prediction by modeling sparse, implicit data, while XGBoost dominates ranking tasks with its ability to capture complex patterns. However, both methods hit limits—FM’s pairwise focus and XGBoost’s reliance on feature engineering couldn’t keep up with the complexity of modern RecSys. In Part 3, we’ll explore how deep learning overcomes these limitations, tackling unstructured data like images and text with models like Neural Collaborative Filtering and DeepFM, which leverage neural networks for higher-order interactions and automated feature learning.</p>
+<h2 id="7-references">7. References<a hidden class="anchor" aria-hidden="true" href="#7-references">#</a></h2>
+<ul>
+<li>Rendle, S. (2010). Factorization Machines. <em>2010 IEEE International Conference on Data Mining (ICDM)</em>, 995-1000. <a href="https://www.ismll.uni-hildesheim.de/pub/pdfs/Rendle2010FM.pdf">https://www.ismll.uni-hildesheim.de/pub/pdfs/Rendle2010FM.pdf</a></li>
+<li>Chen, T., &amp; Guestrin, C. (2016). XGBoost: A Scalable Tree Boosting System. <em>arXiv preprint arXiv:1603.02754</em>. <a href="https://arxiv.org/pdf/1603.02754">https://arxiv.org/pdf/1603.02754</a></li>
+<li>He, X., Zhang, H., Kan, M.-Y., &amp; Chua, T.-S. (2017). Fast Matrix Factorization for Online Recommendation with Implicit Feedback. <em>Proceedings of the 40th International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR ’17)</em>, 549–558. <a href="https://dl.acm.org/doi/10.1145/3459637.3482492">https://dl.acm.org/doi/10.1145/3459637.3482492</a></li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="//localhost:1313/tags/recommendation-systems/">Recommendation Systems</a></li>
+      <li><a href="//localhost:1313/tags/machine-learning/">Machine Learning</a></li>
+      <li><a href="//localhost:1313/tags/factorization-machines/">Factorization Machines</a></li>
+      <li><a href="//localhost:1313/tags/xgboost/">Xgboost</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>© [newabdullah 2025]</span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
