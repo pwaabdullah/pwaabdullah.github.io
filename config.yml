@@ -64,7 +64,7 @@ outputs:
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema
-  description: "Abdullah Al Mamun — LLM Architect, Ex-Meta. Blog on RecSys, LLMs, and Agentic AI."
+  description: "Abdullah Al Mamun — Sr. ML Engineer at Atlassian, Ex-Meta. Blog on RecSys, LLMs, and Agentic AI."
   author: "Abdullah Al Mamun"
 
   # Used by the custom post-footer widgets (layouts/partials/extend_footer.html)
@@ -103,7 +103,7 @@ params:
   homeInfoParams:
     Title: "I'm Abdullah!"
     Content: >
-      **LLM Architect | Ex-Meta**
+      **Sr. ML Engineer at Atlassian | Ex-Meta**
 
   # socialIcons intentionally empty — header has the LinkedIn menu item already,
   # and the per-post share row lives in extend_footer.html.
