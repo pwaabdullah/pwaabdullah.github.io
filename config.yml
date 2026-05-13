@@ -1,8 +1,8 @@
 # If your site is in 'https', then make sure your base url isn't written using 'http' otherwise your sitemap would
-# contain http (as opposeed to https) URLs. This would affect Google indexing of your URLs.
-baseURL: "www.newabdullah.com"
+# contain http (as opposed to https) URLs. This would affect Google indexing of your URLs.
+baseURL: "https://www.newabdullah.com/"
 title: Abdullah Al Mamun
-copyright: "© [newabdullah 2025]"
+copyright: "© newabdullah 2025"
 theme: ["PaperMod"]
 pagination.pagerSize: 5
 
@@ -36,15 +36,22 @@ languages:
           url: about
           weight: 5
         - name: Resume
-          url: https://www.notion.so/Abdullah-Al-Mamun-PhD-35eea9b5b9d9800dab40df159faae078?source=copy_link
+          url: https://www.newabdullah.com/Abdullah_Resume.pdf
           weight: 6
-        - name: "<i class='fab fa-linkedin'></i>Linkedin"
-          title: Linkedin
+          params:
+            target: "_blank"
+        - name: Linkedin
           url: https://www.linkedin.com/in/newabdullah/
           weight: 7
+          pre: "<i class='fab fa-linkedin'></i>"
+          params:
+            target: "_blank"
+        # - name: Gallery
+        #   url: gallery/
+        #   weight: 8
         - name: Contact
           url: contact
-          weight: 8
+          weight: 9
         - name: Search
           url: search/
           weight: 10
@@ -56,13 +63,18 @@ outputs:
     - JSON
 
 params:
-  env: production # to enable google analytics, opengraph, twitter-cards and schema.
-  description: ""
-  author: ""
-  # author: ["Me", "You"] # multiple authors
+  env: production # to enable google analytics, opengraph, twitter-cards and schema
+  description: "Abdullah Al Mamun — LLM Architect, Ex-Meta. Blog on RecSys, LLMs, and Agentic AI."
+  author: "Abdullah Al Mamun"
+
+  # Used by the custom post-footer widgets (layouts/partials/extend_footer.html)
+  buyMeACoffee: "https://buymeacoffee.com/aamcseg"
+  followItFormAction: "https://api.follow.it/subscription-form/OUlKb0NES0htNnRmZmRMSVVacGFRdkY5MW84UUQwL1ZGK2F2S0k0c3duS0EwaU1iN3V6VzQ0YXgyMjNwbGdoWEFYWGhCYlRKVGZ4bGdqdDVWVVJnVk00WVF5OWZxckRJQWdWai9LRytFYzBiQlhnbGhZZnVtOGtqeW55UUZBRDF8U0JBNGMrbDZPVk8wVm1EWUkxeUlEZFMwNnlhek1OZWtlajNEMldZaGpUcz0=/21"
 
   defaultTheme: auto
   # disableThemeToggle: true
+  # Custom share buttons are rendered by extend_footer.html — disable PaperMod's
+  # built-in ones so we don't double up.
   ShowShareButtons: false
   ShowReadingTime: true
   # disableSpecial1stPost: true
@@ -75,14 +87,13 @@ params:
   ShowPageNums: true
   ShowToc: true
   comments: true
+  math: true
 
   profileMode:
     enabled: false
     title: PaperMod
     imageUrl: "#"
     imageTitle: my image
-    # imageWidth: 120
-    # imageHeight: 120
     buttons:
       - name: Blog
         url: archives
@@ -94,41 +105,17 @@ params:
     Content: >
       **LLM Architect | Ex-Meta**
 
-  # socialIcons removed to match live (live has empty sameAs in JSON-LD)
-  # editPost removed (live has no "Suggest Changes" link)
-
-  # label:
-  # iconSVG: '<svg xmlns="http://www.w3.org/2000/svg" height="25" viewBox="0 -960 960 960" fill="currentColor"><path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>'
-  # text: "Home"
-  # icon: icon.png
-  # iconHeight: 35
-
-  # analytics:
-  #     google:
-  #         SiteVerificationTag: "XYZabc"
+  # socialIcons intentionally empty — header has the LinkedIn menu item already,
+  # and the per-post share row lives in extend_footer.html.
 
   assets:
     disableHLJS: true
-  #     favicon: "<link / abs url>"
-  #     favicon16x16: "<link / abs url>"
-  #     favicon32x32: "<link / abs url>"
-  #     apple_touch_icon: "<link / abs url>"
-  #     safari_pinned_tab: "<link / abs url>"
 
-  # cover:
-  #     hidden: true # hide everywhere but not in structured data
-  #     hiddenInList: true # hide on list pages and home
-  #     hiddenInSingle: true # hide on single page
-
-  # fuseOpts:
-  #     isCaseSensitive: false
-  #     shouldSort: true
-  #     location: 0
-  #     distance: 1000
-  #     threshold: 0.4
-  #     minMatchCharLength: 0
-  #     keys: ["title", "permalink", "summary", "content"]
-  math: true
+services:
+  instagram:
+    disableInlineCSS: true
+  x:
+    disableInlineCSS: true
 
 markup:
   goldmark:
@@ -136,32 +123,3 @@ markup:
       unsafe: true
   highlight:
     noClasses: false
-    # anchorLineNos: true
-    # codeFences: true
-    # guessSyntax: true
-    # lineNos: true
-    # style: monokai
-
-# privacy:
-#   vimeo:
-#     disabled: false
-#     simple: true
-
-#   twitter:
-#     disabled: false
-#     enableDNT: true
-#     simple: true
-
-#   instagram:
-#     disabled: false
-#     simple: true
-
-#   youtube:
-#     disabled: false
-#     privacyEnhanced: true
-
-services:
-  instagram:
-    disableInlineCSS: true
-  x:
-    disableInlineCSS: true

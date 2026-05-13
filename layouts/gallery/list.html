@@ -1,0 +1,33 @@
+{{ define "main" }}
+<article class="post-single">
+    <header class="post-header">
+        <h1 class="post-title">
+            {{ .Title }}
+        </h1>
+    </header>
+
+    <div class="post-content">
+        {{ .Content }}
+
+        <div class="gallery-grid">
+            {{ range .Resources.ByType "image" }}
+            <div class="gallery-item">
+                <a href="{{ .RelPermalink }}" data-lightbox="gallery" data-title="{{ .Title }}">
+                    {{ $image := .Resize "300x" }}
+                    <img src="{{ $image.RelPermalink }}" alt="{{ .Title }}">
+                </a>
+                {{ with .Title }}
+                <div class="caption">{{ . }}</div>
+                {{ end }}
+            </div>
+            {{ end }}
+        </div>
+    </div>
+</article>
+
+{{ $lightboxCSS := resources.Get "css/lightbox.css" | minify }}
+<link rel="stylesheet" href="{{ $lightboxCSS.Permalink }}">
+
+{{ $lightboxJS := resources.Get "js/lightbox.js" | minify }}
+<script src="{{ $lightboxJS.Permalink }}"></script>
+{{ end }}

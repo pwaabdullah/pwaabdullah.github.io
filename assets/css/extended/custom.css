@@ -1,17 +1,417 @@
 /* Custom styles added to demo */
 
 .twitter-tweet {
-    margin: auto;
+  margin: auto;
+}
+body {
+  /* overflow-x: hidden; */
 }
 
+/* Increase max-width of main content */
+/* Target the inner container */
+main, .single-container, .content, .wrapper, .container, .content-wrapper {
+  max-width: 1080px !important;
+  width: 100% !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* for equations responsive */
+mjx-container[jax="SVG"] {
+  overflow-x: auto;
+  padding: 0.5em 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+mjx-container[jax="SVG"] > svg {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Optional: give it a background to check what changes */
+/* main {
+  background-color: red !important;
+} */
+
+
 iframe {
-    border-radius: var(--radius) !important;
+  border-radius: var(--radius) !important;
 }
 
 .home-info ul {
-    padding-inline-start: 20px;
+  padding-inline-start: 0px;
 }
 
 .entry-cover img {
-    border: 1px solid var(--border);
+  border: 1px solid var(--border);
+}
+
+/*Share button*/
+/* Share Wrapper */
+.share-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+
+/* Social Icon Buttons */
+.share-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding: 15px 120px;
+  gap: 1rem;
+}
+
+.share-buttons a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #1f1f1f;
+  color: white;
+  font-size: 1.3rem;
+  text-decoration: none;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.share-buttons a:hover {
+  transform: scale(1.1);
+  background-color: #1DA1F2;
+  color: white;
+}
+
+/* Recent post */
+/* Recent Posts Styling */
+.recent-posts {
+  padding: 1rem;
+  /* margin-top: -100px !important; */
+  margin: 0 auto; /* centers the entire block horizontally */
+  max-width: 1000px; /* Keep a max-width for large screens */
+  text-align: center; /* Center the text */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the posts */
+  justify-content: center;
+}
+
+.headline {
+  text-align: center;
+  margin-left: 0;
+  margin-bottom: 30px;
+}
+
+.recent-posts .card-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.post-card {
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  text-align: center;
+  padding: 1.2rem;
+  width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  color: white;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+  border: 1px solid white;
+}
+
+.post-card:hover {
+  transform: translateY(-5px);
+}
+
+.post-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.post-date {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+.first-entry{
+  background-color:red !important;
+  padding: 20px;
+}
+.post-entry, .first-entry, .tag-entry {
+  background-color: #2E2E33 !important;
+  margin: 5 !important;
+  padding:20 !important;
+}
+.hero-title{
+  margin-bottom: 10px;
+}
+/* Hamburger Icon */
+.hamburger-icon {
+  display: none;
+  cursor: pointer;
+  font-size: 28px;
+  color: white;
+}
+
+/* Menu */
+.menu {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+}
+
+@media (max-width: 768px) {
+  .menu {
+    display: none;
+    flex-direction: column;
+    background: #111;
+    padding: 1rem;
+    position: absolute;
+    top: 60px; /* adjust based on your header height */
+    right: 20px;
+    border-radius: 10px;
+    z-index: 1000;
+  }
+
+  .menu.show {
+    display: flex;
+  }
+
+  .hamburger-icon {
+    display: block;
+    margin-right: 20px;
+  }
+}
+
+/* Buy me a coffee */
+.buy-me-a-coffee {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 2rem auto; /* Centers the button */
+  width: 100%;
+  text-align: center;
+}
+
+.buy-me-a-coffee img {
+  max-width: 200px;
+  width: 100%;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.buy-me-a-coffee img:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive Navigation Menu Styles */
+.menu-toggle {
+  display: none;
+  font-size: 36px;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 40px; /* Increased right margin for more spacing */
+  transition: color 0.3s ease;
+}
+.follow-form {
+  
+  display: flex;
+  color: white;
+  justify-content: center;
+  align-items: center;
+
+ 
+}
+
+.follow-form form {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background-color: #6c63ff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.follow-form input[type="email"] {
+  padding: 6px 10px;
+  font-size: 14px;
+  color: white;
+  background-color:#1D1E20;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 220px;
+  outline: none;
+}
+
+.follow-form button {
+  padding: 6px 14px;
+  font-size: 14px;
+  background-color:#1D1E20;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.follow-form button:hover {
+  background-color: #201b1b;
+}
+
+#menu {
+  list-style: none;
+  display: flex;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+}
+
+#menu li {
+  position: relative;
+}
+
+#menu li a {
+  color: var(--primary) !important;
+  padding: 10px 0px; /* Default padding for desktop */
+  text-align: center;
+  display: block;
+  border-radius: 5px;
+  font-size: 18px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+
+@media (max-width: 768px) {
+
+ 
+  #searchbox {
+    width: 80%; /* Set the width of the search box */
+    margin: 0 auto; /* Center horizontally */
+    display: block; /* Ensure it's block-level */
+  }
+  .recent-posts {
+    padding: 1rem;
+    /* margin-top: -120px !important; */
+    max-width: 100%;  /* Ensure full width on mobile */
+    text-align: center;
+
+  }
+
+  .headline {
+    text-align: center;
+    margin-left: 0;
+    margin-bottom: 30px;
+  }
+
+  .recent-posts .posts {
+    display: flex;
+    flex-direction: column;  /* Stack posts vertically */
+    align-items: center;  /* Center the posts */
+    width: 100%;
+  }
+
+  .recent-posts .posts > * {
+    width: 100%;
+    max-width: 90%;  /* Ensure posts are not too wide */
+    margin-bottom: 0rem;
+    text-align: center;  /* Ensure text is centered */
+  }
+
+
+
+  .buy-me-a-coffee {
+      margin: 2rem auto;
+      text-align: center;
+  }
+
+  .buy-me-a-coffee img {
+      width: 100%;
+      max-width: 200px;
+  }
+
+  .share-buttons {
+      flex-wrap: wrap;
+      padding: 10px 20px;
+      gap: 0.8rem;
+  }
+
+  .share-buttons a {
+      width: 45px;
+      height: 45px;
+      font-size: 1.2rem;
+  }
+
+  .top-button {
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+  }
+  .hamburger-icon {
+    display: block;
+  }
+
+  .menu-toggle:hover {
+      color: var(--accent); /* Change color on hover */
+  }
+  .menu-toggle {
+      display: block;
+  }
+
+  #menu {
+      display: none;
+      flex-direction: column;
+      background-color: var(--theme) !important;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      padding: 1rem;
+      z-index: 99;
+      transform: translateY(-100%); /* Start menu off-screen */
+  }
+
+  #menu.show {
+      display: flex;
+      transform: translateY(0); /* Slide the menu in */
+  }
+
+  #menu li a {
+      color: var(--primary) !important;
+      padding: 0px 0px; /* Decreased top and bottom padding */
+      text-align: center;
+      display: block;
+      font-size: 16px; /* Slightly smaller font for mobile */
+      border-bottom: 1px solid var(--border); /* Optional border for better separation */
+  }
+
+  #menu li:last-child a {
+      border-bottom: none; /* Remove border on the last item */
+  }
+
+  /* Styling for the backdrop (optional) */
+  .backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 98;
+  }
+
+  #menu.show + .backdrop {
+      display: block;
+  }
 }

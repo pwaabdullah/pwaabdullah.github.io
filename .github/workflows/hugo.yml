@@ -39,6 +39,10 @@ jobs:
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
+        with:
+          # Auto-create the Pages site and flip its source to "GitHub Actions"
+          # on first run, so no manual change in repo settings is needed.
+          enablement: true
 
       - name: Build with Hugo
         env:
