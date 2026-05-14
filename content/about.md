@@ -28,6 +28,11 @@ summary: "about"
   </p>
 </section>
 
+<!-- Portrait between Short and Long bio -->
+<p align="center" style="margin: 40px 0;">
+  <img src="/abdullah.jpg" alt="Abdullah Al Mamun" class="about-portrait">
+</p>
+
 <!-- Long Bio -->
 <section class="bio-section long-bio">
   <h2>Long</h2>
@@ -117,6 +122,19 @@ summary: "about"
 
 .long-bio {
   margin-top: 40px;
+}
+
+.about-portrait {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border);
+}
+
+@media screen and (max-width: 768px) {
+  .about-portrait { max-width: 260px; }
 }
 
 @media screen and (max-width: 768px) {
