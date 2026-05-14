@@ -39,8 +39,6 @@ series:
 > - Audience: ML engineers and researchers building large-scale RecSys for e-commerce, streaming, and ads.
 > - Each section covers the architecture, the gap it filled, and where it wins/loses in production.
 
-# The Evaluation of Recommendation Systems - Part 3
-
 ## Context: Why This Post Matters, Who It’s For, and What You’ll Learn
 
 Welcome to Part 3 of our four-part series on evaluating recommendation systems (RecSys)! In the previous installments, we laid the groundwork: Part 1 introduced foundational techniques like collaborative filtering (CF) and Matrix Factorization (MF), which excelled at capturing user-item interactions but assumed linearity, missing complex patterns. Part 2 explored Factorization Machines (FM) and XGBoost, which tackled sparse data and non-linear ranking but fell short on higher-order interactions and sequential behaviors. By 2016, these limitations spurred a seismic shift toward deep neural networks (DNNs), which transformed RecSys by learning intricate feature interactions, automating feature engineering, and addressing diverse tasks like sequential recommendations and multi-task optimization. This post traces that evolution from 2016 to 2023, diving into Neural Collaborative Filtering (NCF), Wide & Deep Learning, DeepFM, Deep Interest Network (DIN), Deep Learning Recommendation Model (DLRM), and Adaptive Task-to-Task Fusion (AdaTT). It’s tailored for data scientists, ML engineers, and tech professionals—particularly those designing large-scale RecSys in domains like e-commerce, streaming, and advertising—who need a deep, technical understanding of these advancements.

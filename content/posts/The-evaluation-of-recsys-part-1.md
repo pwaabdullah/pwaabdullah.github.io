@@ -36,8 +36,6 @@ series:
 > - By the end you'll know why MF dominated 2010-era RecSys but couldn't handle sparse, non-linear, sequential patterns.
 > - **[Read Part 2 →](/posts/the-evaluation-of-recsys-part-2/)** picks up with Factorization Machines and XGBoost.
 
-# The evaluation of RecSys - Part 1
-
 Recommendation systems (RecSys) play a critical role in modern AI-driven applications. From e-commerce to social media, search engines, and online advertising, personalized recommendations significantly impact user experience and business revenue. This blog series is intended for both beginners and experienced ML practitioners who want to understand the evaluation of recommendation systems in a structured manner.  
 I’ll discuss early tech briefly and deep dive into the latest innovations. For each technique, I’ll break down key concepts, their loss functions (how they learn), inputs/outputs, features, and limitations—why they weren’t enough, and how the next breakthrough fixed the flaws. But first things first:
 
