@@ -9,9 +9,12 @@
 # Hugo with a dynamic baseURL from the Pages action output, so the same commit
 # produces the right URLs in each environment.
 #
-# The only thing prod has that dev doesn't is `static/CNAME` (which binds the
-# custom domain). That file lives only in the prod repo and we never touch it
-# from here — we promote main except for that one file.
+# The only difference between repos is `static/CNAME` (binds the custom
+# domain — must exist on prod, must NOT exist on dev). This script preserves
+# the prod CNAME file automatically.
+#
+# Strategy: build a fresh prod branch from dev/main (so deletions and renames
+# propagate cleanly), overlay the prod-only CNAME, force-push.
 #
 # Usage:
 #   scripts/promote-to-prod.sh           # promote current HEAD to prod
@@ -43,11 +46,36 @@ if [[ "$BRANCH" != "main" ]]; then
 fi
 
 if ! git diff-index --quiet HEAD --; then
-  echo "ERROR: working tree is dirty. Commit or stash first."
+  echo "ERROR: working tree has uncommitted tracked changes. Commit or stash first."
   exit 1
 fi
 
-echo "==> Fetching latest from origin and prod"
+# Stash untracked files (e.g. local-only drafts, scratch dirs) so they
+# don't leak into the prod commit. Restored at exit (success or failure).
+UNTRACKED=$(git ls-files --others --exclude-standard)
+STASHED=0
+cleanup() {
+  # Always try to restore working tree state, even on error/Ctrl-C.
+  if git rev-parse --verify --quiet main >/dev/null; then
+    git checkout main --quiet 2>/dev/null || true
+  fi
+  if [[ -n "${TMP_BRANCH:-}" ]] && git rev-parse --verify --quiet "$TMP_BRANCH" >/dev/null 2>&1; then
+    git branch -D "$TMP_BRANCH" --quiet 2>/dev/null || true
+  fi
+  if [[ "$STASHED" == "1" ]]; then
+    git stash pop --quiet 2>/dev/null || echo "(warning: failed to restore stashed untracked files; check 'git stash list')"
+  fi
+}
+trap cleanup EXIT
+
+if [[ -n "$UNTRACKED" ]]; then
+  echo "==> Stashing untracked files so they don't leak into prod:"
+  echo "$UNTRACKED" | sed 's/^/    /'
+  git stash push --include-untracked --quiet --message "promote-to-prod: stash untracked"
+  STASHED=1
+fi
+
+echo "==> Fetching origin and prod"
 git fetch origin --quiet
 git fetch prod --quiet
 
@@ -61,60 +89,62 @@ if [[ "$LOCAL" != "$ORIGIN" ]]; then
 fi
 
 PROD_HEAD=$(git rev-parse prod/main)
+
 echo ""
-echo "==> Diff prod/main → local main:"
-git log --oneline "$PROD_HEAD..$LOCAL" || true
+echo "==> Diff prod/main → local main (this is what prod will receive):"
+git --no-pager diff "$PROD_HEAD".."$LOCAL" --stat | tail -25 || true
 echo ""
 
-# Build a temporary "prod" commit on top that preserves prod's static/CNAME.
-# We don't carry static/CNAME locally (dev doesn't bind the custom domain),
-# but the prod repo has it. The cleanest way to promote without dropping it
-# is to merge our changes on top of prod/main, keeping prod's CNAME file.
+# Strategy: build prod branch as a copy of main, then overlay prod-only files
+# from the current prod/main (currently just static/CNAME).
 TMP_BRANCH="_promote_$(date +%s)"
-echo "==> Creating temporary promotion branch: $TMP_BRANCH (based on prod/main)"
-git branch -f "$TMP_BRANCH" prod/main >/dev/null
-
-# Apply our commits on top, but preserve any files that exist only on prod
-# (notably static/CNAME). We do this by checking out our tree into prod's
-# branch as a single commit, then restoring static/CNAME from prod/main.
+echo "==> Creating fresh promotion branch from main: $TMP_BRANCH"
+git branch -f "$TMP_BRANCH" main >/dev/null
 git checkout "$TMP_BRANCH" --quiet
-git checkout main -- . >/dev/null
 
-# Restore prod-only files (currently just static/CNAME).
-if git show "prod/main:static/CNAME" >/dev/null 2>&1; then
-  git checkout prod/main -- static/CNAME
+# Restore prod-only files. List paths here that should only ever exist on
+# prod and never in dev.
+PROD_ONLY_PATHS=(
+  "static/CNAME"
+)
+RESTORED_ANY=0
+for path in "${PROD_ONLY_PATHS[@]}"; do
+  if git show "prod/main:$path" >/dev/null 2>&1; then
+    git show "prod/main:$path" > "$path"
+    git add "$path"
+    RESTORED_ANY=1
+    echo "==> Restored prod-only file: $path"
+  fi
+done
+
+if (( RESTORED_ANY )); then
+  if ! git diff --cached --quiet; then
+    git commit --quiet -m "Promote: $(git --no-pager log -1 --format='%s' main)
+
+Promoted from dev (pwaabdullah.github.io) HEAD=$LOCAL.
+Preserves prod-only files: ${PROD_ONLY_PATHS[*]}."
+  fi
 fi
 
-if git diff --cached --quiet && git diff --quiet; then
-  echo "Nothing to promote — prod is already up to date with local main (after CNAME merge)."
-  git checkout main --quiet
-  git branch -D "$TMP_BRANCH" >/dev/null
+# If the temp branch is identical to prod/main after CNAME overlay, nothing to do.
+if [[ "$(git rev-parse "$TMP_BRANCH")" == "$(git rev-parse prod/main)" ]]; then
+  echo "Nothing to promote — prod is already in sync with main (after CNAME overlay)."
   exit 0
 fi
 
-git add -A
-git commit -m "Promote: $(git --no-pager log -1 --format='%s' main)
-
-Promoted from dev (pwaabdullah.github.io) HEAD=$LOCAL.
-Preserves prod-only files (static/CNAME).
-"
+echo ""
+echo "==> Commits on $TMP_BRANCH that prod/main doesn't have:"
+git --no-pager log "$PROD_HEAD..$TMP_BRANCH" --oneline | head -10 || true
+echo ""
 
 if (( DRY_RUN )); then
-  echo ""
-  echo "==> DRY RUN — would push $TMP_BRANCH to prod/main:"
-  git --no-pager log prod/main..$TMP_BRANCH --oneline
-  git checkout main --quiet
-  git branch -D "$TMP_BRANCH" >/dev/null
+  echo "==> DRY RUN — would force-push $TMP_BRANCH → prod main."
   echo "(no push performed)"
   exit 0
 fi
 
-echo ""
-echo "==> Pushing $TMP_BRANCH → prod main"
-git push prod "$TMP_BRANCH:main"
-
-git checkout main --quiet
-git branch -D "$TMP_BRANCH" >/dev/null
+echo "==> Force-pushing $TMP_BRANCH → prod main (this overwrites prod/main)"
+git push prod "$TMP_BRANCH:main" --force
 
 echo ""
 echo "==> Promotion pushed. Watch the deploy:"
