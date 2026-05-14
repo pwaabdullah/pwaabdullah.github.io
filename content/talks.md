@@ -2,6 +2,7 @@
 title: "Talks"
 layout: "single"
 url: "/talks/"
+draft: true   # Hidden until real talks are added — flip to false when ready
 description: "Talks, conference presentations, and guest lectures by Abdullah Al Mamun on RecSys, LLMs, and Agentic AI."
 summary: "Selected talks and presentations on applied AI, RecSys, and LLM fine-tuning."
 ShowToc: false

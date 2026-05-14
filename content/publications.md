@@ -2,6 +2,7 @@
 title: "Publications"
 layout: "single"
 url: "/publications/"
+draft: true   # Hidden until real publications list is curated — flip to false when ready
 description: "Selected academic publications by Abdullah Al Mamun, PhD — interpretable deep learning, recommendation systems, and applied ML."
 summary: "Selected peer-reviewed publications on interpretable deep learning, RecSys, and applied machine learning."
 ShowToc: false

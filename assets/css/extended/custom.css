@@ -1,4 +1,19 @@
-/* Custom styles added to demo */
+/* =========================================================
+   Brand palette — ONE accent color used everywhere.
+   PaperMod's own theme vars (--primary, --secondary, --content,
+   --border, --entry, --theme, --tertiary) handle light/dark mode.
+   We just add a single brand accent.
+   ========================================================= */
+:root {
+  --brand: #00BFFF;            /* primary accent — used for section titles, links, company names */
+  --brand-hover: #22D3EE;      /* slight hover variant of brand */
+  --brand-contrast: #0F172A;   /* text color used on top of --brand backgrounds */
+  --linkedin: #0077B5;         /* LinkedIn's own brand color — only on LinkedIn buttons */
+}
+
+/* Helper: anything tagged .brand gets the accent color */
+.brand { color: var(--brand); }
+.muted { color: var(--secondary); font-weight: 400; }
 
 .twitter-tweet {
   margin: auto;
@@ -273,9 +288,10 @@ iframe {
 #menu {
   list-style: none;
   display: flex;
-  gap: 10px;
+  gap: 1.6rem;        /* more breathing room between items (was 10px — congested) */
   padding: 0;
   margin: 0;
+  align-items: center;
 }
 
 #menu li {
@@ -284,13 +300,35 @@ iframe {
 
 #menu li a {
   color: var(--primary) !important;
-  padding: 10px 0px; /* Default padding for desktop */
+  padding: 0.5rem 0.4rem;
   text-align: center;
-  display: block;
-  border-radius: 5px;
-  font-size: 18px;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 6px;
+  font-size: 0.98rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  position: relative;
+  transition: color 0.2s ease;
 }
+
+/* underline-on-hover accent (subtle, professional) */
+#menu li a::after {
+  content: "";
+  position: absolute;
+  left: 0.4rem;
+  right: 0.4rem;
+  bottom: 0.15rem;
+  height: 2px;
+  background: var(--brand);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s ease;
+  border-radius: 2px;
+}
+#menu li a:hover { color: var(--brand) !important; }
+#menu li a:hover::after { transform: scaleX(1); }
 
 
 @media (max-width: 768px) {
@@ -414,4 +452,343 @@ iframe {
   #menu.show + .backdrop {
       display: block;
   }
+}
+
+/* =========================================================
+   Home page — clean hero + bottom Subscribe/follow section.
+   Hero CTAs were removed (they duplicated the nav menu).
+   ========================================================= */
+.intro h1 {
+  font-size: 2.3rem;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.01em;
+}
+.hero-subtitle {
+  font-size: 0.95rem;
+  color: var(--secondary);
+  margin: 0 0 1rem 0;
+}
+.hero-paragraph {
+  margin: 0.7rem 0;
+  line-height: 1.65;
+  font-size: 1.02rem;
+}
+.hero-tagline {
+  font-size: 0.95rem;
+  color: var(--secondary);
+  margin-top: 1.5rem;
+  font-weight: 500;
+}
+
+/* Subscribe + social-follow band at the bottom of the home page only */
+.home-cta {
+  max-width: 1080px;
+  margin: 3rem auto 1rem auto;
+  padding: 0 1rem;
+}
+.home-cta-inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2rem;
+  padding: 1.6rem 1.6rem;
+  background: var(--entry);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+@media (min-width: 720px) {
+  .home-cta-inner { grid-template-columns: 1.4fr 1fr; gap: 2.5rem; align-items: center; }
+}
+
+.home-subscribe-title,
+.home-follow-title {
+  margin: 0 0 0.35rem 0;
+  font-size: 1.05rem;
+  color: var(--primary);
+  font-weight: 700;
+}
+.home-subscribe-note {
+  margin: 0 0 0.8rem 0;
+  font-size: 0.88rem;
+  color: var(--secondary);
+}
+.home-subscribe-form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.home-subscribe-form input[type=email] {
+  flex: 1 1 220px;
+  padding: 0.6rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--theme);
+  color: var(--primary);
+  font-size: 0.95rem;
+}
+.home-subscribe-form input[type=email]:focus {
+  outline: 2px solid var(--brand);
+  outline-offset: 1px;
+}
+.home-subscribe-form button {
+  padding: 0.6rem 1.3rem;
+  border-radius: 999px;
+  border: 0;
+  background: var(--brand);
+  color: var(--brand-contrast);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.93rem;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.home-subscribe-form button:hover { background: var(--brand-hover); transform: translateY(-1px); }
+
+/* Social-follow icon bar */
+.home-follow-bar {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  margin-top: 0.4rem;
+}
+.home-follow-bar a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--tertiary);
+  color: var(--primary);
+  font-size: 1rem;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+.home-follow-bar a:hover {
+  background: var(--brand);
+  color: var(--brand-contrast);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 700px) {
+  .intro h1 { font-size: 1.95rem; }
+  .home-subscribe-form input[type=email],
+  .home-subscribe-form button { flex: 1 1 100%; }
+}
+
+
+/* =========================================================
+   Resume page (uses layouts/_default/resume.html, not markdown)
+   Single brand color used for accents, section titles, company names.
+   ========================================================= */
+.resume-page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 0.5rem;
+}
+
+.resume-intro {
+  text-align: center;
+  padding: 1.5rem 0 1.8rem 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+}
+.resume-eyebrow {
+  margin: 0 0 0.4rem 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  color: var(--brand);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.resume-name {
+  font-size: 2.4rem;
+  margin: 0 0 0.4rem 0;
+  letter-spacing: -0.01em;
+}
+.resume-tagline {
+  font-size: 1.05rem;
+  color: var(--primary);
+  margin: 0 0 0.3rem 0;
+}
+.resume-status {
+  font-size: 0.88rem;
+  color: var(--secondary);
+  margin: 0 0 1.3rem 0;
+}
+
+.resume-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  justify-content: center;
+}
+.btn-primary, .btn-secondary, .btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+.btn-primary  { background: var(--brand);    color: var(--brand-contrast); }
+.btn-secondary{ background: var(--linkedin); color: #fff; }
+.btn-ghost    { background: transparent; color: var(--primary); border: 1px solid var(--border); }
+.btn-primary:hover  { background: var(--brand-hover); transform: translateY(-2px); }
+.btn-secondary:hover{ transform: translateY(-2px); }
+.btn-ghost:hover    { border-color: var(--brand); color: var(--brand); transform: translateY(-2px); }
+
+/* Section titles */
+.resume-section-title {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--brand);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.45rem;
+  margin: 2rem 0 1rem 0;
+  font-weight: 700;
+}
+
+/* Experience entries — vertical, easy to scan */
+.exp-entry {
+  padding: 1rem 0 1.1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.exp-entry:last-of-type { border-bottom: none; }
+.exp-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.4rem;
+}
+.exp-role h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--primary);
+}
+.exp-company {
+  margin: 0.2rem 0 0 0;
+  font-size: 0.92rem;
+  color: var(--secondary);
+}
+.exp-date {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--secondary);
+  white-space: nowrap;
+  background: var(--tertiary);
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+}
+.exp-bullets {
+  margin: 0.5rem 0 0 0;
+  padding-left: 1.25rem;
+}
+.exp-bullets li {
+  margin: 0.4rem 0;
+  line-height: 1.55;
+  font-size: 0.96rem;
+  color: var(--content);
+}
+
+/* Skills as a label → values list (NO horizontal boxes) */
+.skill-list {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.6rem 1.5rem;
+}
+@media (min-width: 720px) {
+  .skill-list { grid-template-columns: max-content 1fr; }
+}
+.skill-list dt {
+  font-weight: 700;
+  color: var(--brand);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding-top: 0.2rem;
+}
+.skill-list dd {
+  margin: 0 0 0.6rem 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--content);
+}
+@media (min-width: 720px) {
+  .skill-list dd { margin-bottom: 0.3rem; }
+}
+
+/* Education as a vertical list (NO horizontal boxes) */
+.edu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.edu-list > li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.edu-list > li:last-child { border-bottom: none; }
+.edu-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.edu-head h4 {
+  margin: 0;
+  font-size: 1.02rem;
+  color: var(--primary);
+}
+.edu-date {
+  font-size: 0.82rem;
+  color: var(--secondary);
+}
+.edu-school {
+  margin: 0.25rem 0 0.15rem 0;
+  font-size: 0.92rem;
+  color: var(--secondary);
+}
+.edu-focus {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--content);
+  font-style: italic;
+}
+
+/* Simple bullet lists (certs, awards) */
+.simple-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.simple-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--border);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--content);
+}
+.simple-list li:last-child { border-bottom: none; }
+
+.resume-footer {
+  margin-top: 2.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.88rem;
+  color: var(--secondary);
+  text-align: center;
+}
+
+/* Resume: print-friendly */
+@media print {
+  .resume-actions, .resume-footer, header.header, footer.footer, #top-link, .home-cta { display: none !important; }
+  .resume-page { max-width: 100%; }
+  .resume-section-title { color: #000; border-color: #999; }
+  .brand { color: #000; }
 }

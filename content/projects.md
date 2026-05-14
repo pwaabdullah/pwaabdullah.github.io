@@ -2,6 +2,7 @@
 title: "Projects"
 layout: "single"
 url: "/projects/"
+draft: true   # Hidden until real project list is curated — flip to false when ready
 description: "Projects, open-source contributions, and writing by Abdullah Al Mamun on RecSys, agentic AI, and LLM fine-tuning."
 summary: "Selected open-source work, blog series, and applied ML projects."
 ShowToc: false

@@ -1,0 +1,169 @@
+{{- /*
+  Custom resume layout — bypasses Goldmark so the resume HTML renders
+  reliably without the indent + blank-line code-block bug.
+  Triggered by `layout: resume` in content/resume.md frontmatter.
+*/ -}}
+{{- define "main" }}
+
+<article class="resume-page">
+
+  <!-- Page intro: title + tagline (no PaperMod post-header, so we render our own) -->
+  <header class="resume-intro">
+    <p class="resume-eyebrow">RESUME</p>
+    <h1 class="resume-name">Abdullah Al Mamun, PhD</h1>
+    <p class="resume-tagline">
+      Sr. Machine Learning Engineer at <span class="brand">Atlassian</span> &middot; Ex-Meta &middot; 8+ Years
+    </p>
+    <p class="resume-status">Permanent Resident <span class="muted">(no visa sponsorship required)</span> &middot; San Francisco Bay Area, CA</p>
+
+    <div class="resume-actions">
+      <a class="btn-primary" href="/Abdullah_Resume.pdf" target="_blank" rel="noopener">
+        <i class="fas fa-file-pdf"></i>&nbsp; Download PDF
+      </a>
+      <a class="btn-secondary" href="https://www.linkedin.com/in/newabdullah/" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>&nbsp; LinkedIn
+      </a>
+      <a class="btn-ghost" href="https://scholar.google.com/citations?user=iMIqKjcAAAAJ&hl=en" target="_blank" rel="noopener">
+        <i class="fas fa-graduation-cap"></i>&nbsp; Google Scholar
+      </a>
+      <a class="btn-ghost" href="/contact/">
+        <i class="fas fa-envelope"></i>&nbsp; Contact
+      </a>
+    </div>
+  </header>
+
+  <!-- ===================== EXPERIENCE ===================== -->
+  <h2 class="resume-section-title">Professional Experience</h2>
+
+  <article class="exp-entry">
+    <div class="exp-head">
+      <div class="exp-role">
+        <h3>Sr. Machine Learning Engineer</h3>
+        <p class="exp-company"><span class="brand">Atlassian</span> &middot; Mountain View, USA</p>
+      </div>
+      <p class="exp-date">Sep 2025 – Present</p>
+    </div>
+    <ul class="exp-bullets">
+      <li>Replaced GPT-4o-mini with fine-tuned <strong>Llama-3.2 1B</strong> for Jira/Confluence search intent detection &mdash; <strong>$1M CAPEX savings/year</strong>.</li>
+      <li>Built <strong>RL-based fine-tuning pipeline</strong> for SMART Answer generation &mdash; <strong>20% coverage improvement</strong>.</li>
+      <li>Engineered <strong>ML-based Jira intent classifier</strong> (replacing rule-based heuristics) with multilingual support for global Jira users &mdash; <strong>17% increment in query success</strong>.</li>
+    </ul>
+  </article>
+
+  <article class="exp-entry">
+    <div class="exp-head">
+      <div class="exp-role">
+        <h3>Member of Technical Staff</h3>
+        <p class="exp-company"><span class="brand">Aisera</span> &middot; Santa Clara, USA</p>
+      </div>
+      <p class="exp-date">Jun 2024 – Sep 2025</p>
+    </div>
+    <ul class="exp-bullets">
+      <li>Built end-to-end scalable <strong>multi-agentic architecture</strong> for enterprise AI &mdash; driving <strong>~$3.4M estimated ARR</strong>.</li>
+      <li>Fine-tuned LLaMA 3 and deployed on AWS &mdash; reducing <strong>$4M in CAPEX</strong> vs. GPT-4.</li>
+      <li>Integrated RAG into conversational AI, enhancing real-time semantic search by <strong>~93%</strong>.</li>
+    </ul>
+  </article>
+
+  <article class="exp-entry">
+    <div class="exp-head">
+      <div class="exp-role">
+        <h3>Machine Learning Engineer</h3>
+        <p class="exp-company"><span class="brand">Meta</span> &middot; Menlo Park, USA</p>
+      </div>
+      <p class="exp-date">May 2022 – Jun 2024</p>
+    </div>
+    <ul class="exp-bullets">
+      <li><strong>LLM in Ads Creation:</strong> Fine-tuned LLaMA 3 (SFT, RLHF, KV-Cache, 4D parallelism, quantization, distillation) &mdash; <strong>13% CTR &uarr;</strong>, <strong>6% CVR &uarr;</strong>, <strong>~$497M iRev</strong>.</li>
+      <li><strong>Personalized Ads Recommendations:</strong> AutoCA clusters for ad ranking via targeting relaxation &mdash; <strong>0.1% iRev improvement, ~$109M</strong>.</li>
+    </ul>
+  </article>
+
+  <article class="exp-entry">
+    <div class="exp-head">
+      <div class="exp-role">
+        <h3>Research Assistant (AI / ML)</h3>
+        <p class="exp-company"><span class="brand">ML &amp; Data Analytics Lab (MLDAG), FIU</span> &middot; Miami, USA</p>
+      </div>
+      <p class="exp-date">Sep 2018 – Apr 2022</p>
+    </div>
+    <ul class="exp-bullets">
+      <li>End-to-end development of <strong>interpretable deep learning models</strong> for early cancer detection and drug recommendation.</li>
+    </ul>
+  </article>
+
+  <article class="exp-entry">
+    <div class="exp-head">
+      <div class="exp-role">
+        <h3>Research Assistant (ML)</h3>
+        <p class="exp-company"><span class="brand">Research &amp; Innovation (RI), KFUPM</span> &middot; Saudi Arabia</p>
+      </div>
+      <p class="exp-date">Jan 2015 – Dec 2016</p>
+    </div>
+    <ul class="exp-bullets">
+      <li>Implemented <strong>LSTM-based sentiment analysis</strong> tool for customer feedback &mdash; <strong>98% accuracy</strong>.</li>
+    </ul>
+  </article>
+
+  <!-- ===================== SKILLS ===================== -->
+  <h2 class="resume-section-title">Technical Skills</h2>
+  <dl class="skill-list">
+    <dt>ML / AI</dt>
+    <dd>LLMs &middot; Fine-tuning (LoRA, QLoRA, SFT) &middot; RLHF, PPO, DPO &middot; RAG &middot; Agentic AI &middot; Multi-Agent Systems &middot; Transformers &middot; Quantization &middot; 4D Parallelism &middot; KV-Cache &middot; LangChain &middot; LangGraph &middot; Intent Classification &middot; NL2JQL &middot; Offline Eval Pipelines</dd>
+
+    <dt>Domain</dt>
+    <dd>Search Ranking (Jira / Confluence) &middot; FPS Intent Detection &middot; SAIN (Smart Answer Intelligence) &middot; Ads Ranking &middot; Recommendation Systems (RecSys) &middot; Conversational AI &middot; Knowledge Discovery</dd>
+
+    <dt>Engineering</dt>
+    <dd>Python &middot; PyTorch &middot; TEAMServe (ML model serving) &middot; Statsig / Switcheroo (feature flags) &middot; A/B Experimentation &middot; Docker / Kubernetes &middot; CI/CD &middot; AWS &middot; Databricks &middot; Socrates (SQL)</dd>
+  </dl>
+
+  <!-- ===================== EDUCATION ===================== -->
+  <h2 class="resume-section-title">Education</h2>
+  <ul class="edu-list">
+    <li>
+      <div class="edu-head">
+        <h4>PhD in Computer Science</h4>
+        <span class="edu-date">2018 – 2022</span>
+      </div>
+      <p class="edu-school"><span class="brand">Florida International University</span> &middot; Miami, USA</p>
+      <p class="edu-focus">Focus: Interpretable Applied ML</p>
+    </li>
+    <li>
+      <div class="edu-head">
+        <h4>MS in Computer Engineering</h4>
+        <span class="edu-date">&nbsp;</span>
+      </div>
+      <p class="edu-school"><span class="brand">King Fahd University of Petroleum &amp; Minerals (KFUPM)</span> &middot; Saudi Arabia</p>
+      <p class="edu-focus">Focus: ML / Robotics in Computer Vision</p>
+    </li>
+    <li>
+      <div class="edu-head">
+        <h4>BSc in Computer Science &amp; Engineering</h4>
+        <span class="edu-date">&nbsp;</span>
+      </div>
+      <p class="edu-school"><span class="brand">Dhaka University of Engineering &amp; Technology (DUET)</span> &middot; Bangladesh</p>
+      <p class="edu-focus">Focus: ML in NLP</p>
+    </li>
+  </ul>
+
+  <!-- ===================== CERTIFICATIONS + AWARDS ===================== -->
+  <h2 class="resume-section-title">Certifications</h2>
+  <ul class="simple-list">
+    <li><strong>Google</strong> &mdash; End-to-End Machine Learning with TensorFlow on GCP <span class="muted">&middot; Mar 2020</span></li>
+    <li><strong>UIUC</strong> &mdash; Cloud Computing Concepts: Part 1 &amp; 2 <span class="muted">&middot; Apr 2015</span></li>
+  </ul>
+
+  <h2 class="resume-section-title">Awards &amp; Honors</h2>
+  <ul class="simple-list">
+    <li><strong>Champion</strong>, 2nd GCC Robotics Challenge <span class="muted">&middot; IEEE &amp; IET &middot; Doha, Qatar &middot; 2017</span></li>
+    <li><strong>Conference Travel Fellowships</strong> <span class="muted">&middot; ACM BCB NYC (2019), IEEE BIBM San Diego (2019, 2020)</span></li>
+  </ul>
+
+  <p class="resume-footer">
+    For more on what I'm working on, see <a href="/about/">About</a> or <a href="/contact/">reach out</a>.
+  </p>
+
+</article>
+
+{{- end }}

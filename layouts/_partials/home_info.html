@@ -1,146 +1,27 @@
 {{/*
   home_info.html — homepage hero section.
   Overrides PaperMod's default home_info partial.
+  Kept minimal — Subscribe + social-follow live in extend_footer.html
+  so they appear once at the bottom of the home page, not duplicated
+  with the nav menu CTAs.
 */}}
-{{- $followFormAction := site.Params.followItFormAction | default "" -}}
 
 <section class="intro" style="margin-top:3rem;">
   <h1>Hi, I&rsquo;m Abdullah!</h1>
-  <figcaption class="hero-subtitle">
-    <strong>Sr. ML Engineer at Atlassian | Ex-Meta | PhD</strong>
-  </figcaption>
+  <p class="hero-subtitle">
+    <strong>Sr. ML Engineer at <span class="brand">Atlassian</span> &nbsp;|&nbsp; Ex-Meta &nbsp;|&nbsp; PhD</strong>
+  </p>
 
   <p class="hero-paragraph">
     <strong>RL &amp; multi-Agentic AI for Confluence/Jira Search.</strong>
     On the <strong>Central AI team</strong>, I&rsquo;m building and improving
     <strong>SMART Answer</strong> generation using
     <strong>RL-based fine-tuned LLMs</strong> and <strong>multi-Agent AI architecture</strong>.
-    Previously, I worked at <strong>Meta</strong> on <strong>Ads Ranking</strong> and fine-tuned
+    Previously at <strong>Meta</strong> on <strong>Ads Ranking</strong>, fine-tuning
     <strong>LLaMA 3</strong> for large-scale suggestive ad generation.
   </p>
 
-  <p class="hero-paragraph hero-tagline">
+  <p class="hero-tagline">
     I write about <strong>RecSys</strong>, <strong>agentic AI</strong>, <strong>RL fine-tuning</strong>, and what actually ships at scale.
   </p>
-
-  <div class="hero-ctas">
-    <a class="hero-btn hero-btn-primary" href="/archives/">
-      <i class="fas fa-book-open"></i> Read the blog
-    </a>
-    <a class="hero-btn hero-btn-secondary" href="/about/">
-      <i class="fas fa-user"></i> About me
-    </a>
-    <a class="hero-btn hero-btn-tertiary" href="https://www.linkedin.com/in/newabdullah/" target="_blank" rel="noopener">
-      <i class="fab fa-linkedin"></i> LinkedIn
-    </a>
-  </div>
-
-  {{- if $followFormAction }}
-  <div class="hero-subscribe">
-    <p class="hero-subscribe-label">
-      Get new posts in your inbox <span class="hero-subscribe-note">— no spam, just deep-dives on applied AI.</span>
-    </p>
-    <form action="{{ $followFormAction }}" method="post" target="_blank" class="hero-subscribe-form">
-      <input type="email" name="email" placeholder="your@email.com" required aria-label="Email address">
-      <button type="submit">Subscribe</button>
-    </form>
-  </div>
-  {{- end }}
 </section>
-
-<style>
-.intro h1 {
-  font-size: 2.4rem;
-  margin: 0 0 0.4rem 0;
-}
-.hero-subtitle {
-  font-size: 0.95rem;
-  color: var(--secondary);
-  margin-bottom: 1.1rem;
-}
-.hero-paragraph {
-  margin: 0.7rem 0;
-  line-height: 1.65;
-  font-size: 1.02rem;
-}
-.hero-tagline {
-  font-size: 0.95rem;
-  color: var(--secondary);
-}
-.hero-ctas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-  margin: 1.5rem 0 1.7rem 0;
-}
-.hero-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.55rem 1.05rem;
-  border-radius: 999px;
-  font-size: 0.92rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  white-space: nowrap;
-}
-.hero-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
-.hero-btn-primary    { background: #00BFFF; color: #0F172A; }
-.hero-btn-secondary  { background: var(--entry); color: var(--primary); border: 1px solid var(--border); }
-.hero-btn-tertiary   { background: #0077B5; color: #fff; }
-
-.hero-subscribe {
-  margin-top: 1.2rem;
-  padding: 1rem 1.2rem;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--entry);
-}
-.hero-subscribe-label {
-  margin: 0 0 0.55rem 0;
-  font-size: 0.93rem;
-  color: var(--primary);
-  font-weight: 600;
-}
-.hero-subscribe-note {
-  color: var(--secondary);
-  font-weight: 400;
-}
-.hero-subscribe-form {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-.hero-subscribe-form input[type=email] {
-  flex: 1 1 220px;
-  padding: 0.55rem 0.85rem;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--theme);
-  color: var(--primary);
-  font-size: 0.95rem;
-}
-.hero-subscribe-form input[type=email]:focus {
-  outline: 2px solid #00BFFF;
-  outline-offset: 1px;
-}
-.hero-subscribe-form button {
-  padding: 0.55rem 1.2rem;
-  border-radius: 999px;
-  border: 0;
-  background: #00BFFF;
-  color: #0F172A;
-  font-weight: 700;
-  cursor: pointer;
-  font-size: 0.92rem;
-}
-.hero-subscribe-form button:hover { background: #22D3EE; }
-
-@media (max-width: 700px) {
-  .intro h1 { font-size: 2rem; }
-  .hero-btn { padding: 0.5rem 0.9rem; font-size: 0.88rem; }
-  .hero-subscribe-form input[type=email] { flex: 1 1 100%; }
-  .hero-subscribe-form button { flex: 1 1 100%; }
-}
-</style>

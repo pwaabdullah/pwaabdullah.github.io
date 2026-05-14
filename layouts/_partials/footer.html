@@ -1,3 +1,7 @@
+{{- /* Home-only Subscribe + social-follow lives in extend_footer.html;
+       call it BEFORE the © footer so it sits between content and copyright. */ -}}
+{{- partial "extend_footer.html" . }}
+
 {{- if not (.Param "hideFooter") }}
 <footer class="footer">
     <p>&copy; <span id="year"></span> newabdullah. All rights reserved.</p>
@@ -16,8 +20,6 @@
     </svg>
 </a>
 {{- end }}
-
-{{- partial "extend_footer.html" . }}
 
 <script>
     let menu = document.getElementById('menu');

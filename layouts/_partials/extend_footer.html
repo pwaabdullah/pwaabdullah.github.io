@@ -1,0 +1,49 @@
+{{/*
+  extend_footer.html — runs at the very end of every page (called from
+  footer.html, AFTER <footer class="footer">). We render the home-only
+  "Subscribe + follow" block here so the hero stays clean and the CTAs
+  don't duplicate what's already in the nav menu.
+*/}}
+{{- if .IsHome }}
+  {{- $followFormAction := site.Params.followItFormAction | default "" -}}
+  <aside class="home-cta">
+    <div class="home-cta-inner">
+
+      {{- if $followFormAction }}
+      <div class="home-subscribe">
+        <h3 class="home-subscribe-title">Get new posts in your inbox</h3>
+        <p class="home-subscribe-note">No spam — just deep-dives on applied AI, every couple of weeks.</p>
+        <form action="{{ $followFormAction }}" method="post" target="_blank" class="home-subscribe-form">
+          <input type="email" name="email" placeholder="your@email.com" required aria-label="Email address">
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+      {{- end }}
+
+      <div class="home-follow">
+        <h3 class="home-follow-title">Or follow along</h3>
+        <div class="home-follow-bar">
+          <a href="https://www.linkedin.com/in/newabdullah/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a href="https://x.com/newmamun" target="_blank" rel="noopener" aria-label="X (Twitter)" title="X (Twitter)">
+            <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18" fill="currentColor"><path d="M17.53 2H21l-7.22 8.24L23 22h-6.38l-4.99-6.03L5.8 22H2l7.66-8.75L1 2h6.5l4.44 5.37L17.53 2Zm-1.1 18h1.74L8.61 4H6.75l9.68 16Z"/></svg>
+          </a>
+          <a href="https://github.com/pwaabdullah" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="https://scholar.google.com/citations?user=iMIqKjcAAAAJ&hl=en" target="_blank" rel="noopener" aria-label="Google Scholar" title="Google Scholar">
+            <i class="fas fa-graduation-cap"></i>
+          </a>
+          <a href="/index.xml" aria-label="RSS feed" title="RSS feed">
+            <i class="fas fa-rss"></i>
+          </a>
+          <a href="/contact/" aria-label="Contact" title="Contact">
+            <i class="fas fa-envelope"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+{{- end }}

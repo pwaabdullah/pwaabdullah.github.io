@@ -35,30 +35,21 @@ languages:
         - name: About
           url: about
           weight: 5
-        - name: Projects
-          url: projects
-          weight: 6
-        - name: Publications
-          url: publications
-          weight: 7
-        - name: Talks
-          url: talks
-          weight: 8
         - name: Resume
           url: resume
-          weight: 9
+          weight: 6
         - name: Linkedin
           url: https://www.linkedin.com/in/newabdullah/
-          weight: 10
+          weight: 7
           pre: "<i class='fab fa-linkedin'></i>"
           params:
             target: "_blank"
         - name: Contact
           url: contact
-          weight: 11
+          weight: 8
         - name: Search
           url: search/
-          weight: 12
+          weight: 9
 
 outputs:
   home:
@@ -92,8 +83,11 @@ params:
 
   # Person schema (vs default Organization) for JSON-LD on the home page.
   # Lets Google's knowledge graph treat this as a person entity.
+  # `image` here is read by our schema_json.html override so the Person
+  # image is the real headshot, not the tiny favicon.
   schema:
     publisherType: "Person"
+    image: "/headshot.jpg"
     sameAs:
       - "https://www.linkedin.com/in/newabdullah/"
       - "https://github.com/pwaabdullah"
