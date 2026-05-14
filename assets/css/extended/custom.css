@@ -862,3 +862,25 @@ iframe {
   .resume-section-title { color: #000; border-color: #999; }
   .brand { color: #000; }
 }
+
+/* Blog page: inline search box sits above the archives list */
+.blog-search {
+  margin: 0 0 2rem 0;
+}
+.blog-search input {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: var(--entry);
+  color: var(--primary);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+}
+.blog-search input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.15);
+}
+.blog-search .searchResults {
+  margin-top: 1rem;
+}
