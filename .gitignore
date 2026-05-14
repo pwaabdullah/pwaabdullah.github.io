@@ -29,3 +29,6 @@ resources/
 .hugo_build.lock
 .DS_Store
 temp/
+
+# Local-only draft posts (kept on disk, never tracked)
+content/posts/personal-portfolio-audit-and-strategy.md
