@@ -32,29 +32,33 @@ languages:
         - name: Blog
           url: archives
           weight: 4
-        - name: About Me
+        - name: About
           url: about
           weight: 5
-        - name: Resume
-          url: https://www.newabdullah.com/Abdullah_Resume.pdf
+        - name: Projects
+          url: projects
           weight: 6
-          params:
-            target: "_blank"
+        - name: Publications
+          url: publications
+          weight: 7
+        - name: Talks
+          url: talks
+          weight: 8
+        - name: Resume
+          url: resume
+          weight: 9
         - name: Linkedin
           url: https://www.linkedin.com/in/newabdullah/
-          weight: 7
+          weight: 10
           pre: "<i class='fab fa-linkedin'></i>"
           params:
             target: "_blank"
-        # - name: Gallery
-        #   url: gallery/
-        #   weight: 8
         - name: Contact
           url: contact
-          weight: 9
+          weight: 11
         - name: Search
           url: search/
-          weight: 10
+          weight: 12
 
 outputs:
   home:
@@ -64,10 +68,43 @@ outputs:
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema
-  description: "Abdullah Al Mamun — Sr. ML Engineer at Atlassian, Ex-Meta. Blog on RecSys, LLMs, and Agentic AI."
+  description: "Abdullah Al Mamun, PhD — Sr. ML Engineer at Atlassian (Central AI). Ex-Meta Ads ML. Writing on RecSys, agentic AI, RL fine-tuning, and LLMs."
+  keywords:
+    - "Abdullah Al Mamun"
+    - "Sr. ML Engineer"
+    - "Atlassian"
+    - "Meta"
+    - "Recommendation Systems"
+    - "RecSys"
+    - "Agentic AI"
+    - "Large Language Models"
+    - "LLM Fine-tuning"
+    - "Reinforcement Learning"
+    - "Machine Learning"
+    - "Applied AI"
   author: "Abdullah Al Mamun"
 
-  # Used by the custom post-footer widgets (layouts/partials/extend_footer.html)
+  # Default Open Graph / Twitter card image (1200x630). Used on every page
+  # where no per-page cover image is set. PaperMod's opengraph.html and
+  # twitter_cards.html pick this up automatically from site.Params.images.
+  images:
+    - "og-default.png"
+
+  # Person schema (vs default Organization) for JSON-LD on the home page.
+  # Lets Google's knowledge graph treat this as a person entity.
+  schema:
+    publisherType: "Person"
+    sameAs:
+      - "https://www.linkedin.com/in/newabdullah/"
+      - "https://github.com/pwaabdullah"
+      - "https://scholar.google.com/citations?user=iMIqKjcAAAAJ"
+      - "https://x.com/newmamun"
+
+  # Social handle for twitter:site / twitter:creator meta.
+  social:
+    twitter: "newmamun"
+
+  # Used by the custom post-footer widgets (layouts/_partials/extend_post_content.html)
   buyMeACoffee: "https://buymeacoffee.com/aamcseg"
   followItFormAction: "https://api.follow.it/subscription-form/OUlKb0NES0htNnRmZmRMSVVacGFRdkY5MW84UUQwL1ZGK2F2S0k0c3duS0EwaU1iN3V6VzQ0YXgyMjNwbGdoWEFYWGhCYlRKVGZ4bGdqdDVWVVJnVk00WVF5OWZxckRJQWdWai9LRytFYzBiQlhnbGhZZnVtOGtqeW55UUZBRDF8U0JBNGMrbDZPVk8wVm1EWUkxeUlEZFMwNnlhek1OZWtlajNEMldZaGpUcz0=/21"
 

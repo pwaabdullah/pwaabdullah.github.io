@@ -1,21 +1,40 @@
 ---
 author: ["Abdullah Al Mamun"]
-title: "The Evaluation of RecSys - Part 2"
-description: " "
-summary: "Sample article showcasing basic code syntax and formatting for HTML elements."
+title: "The Evaluation of RecSys — Part 2: Factorization Machines and XGBoost"
 date: 2025-03-11
 draft: false
-tags: ["recommendation systems", "machine learning", "factorization machines", "xgboost"]
-categories: ["RecSys Series"]
-series: ["Themes Guide"]
+comments: true
 ShowToc: true
 TocOpen: true
 math: true
-social:
-  fediverse_creator: "@adityatelange@mastodon.social"
+description: "Part 2 of the RecSys series. Factorization Machines generalize matrix factorization to arbitrary feature spaces, and XGBoost brings non-linear ranking via gradient-boosted trees. We cover the math, loss functions, strengths, and the limitations that drove the field toward deep learning."
+summary: "Part 2 of the series: how Factorization Machines generalized MF to arbitrary features, how XGBoost handled non-linear ranking, and the limitations that pushed the field toward deep neural networks."
+keywords:
+  - "Factorization Machines"
+  - "XGBoost"
+  - "recommendation systems"
+  - "ranking"
+  - "CTR prediction"
+  - "RecSys evaluation"
+aliases:
+  - "/posts/the-evaluation-of-recsys-part2/"
+tags:
+  - "recommendation systems"
+  - "machine learning"
+  - "factorization machines"
+  - "xgboost"
+categories: ["RecSys Series"]
+series:
+  - "Evaluation of RecSys"
 ---
 
-Welcome to Part 2 of RecSys series! In [Part 1](link-to-part-1), we traced the evolution of RecSys from content-based filtering (CBF) to collaborative filtering (CF), and finally to Matrix Factorization (MF), which introduced latent factor models to tackle sparsity and scalability. However, MF’s linear assumptions and struggles with implicit feedback (e.g., clicks, views) set the stage for more advanced techniques. In this post, we dive into two pivotal methods from the 2010-2015 era: **Factorization Machines (FM)** and **Gradient Boosted Trees (XGBoost)**.
+> **TL;DR**
+> - **Part 2 of a 4-part series.** [Start at Part 1 →](/posts/the-evaluation-of-recsys-part-1/) if you missed it.
+> - **Factorization Machines (FM)** generalize matrix factorization to arbitrary categorical/numerical features — making them a workhorse for CTR prediction on sparse data.
+> - **XGBoost** brought robust non-linear ranking via gradient-boosted trees, dominating top-N recommendation tasks in the mid-2010s.
+> - Both hit hard limits on higher-order interactions and sequential behavior — setting up the deep-learning wave in **[Part 3 →](/posts/the-evaluation-of-recsys-part-3/)**.
+
+Welcome to Part 2 of the RecSys series! In [Part 1](/posts/the-evaluation-of-recsys-part-1/), we traced the evolution of RecSys from content-based filtering (CBF) to collaborative filtering (CF), and finally to Matrix Factorization (MF), which introduced latent factor models to tackle sparsity and scalability. However, MF’s linear assumptions and struggles with implicit feedback (e.g., clicks, views) set the stage for more advanced techniques. In this post, we dive into two pivotal methods from the 2010-2015 era: **Factorization Machines (FM)** and **Gradient Boosted Trees (XGBoost)**.
 
 In Part 2, you’ll learn how FM generalizes MF to handle diverse data types, how XGBoost leverages decision trees for ranking, and the strengths and limitations of each.
 

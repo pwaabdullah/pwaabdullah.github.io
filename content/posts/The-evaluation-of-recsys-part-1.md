@@ -1,12 +1,23 @@
 ---
 author: ["Abdullah Al Mamun"]
-title: "The Evaluation of RecSys - Part 1"
+title: "The Evaluation of RecSys — Part 1: From Content-Based Filtering to Matrix Factorization"
 date: 2025-03-01
+draft: false
 comments: true
 ShowToc: true
 TocOpen: true
-draft: false
 math: true
+description: "Part 1 of a deep-dive series on the evolution of recommendation systems. Covers content-based filtering, collaborative filtering (user/item), and matrix factorization — with loss functions, intuition, and where each technique breaks down."
+summary: "Part 1 of a 4-part series tracing how RecSys evolved from content-based filtering through collaborative filtering to matrix factorization — and where each technique falls short, setting up the next breakthrough."
+keywords:
+  - "recommendation systems"
+  - "collaborative filtering"
+  - "matrix factorization"
+  - "content-based filtering"
+  - "RecSys"
+  - "evaluation"
+aliases:
+  - "/posts/the-evaluation-of-recsys---part-1/"
 tags:
   - "recommendation systems"
   - "deep learning"
@@ -15,7 +26,15 @@ tags:
   - "evaluation"
 categories:
   - "RecSys Series"
+series:
+  - "Evaluation of RecSys"
 ---
+
+> **TL;DR**
+> - This is **Part 1 of a 4-part deep-dive** on recommendation systems.
+> - We cover **content-based filtering**, **collaborative filtering** (user-based & item-based), and **matrix factorization** — with the math, loss functions, and where each breaks down.
+> - By the end you'll know why MF dominated 2010-era RecSys but couldn't handle sparse, non-linear, sequential patterns.
+> - **[Read Part 2 →](/posts/the-evaluation-of-recsys-part-2/)** picks up with Factorization Machines and XGBoost.
 
 # The evaluation of RecSys - Part 1
 

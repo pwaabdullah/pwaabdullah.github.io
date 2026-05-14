@@ -1,10 +1,43 @@
 ---
-title: "The Evaluation of RecSys - Part 3"
+author: ["Abdullah Al Mamun"]
+title: "The Evaluation of RecSys — Part 3: The Deep Learning Era (NCF, Wide & Deep, DeepFM, DIN, DLRM, AdaTT)"
 date: 2025-03-12
 draft: false
-tags: ["recommendation systems", "deep learning", "neural collaborative filtering", "wide and deep", "deepfm", "din", "dlrm", "multi-task learning"]
+comments: true
+ShowToc: true
+TocOpen: true
+math: true
+description: "Part 3 of the RecSys series. Traces the deep-learning revolution in RecSys from 2016 to 2023 — Neural Collaborative Filtering, Wide & Deep, DeepFM, Deep Interest Network, DLRM, and AdaTT. Architectures, intuition, where each one wins."
+summary: "Part 3 of the series: how DNNs transformed RecSys from 2016 onward — NCF, Wide & Deep, DeepFM, DIN, DLRM, and AdaTT. Architectures, intuition, and where each shines."
+keywords:
+  - "Neural Collaborative Filtering"
+  - "Wide and Deep Learning"
+  - "DeepFM"
+  - "Deep Interest Network"
+  - "DIN"
+  - "DLRM"
+  - "AdaTT"
+  - "multi-task learning"
+  - "RecSys deep learning"
+tags:
+  - "recommendation systems"
+  - "deep learning"
+  - "neural collaborative filtering"
+  - "wide and deep"
+  - "deepfm"
+  - "din"
+  - "dlrm"
+  - "multi-task learning"
 categories: ["RecSys Series"]
+series:
+  - "Evaluation of RecSys"
 ---
+
+> **TL;DR**
+> - **Part 3 of a 4-part series.** [Part 1](/posts/the-evaluation-of-recsys-part-1/) covered MF. [Part 2](/posts/the-evaluation-of-recsys-part-2/) covered FM and XGBoost.
+> - This post traces the **deep-learning revolution in RecSys from 2016 to 2023** — Neural Collaborative Filtering, Wide & Deep, DeepFM, Deep Interest Network (DIN), DLRM, and AdaTT.
+> - Audience: ML engineers and researchers building large-scale RecSys for e-commerce, streaming, and ads.
+> - Each section covers the architecture, the gap it filled, and where it wins/loses in production.
 
 # The Evaluation of Recommendation Systems - Part 3
 
