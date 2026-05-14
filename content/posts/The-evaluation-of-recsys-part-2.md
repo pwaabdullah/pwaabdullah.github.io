@@ -1,6 +1,6 @@
 ---
 author: ["Abdullah Al Mamun"]
-title: "The Evaluation of RecSys — Part 2: Factorization Machines and XGBoost"
+title: "The Evaluation of RecSys, Part 2: Factorization Machines and XGBoost"
 date: 2025-03-11
 draft: false
 comments: true
@@ -30,9 +30,9 @@ series:
 
 > **TL;DR**
 > - **Part 2 of a 4-part series.** [Start at Part 1 →](/posts/the-evaluation-of-recsys-part-1/) if you missed it.
-> - **Factorization Machines (FM)** generalize matrix factorization to arbitrary categorical/numerical features — making them a workhorse for CTR prediction on sparse data.
+> - **Factorization Machines (FM)** generalize matrix factorization to arbitrary categorical/numerical features, making them a workhorse for CTR prediction on sparse data.
 > - **XGBoost** brought robust non-linear ranking via gradient-boosted trees, dominating top-N recommendation tasks in the mid-2010s.
-> - Both hit hard limits on higher-order interactions and sequential behavior — setting up the deep-learning wave in **[Part 3 →](/posts/the-evaluation-of-recsys-part-3/)**.
+> - Both hit hard limits on higher-order interactions and sequential behavior, setting up the deep-learning wave in **[Part 3 →](/posts/the-evaluation-of-recsys-part-3/)**.
 
 Welcome to Part 2 of the RecSys series! In [Part 1](/posts/the-evaluation-of-recsys-part-1/), we traced the evolution of RecSys from content-based filtering (CBF) to collaborative filtering (CF), and finally to Matrix Factorization (MF), which introduced latent factor models to tackle sparsity and scalability. However, MF’s linear assumptions and struggles with implicit feedback (e.g., clicks, views) set the stage for more advanced techniques. In this post, we dive into two pivotal methods from the 2010-2015 era: **Factorization Machines (FM)** and **Gradient Boosted Trees (XGBoost)**.
 
@@ -50,9 +50,9 @@ These limitations prompted the 2010-2015 era, where machine learning techniques 
 
 ## 2. In Layman terms
 
-Imagine you’re shopping in a store for a jacket. In Part 1, MF was like a salesman who suggested jackets based on your ratings, guessing your taste with simple categories like “likes warm jackets” or “prefers casual style.” It worked well when you rated items, but what if you never rating? or what if the assistant only knows you *clicked* on a jacket or *viewed* its picture? MF struggles here because it’s too rigid. Enter **Factorization Machines (FM)** and **XGBoost**—two smarter assistants who arrived around 2010 to fix this.
+Imagine you’re shopping in a store for a jacket. In Part 1, MF was like a salesman who suggested jackets based on your ratings, guessing your taste with simple categories like “likes warm jackets” or “prefers casual style.” It worked well when you rated items, but what if you never rating? or what if the assistant only knows you *clicked* on a jacket or *viewed* its picture? MF struggles here because it’s too rigid. Enter **Factorization Machines (FM)** and **XGBoost**, two smarter assistants who arrived around 2010 to fix this.
 
-- **FM:** It's like a smart salesman who looks at everything—you clicked, the weather, and your profile (e.g., you’re a runner), mixing these clues to suggest a waterproof running jacket if it’s rainy. It’s flexible and can handle all kinds of hints, not just ratings.
+- **FM:** It's like a smart salesman who looks at everything: you clicked, the weather, and your profile (e.g., you’re a runner), mixing these clues to suggest a waterproof running jacket if it’s rainy. It’s flexible and can handle all kinds of hints, not just ratings.
 
 - **XGBoost:** XGBoost is like a super-smart friend who learns from everyone’s shopping habits to suggest the perfect jacket. It builds a decision flowchart (Actually TREE): “If you like bright colors, and it’s winter, and you often buy on weekends, then try this red parka.” It improves its suggestions step by step.
 
@@ -60,7 +60,7 @@ These assistants are more flexible than MF, handling messy data and complex patt
 
 ## 3. Prerequisites
 
-- **Dot product** combines two vectors to measure similarity—think of it as a handshake between features (e.g., user preferences and item traits).
+- **Dot product** combines two vectors to measure similarity. Think of it as a handshake between features (e.g., user preferences and item traits).
 - **Loss function** measures prediction errors (e.g., squared error: {{< math.inline >}} \((y - \hat{y})^2\){{</ math.inline >}}), regularization prevents overfitting, and optimization (e.g., gradient descent) minimizes the loss.
 - **One-hot encoding** transforming raw data (e.g., user IDs, item categories) into usable inputs.
 - From Part 1, recall MF models ratings as {{< math.inline >}} \(\hat{r}_{ui} = p_u^T q_i\){{</ math.inline >}}, where {{< math.inline >}} \(p_u\){{</ math.inline >}} and {{< math.inline >}} \(q_i\){{</ math.inline >}} are latent vectors, but it struggles with implicit feedback.
@@ -202,7 +202,7 @@ At Bing, XGBoost ranks search results by modeling features like query relevance,
 
 ## 6. Conclusion
 
-Part 2 has taken us from MF to FM’s flexible feature interactions and XGBoost’s non-linear ranking power. FM excels in CTR prediction by modeling sparse, implicit data, while XGBoost dominates ranking tasks with its ability to capture complex patterns. However, both methods hit limits—FM’s pairwise focus and XGBoost’s reliance on feature engineering couldn’t keep up with the complexity of modern RecSys. In Part 3, we’ll explore how deep learning overcomes these limitations, tackling unstructured data like images and text with models like Neural Collaborative Filtering and DeepFM, which leverage neural networks for higher-order interactions and automated feature learning.
+Part 2 has taken us from MF to FM’s flexible feature interactions and XGBoost’s non-linear ranking power. FM excels in CTR prediction by modeling sparse, implicit data, while XGBoost dominates ranking tasks with its ability to capture complex patterns. However, both methods hit limits: FM’s pairwise focus and XGBoost’s reliance on feature engineering couldn’t keep up with the complexity of modern RecSys. In Part 3, we’ll explore how deep learning overcomes these limitations, tackling unstructured data like images and text with models like Neural Collaborative Filtering and DeepFM, which leverage neural networks for higher-order interactions and automated feature learning.
 
 ## 7. References
 

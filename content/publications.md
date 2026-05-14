@@ -2,7 +2,7 @@
 title: "Publications"
 layout: "single"
 url: "/publications/"
-description: "Selected peer-reviewed publications by Abdullah Al Mamun, PhD — deep learning and applied machine learning for computational biology, cancer biomarker discovery, and biomedical informatics."
+description: "Selected peer-reviewed publications by Abdullah Al Mamun, PhD on deep learning and applied machine learning for computational biology, cancer biomarker discovery, and biomedical informatics."
 summary: "Selected peer-reviewed publications on deep learning and applied ML for computational biology."
 ShowToc: false
 ShowReadingTime: false
@@ -15,7 +15,7 @@ hidemeta: true
 
 <p class="page-lede">
   A curated set of peer-reviewed work applying deep learning and machine learning
-  to computational biology — cancer biomarker discovery, multi-cancer classification,
+  to computational biology: cancer biomarker discovery, multi-cancer classification,
   and biomedical interpretability. Full list and live citation counts on
   <a href="https://scholar.google.com/citations?user=iMIqKjcAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>.
 </p>
@@ -36,7 +36,7 @@ hidemeta: true
   </p>
   <p class="pub-summary">
     Deep-learning approach (concrete autoencoder) for biomarker discovery across
-    12 cancer types — finds prognostic long non-coding RNAs that survive across
+    12 cancer types. Finds prognostic long non-coding RNAs that survive across
     independent runs, giving clinicians a stable feature set.
   </p>
 </article>
@@ -55,8 +55,8 @@ hidemeta: true
     <em>IEEE International Conference on Bioinformatics and Biomedicine (BIBM 2020)</em>
   </p>
   <p class="pub-summary">
-    Machine-learning feature-selection pipeline for pan-cancer classification —
-    identifies a compact set of lncRNAs that distinguish tumor types, useful for
+    Machine-learning feature-selection pipeline for pan-cancer classification.
+    Identifies a compact set of lncRNAs that distinguish tumor types, useful for
     diagnostic ML models on TCGA.
   </p>
 </article>
@@ -77,7 +77,7 @@ hidemeta: true
   </p>
   <p class="pub-summary">
     Deep-learning pipeline that surfaces cancer-origin glycome genes from
-    high-dimensional expression data — bridging interpretable ML and tumor biology
+    high-dimensional expression data, bridging interpretable ML and tumor biology
     to point at tissue-of-origin signatures.
   </p>
 </article>
@@ -98,7 +98,7 @@ hidemeta: true
   </p>
   <p class="pub-summary">
     Deep learning surfaces genomic signals that differ between racial groups in
-    lung cancer — a societal-impact application of ML to a healthcare-equity
+    lung cancer: a societal-impact application of ML to a healthcare-equity
     problem.
   </p>
 </article>
@@ -119,7 +119,7 @@ hidemeta: true
   </p>
   <p class="pub-summary">
     End-to-end deep neural network for multi-cancer classification using lncRNA
-    expression — outperforms classical ML baselines on the TCGA pan-cancer dataset.
+    expression. Outperforms classical ML baselines on the TCGA pan-cancer dataset.
   </p>
 </article>
 

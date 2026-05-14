@@ -24,7 +24,7 @@ hidemeta: true
       <p class="project-summary">
         A deep-dive series tracing the evolution of recommendation systems from collaborative
         filtering and matrix factorization through Factorization Machines, neural collaborative
-        filtering, Wide &amp; Deep, DeepFM, DIN, DLRM, and AdaTT — with practical evaluation
+        filtering, Wide &amp; Deep, DeepFM, DIN, DLRM, and AdaTT, with practical evaluation
         strategies at each step.
       </p>
       <div class="project-tags">

@@ -14,7 +14,7 @@ hidemeta: true
 
 <section class="page-section">
   <p class="page-lede">
-    Selected talks, panels, and guest lectures. <em>This page is being assembled — check back soon, or
+    Selected talks, panels, and guest lectures. <em>This page is being assembled; check back soon, or
     <a href="/contact/">reach out</a> if you'd like me to speak at your event.</em>
   </p>
 
@@ -37,7 +37,7 @@ hidemeta: true
   <article class="talk-entry">
     <div class="talk-meta">
       <span class="talk-date">Coming soon</span>
-      <span class="talk-venue">— talks page in progress</span>
+      <span class="talk-venue">talks page in progress</span>
     </div>
     <h3 class="talk-title">First entry pending</h3>
     <p class="talk-summary">If you've attended one of my talks (at Atlassian, Meta, ACM BCB, IEEE BIBM, or elsewhere) and want me to add it here, <a href="/contact/">let me know</a>.</p>

@@ -62,7 +62,7 @@ outputs:
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema
-  description: "Abdullah Al Mamun, PhD — Sr. ML Engineer at Atlassian (Central AI). Ex-Meta Ads ML. Writing on RecSys, agentic AI, RL fine-tuning, and LLMs."
+  description: "Abdullah Al Mamun, PhD | Sr. ML Engineer at Atlassian (Central AI). Ex-Meta Ads ML. Writing on RecSys, agentic AI, RL fine-tuning, and LLMs."
   keywords:
     - "Abdullah Al Mamun"
     - "Sr. ML Engineer"

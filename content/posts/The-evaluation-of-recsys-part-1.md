@@ -1,14 +1,14 @@
 ---
 author: ["Abdullah Al Mamun"]
-title: "The Evaluation of RecSys — Part 1: From Content-Based Filtering to Matrix Factorization"
+title: "The Evaluation of RecSys, Part 1: From Content-Based Filtering to Matrix Factorization"
 date: 2025-03-01
 draft: false
 comments: true
 ShowToc: true
 TocOpen: true
 math: true
-description: "Part 1 of a deep-dive series on the evolution of recommendation systems. Covers content-based filtering, collaborative filtering (user/item), and matrix factorization — with loss functions, intuition, and where each technique breaks down."
-summary: "Part 1 of a 4-part series tracing how RecSys evolved from content-based filtering through collaborative filtering to matrix factorization — and where each technique falls short, setting up the next breakthrough."
+description: "Part 1 of a deep-dive series on the evolution of recommendation systems. Covers content-based filtering, collaborative filtering (user/item), and matrix factorization, with loss functions, intuition, and where each technique breaks down."
+summary: "Part 1 of a 4-part series tracing how RecSys evolved from content-based filtering through collaborative filtering to matrix factorization, and where each technique falls short, setting up the next breakthrough."
 keywords:
   - "recommendation systems"
   - "collaborative filtering"
@@ -32,12 +32,12 @@ series:
 
 > **TL;DR**
 > - This is **Part 1 of a 4-part deep-dive** on recommendation systems.
-> - We cover **content-based filtering**, **collaborative filtering** (user-based & item-based), and **matrix factorization** — with the math, loss functions, and where each breaks down.
+> - We cover **content-based filtering**, **collaborative filtering** (user-based & item-based), and **matrix factorization**, with the math, loss functions, and where each breaks down.
 > - By the end you'll know why MF dominated 2010-era RecSys but couldn't handle sparse, non-linear, sequential patterns.
 > - **[Read Part 2 →](/posts/the-evaluation-of-recsys-part-2/)** picks up with Factorization Machines and XGBoost.
 
 Recommendation systems (RecSys) play a critical role in modern AI-driven applications. From e-commerce to social media, search engines, and online advertising, personalized recommendations significantly impact user experience and business revenue. This blog series is intended for both beginners and experienced ML practitioners who want to understand the evaluation of recommendation systems in a structured manner.  
-I’ll discuss early tech briefly and deep dive into the latest innovations. For each technique, I’ll break down key concepts, their loss functions (how they learn), inputs/outputs, features, and limitations—why they weren’t enough, and how the next breakthrough fixed the flaws. But first things first:
+I’ll discuss early tech briefly and deep dive into the latest innovations. For each technique, I’ll break down key concepts, their loss functions (how they learn), inputs/outputs, features, and limitations: why they weren’t enough, and how the next breakthrough fixed the flaws. But first things first:
 
 ## 1. What is a Recommendation System?
 
@@ -91,18 +91,18 @@ It reduces information overload and boosts user engagement by personalizing cont
 Imagine you’re at a buffet with endless dishes, but you only have time to pick a few. A recommendation system is like a smart friend who knows your taste. There are three classic ways it works:
 
 **Content-Based Filtering (The “What You Like” Friend):**  
-This friend looks at what you’ve eaten before—like spicy tacos—and suggests more spicy stuff, like chili soup. It builds a “you” profile (loves spicy!) and a “food” profile (this dish is spicy!) to match them up.  
+This friend looks at what you’ve eaten before (like spicy tacos) and suggests more spicy stuff, like chili soup. It builds a “you” profile (loves spicy!) and a “food” profile (this dish is spicy!) to match them up.  
 **Example:**  You watch a sci-fi movie on Netflix, so it suggests Star Wars next because it’s similar. Easy, right?
 
 **Collaborative Filtering (The “Crowd Wisdom” Friend):**  
-This friend doesn’t care what the food is—they watch other people. If you and your buddy both liked pizza, and your buddy also loved sushi, they’ll suggest sushi to you.  
+This friend doesn’t care what the food is; they watch other people. If you and your buddy both liked pizza, and your buddy also loved sushi, they’ll suggest sushi to you.  
 **Example:**  On Amazon, you buy a phone case, and it suggests a charger because others who bought cases also grabbed chargers.
 
 **Matrix Factorization (The “Secret Code” Friend):**  
-Now imagine your friend cracking a secret code. They don’t just look at what you ate or what others did—they figure out why you liked it.  
+Now imagine your friend cracking a secret code. They don’t just look at what you ate or what others did; they figure out why you liked it.  
 **Example:**  You rate action movies high on Netflix. It figures you like “fast pacing” and “hero vibes,” so it suggests *Mad Max* even if you’ve never seen it before.
 
-Each method has strengths, but they stumble too—new users or items can confuse them, or they miss the bigger picture. That’s why we keep inventing better friends!
+Each method has strengths, but they stumble too: new users or items can confuse them, or they miss the bigger picture. That’s why we keep inventing better friends!
 
 ## 4. Technical Deep Dive
 
