@@ -2,8 +2,8 @@
 title: "Publications"
 layout: "single"
 url: "/publications/"
-description: "Selected peer-reviewed publications by Abdullah Al Mamun, PhD — deep learning, evolutionary computation, and applied machine learning across cybersecurity and computational biology."
-summary: "Selected peer-reviewed publications on deep learning, evolutionary ML, and applied AI."
+description: "Selected peer-reviewed publications by Abdullah Al Mamun, PhD — deep learning and applied machine learning for computational biology, cancer biomarker discovery, and biomedical informatics."
+summary: "Selected peer-reviewed publications on deep learning and applied ML for computational biology."
 ShowToc: false
 ShowReadingTime: false
 ShowBreadCrumbs: false
@@ -14,50 +14,11 @@ hidemeta: true
 <section class="page-section">
 
 <p class="page-lede">
-  A curated set of peer-reviewed work spanning deep learning, evolutionary
-  machine learning, and applied AI across cybersecurity and computational
-  biology. Full list and live citation counts on
+  A curated set of peer-reviewed work applying deep learning and machine learning
+  to computational biology — cancer biomarker discovery, multi-cancer classification,
+  and biomedical interpretability. Full list and live citation counts on
   <a href="https://scholar.google.com/citations?user=iMIqKjcAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>.
 </p>
-
-<article class="pub-entry">
-  <p class="pub-year">2025</p>
-  <h3 class="pub-title">
-    <a href="https://doi.org/10.1016/j.cose.2024.104185" target="_blank" rel="noopener">
-      Genetic programming for enhanced detection of Advanced Persistent Threats through feature construction
-    </a>
-  </h3>
-  <p class="pub-authors">
-    <strong>Abdullah Al Mamun</strong>, Harith Al-Sahaf, Ian Welch, Seyit Camtepe
-  </p>
-  <p class="pub-venue">
-    <em>Computers &amp; Security</em>, vol. 149, 104185 &nbsp;·&nbsp; Elsevier &nbsp;·&nbsp; Q1, IF&nbsp;~5.6
-  </p>
-  <p class="pub-summary">
-    Uses genetic programming to <em>automatically construct</em> features that catch
-    advanced persistent threats — outperforming hand-engineered baselines on
-    benchmark intrusion datasets.
-  </p>
-</article>
-
-<article class="pub-entry">
-  <p class="pub-year">2024</p>
-  <h3 class="pub-title">
-    <a href="https://doi.org/10.1016/j.asoc.2024.112447" target="_blank" rel="noopener">
-      Detection of Advanced Persistent Threat: A genetic programming approach
-    </a>
-  </h3>
-  <p class="pub-authors">
-    <strong>Abdullah Al Mamun</strong>, Harith Al-Sahaf, Ian Welch, Masood Mansoori, Seyit Camtepe
-  </p>
-  <p class="pub-venue">
-    <em>Applied Soft Computing</em>, vol. 167, 112447 &nbsp;·&nbsp; Elsevier &nbsp;·&nbsp; Q1, IF&nbsp;~8.7
-  </p>
-  <p class="pub-summary">
-    Evolutionary ML for cybersecurity — proposes a GP framework for APT detection
-    that generalizes across attack families with interpretable detection rules.
-  </p>
-</article>
 
 <article class="pub-entry">
   <p class="pub-year">2021</p>
@@ -83,7 +44,48 @@ hidemeta: true
 <article class="pub-entry">
   <p class="pub-year">2020</p>
   <h3 class="pub-title">
-    <a href="https://doi.org/10.1109/BIBM49941.2020.9313454" target="_blank" rel="noopener">
+    <a href="https://doi.org/10.1109/BIBM49941.2020.9313332" target="_blank" rel="noopener">
+      Pan-cancer feature selection and classification reveals important long non-coding RNAs
+    </a>
+  </h3>
+  <p class="pub-authors">
+    <strong>Abdullah Al Mamun</strong>, Wenrui Duan, Ananda Mohan Mondal
+  </p>
+  <p class="pub-venue">
+    <em>IEEE International Conference on Bioinformatics and Biomedicine (BIBM 2020)</em>
+  </p>
+  <p class="pub-summary">
+    Machine-learning feature-selection pipeline for pan-cancer classification —
+    identifies a compact set of lncRNAs that distinguish tumor types, useful for
+    diagnostic ML models on TCGA.
+  </p>
+</article>
+
+<article class="pub-entry">
+  <p class="pub-year">2020</p>
+  <h3 class="pub-title">
+    <a href="https://doi.org/10.1109/BIBM49941.2020.9313450" target="_blank" rel="noopener">
+      Deep learning to discover cancer glycome genes signifying the origins of cancer
+    </a>
+  </h3>
+  <p class="pub-authors">
+    <strong>Abdullah Al Mamun</strong>, Masrur Sobhan, Raihanul Bari Tanvir,
+    Charles J. Dimitroff, Ananda Mohan Mondal
+  </p>
+  <p class="pub-venue">
+    <em>IEEE International Conference on Bioinformatics and Biomedicine (BIBM 2020)</em>
+  </p>
+  <p class="pub-summary">
+    Deep-learning pipeline that surfaces cancer-origin glycome genes from
+    high-dimensional expression data — bridging interpretable ML and tumor biology
+    to point at tissue-of-origin signatures.
+  </p>
+</article>
+
+<article class="pub-entry">
+  <p class="pub-year">2020</p>
+  <h3 class="pub-title">
+    <a href="https://doi.org/10.1109/BIBM49941.2020.9313426" target="_blank" rel="noopener">
       Deep learning to discover genomic signatures for racial disparity in lung cancer
     </a>
   </h3>
@@ -104,7 +106,7 @@ hidemeta: true
 <article class="pub-entry">
   <p class="pub-year">2019</p>
   <h3 class="pub-title">
-    <a href="https://doi.org/10.1145/3307339.3343267" target="_blank" rel="noopener">
+    <a href="https://doi.org/10.1145/3307339.3343249" target="_blank" rel="noopener">
       Long non-coding RNA based cancer classification using deep neural networks
     </a>
   </h3>
