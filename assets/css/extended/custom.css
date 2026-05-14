@@ -61,8 +61,7 @@ iframe {
   border: 1px solid var(--border);
 }
 
-/*Share button*/
-/* Share Wrapper */
+/* Share buttons — use theme variables so light + dark mode both look right */
 .share-wrapper {
   display: flex;
   flex-direction: column;
@@ -71,99 +70,87 @@ iframe {
   margin-top: 2rem;
 }
 
-
-/* Social Icon Buttons */
 .share-buttons {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 1.5rem;
-  padding: 15px 120px;
+  padding: 15px 0;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .share-buttons a {
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #1f1f1f;
-  color: white;
-  font-size: 1.3rem;
+  background-color: var(--tertiary);
+  color: var(--primary);
+  font-size: 1.1rem;
   text-decoration: none;
-  transition: transform 0.2s ease, background-color 0.3s ease;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
 .share-buttons a:hover {
-  transform: scale(1.1);
-  background-color: #1DA1F2;
-  color: white;
+  transform: scale(1.08);
+  background-color: var(--brand);
+  color: var(--brand-contrast);
 }
+.share-buttons a:hover svg { fill: var(--brand-contrast); }
 
-/* Recent post */
-/* Recent Posts Styling */
+/* Recent posts (rendered after each blog post) */
 .recent-posts {
-  padding: 1rem;
-  /* margin-top: -100px !important; */
-  margin: 0 auto; /* centers the entire block horizontally */
-  max-width: 1000px; /* Keep a max-width for large screens */
-  text-align: center; /* Center the text */
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center the posts */
-  justify-content: center;
+  padding: 1rem 0;
+  margin: 2rem auto 0 auto;
+  max-width: 1000px;
+  text-align: center;
 }
 
 .headline {
   text-align: center;
-  margin-left: 0;
-  margin-bottom: 30px;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.2rem;
+  color: var(--primary);
 }
 
 .recent-posts .card-grid {
   display: flex;
   justify-content: center;
-  gap: 2rem;
+  gap: 1.2rem;
   flex-wrap: wrap;
   margin-top: 1rem;
 }
 
 .post-card {
-  background-color: #1e1e1e;
-  border-radius: 10px;
-  text-align: center;
-  padding: 1.2rem;
-  width: 300px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  color: white;
+  background-color: var(--entry);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: left;
+  padding: 1.1rem 1.2rem;
+  width: 280px;
+  color: var(--primary);
   text-decoration: none;
-  transition: transform 0.2s ease;
-  border: 1px solid white;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .post-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
+  border-color: var(--brand);
 }
 
 .post-card h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  margin: 0 0 0.4rem 0;
+  color: var(--primary);
+  line-height: 1.35;
 }
 
 .post-date {
-  font-size: 0.85rem;
-  color: #aaa;
-}
-.first-entry{
-  background-color:red !important;
-  padding: 20px;
-}
-.post-entry, .first-entry, .tag-entry {
-  background-color: #2E2E33 !important;
-  margin: 5 !important;
-  padding:20 !important;
+  font-size: 0.82rem;
+  color: var(--secondary);
 }
 .hero-title{
   margin-bottom: 10px;
@@ -240,49 +227,55 @@ iframe {
   margin-right: 40px; /* Increased right margin for more spacing */
   transition: color 0.3s ease;
 }
+/* Post-page subscribe form (rendered by extend_post_content.html) */
 .follow-form {
-  
   display: flex;
-  color: white;
   justify-content: center;
   align-items: center;
-
- 
+  margin: 1.5rem 0;
 }
 
 .follow-form form {
   display: flex;
   gap: 0.5rem;
-  padding: 0.6rem 1rem;
-  background-color: #6c63ff;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 0.9rem 1.1rem;
+  background-color: var(--entry);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .follow-form input[type="email"] {
-  padding: 6px 10px;
-  font-size: 14px;
-  color: white;
-  background-color:#1D1E20;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 220px;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.92rem;
+  color: var(--primary);
+  background-color: var(--theme);
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  width: 240px;
   outline: none;
+}
+.follow-form input[type="email"]:focus {
+  outline: 2px solid var(--brand);
+  outline-offset: 1px;
 }
 
 .follow-form button {
-  padding: 6px 14px;
-  font-size: 14px;
-  background-color:#1D1E20;
-  color: white;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.92rem;
+  background-color: var(--brand);
+  color: var(--brand-contrast);
   border: none;
-  border-radius: 5px;
+  border-radius: 999px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.15s ease;
 }
 
 .follow-form button:hover {
-  background-color: #201b1b;
+  background-color: var(--brand-hover);
+  transform: translateY(-1px);
 }
 
 #menu {
@@ -783,6 +776,83 @@ iframe {
   font-size: 0.88rem;
   color: var(--secondary);
   text-align: center;
+}
+
+/* =========================================================
+   Custom 404 page (layouts/404.html)
+   ========================================================= */
+.not-found {
+  max-width: 720px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+.nf-eyebrow {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  color: var(--brand);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.nf-title {
+  font-size: 2rem;
+  margin: 0.6rem 0 0.9rem 0;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.nf-sub {
+  font-size: 1rem;
+  color: var(--secondary);
+  margin: 0 0 1.6rem 0;
+  line-height: 1.6;
+}
+.nf-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+.nf-recent {
+  text-align: left;
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+.nf-recent-title {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--brand);
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+}
+.nf-recent-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.nf-recent-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-bottom: 1px dashed var(--border);
+}
+.nf-recent-list li:last-child { border-bottom: none; }
+.nf-recent-list a {
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 0.96rem;
+  flex: 1;
+}
+.nf-recent-list a:hover { color: var(--brand); }
+.nf-recent-date {
+  font-size: 0.82rem;
+  color: var(--secondary);
+  white-space: nowrap;
 }
 
 /* Resume: print-friendly */

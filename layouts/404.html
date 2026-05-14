@@ -1,0 +1,31 @@
+{{- define "main" -}}
+<section class="not-found">
+  <p class="nf-eyebrow">Error 404</p>
+  <h1 class="nf-title">This page got lost in the latent space.</h1>
+  <p class="nf-sub">
+    The page you&rsquo;re looking for doesn&rsquo;t exist (anymore), or the link is malformed.
+    But while you&rsquo;re here &mdash;
+  </p>
+
+  <div class="nf-actions">
+    <a class="btn-primary" href="{{ "/" | absURL }}">&larr; Go home</a>
+    <a class="btn-ghost"   href="{{ "/archives/" | absURL }}">Read the blog</a>
+    <a class="btn-ghost"   href="{{ "/search/"   | absURL }}">Search the site</a>
+  </div>
+
+  {{- $recent := first 4 (where site.RegularPages "Section" "posts") -}}
+  {{- if $recent }}
+  <div class="nf-recent">
+    <h2 class="nf-recent-title">Or try one of these recent posts</h2>
+    <ul class="nf-recent-list">
+      {{- range $recent }}
+      <li>
+        <a href="{{ .Permalink }}">{{ .Title }}</a>
+        <span class="nf-recent-date">{{ .Date.Format "Jan 2, 2006" }}</span>
+      </li>
+      {{- end }}
+    </ul>
+  </div>
+  {{- end }}
+</section>
+{{- end -}}
