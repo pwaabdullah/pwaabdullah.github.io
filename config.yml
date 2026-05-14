@@ -32,24 +32,27 @@ languages:
         - name: Blog
           url: archives
           weight: 4
+        - name: Publications
+          url: publications
+          weight: 5
         - name: About
           url: about
-          weight: 5
+          weight: 6
         - name: Resume
           url: resume
-          weight: 6
+          weight: 7
         - name: Linkedin
           url: https://www.linkedin.com/in/newabdullah/
-          weight: 7
+          weight: 8
           pre: "<i class='fab fa-linkedin'></i>"
           params:
             target: "_blank"
         - name: Contact
           url: contact
-          weight: 8
+          weight: 9
         - name: Search
           url: search/
-          weight: 9
+          weight: 10
 
 outputs:
   home:
