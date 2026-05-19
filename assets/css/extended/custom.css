@@ -163,36 +163,6 @@ iframe {
   color: white;
 }
 
-/* Menu */
-.menu {
-  display: flex;
-  gap: 1rem;
-  list-style: none;
-}
-
-@media (max-width: 768px) {
-  .menu {
-    display: none;
-    flex-direction: column;
-    background: #111;
-    padding: 1rem;
-    position: absolute;
-    top: 60px; /* adjust based on your header height */
-    right: 20px;
-    border-radius: 10px;
-    z-index: 1000;
-  }
-
-  .menu.show {
-    display: flex;
-  }
-
-  .hamburger-icon {
-    display: block;
-    margin-right: 20px;
-  }
-}
-
 /* Buy me a coffee */
 .buy-me-a-coffee {
   display: flex;
@@ -215,18 +185,31 @@ iframe {
   transform: scale(1.1);
 }
 
-/* Responsive Navigation Menu Styles */
+/* Mobile hamburger button — hidden on desktop, visible on mobile via the
+   @media block further down. The button itself is rendered in
+   layouts/_partials/header.html. */
 .menu-toggle {
   display: none;
-  font-size: 36px;
   background: none;
   border: none;
-  color: inherit;
+  color: var(--primary);
   cursor: pointer;
-  margin-left: auto;
-  margin-right: 40px; /* Increased right margin for more spacing */
-  transition: color 0.3s ease;
+  padding: 0.5rem;
+  line-height: 0;
+  border-radius: 6px;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
+.menu-toggle:hover { color: var(--brand); }
+.menu-toggle:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.menu-toggle svg {
+  width: 26px;
+  height: 26px;
+  stroke: currentColor;
+}
+
 /* Post-page subscribe form (rendered by extend_post_content.html) */
 .follow-form {
   display: flex;
@@ -388,63 +371,58 @@ iframe {
       font-size: 0.95rem;
       padding: 0.5rem 1rem;
   }
-  .hamburger-icon {
-    display: block;
-  }
 
-  .menu-toggle:hover {
-      color: var(--accent); /* Change color on hover */
-  }
-  .menu-toggle {
-      display: block;
-  }
+  /* ----- Mobile nav: hamburger button + slide-down menu ----- */
+  .menu-toggle { display: inline-flex; align-items: center; justify-content: center; }
 
   #menu {
       display: none;
       flex-direction: column;
-      background-color: var(--theme) !important;
+      align-items: stretch;
+      background-color: var(--theme);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
       position: absolute;
-      top: 60px;
-      left: 0;
-      width: 100%;
-      padding: 1rem;
+      top: calc(100% + 8px);
+      right: 12px;
+      min-width: 220px;
+      max-width: calc(100vw - 24px);
+      padding: 0.5rem;
+      gap: 0;
       z-index: 99;
-      transform: translateY(-100%); /* Start menu off-screen */
   }
+  #menu.show { display: flex; }
 
-  #menu.show {
-      display: flex;
-      transform: translateY(0); /* Slide the menu in */
-  }
+  #menu li { width: 100%; }
 
   #menu li a {
-      color: var(--primary) !important;
-      padding: 0px 0px; /* Decreased top and bottom padding */
-      text-align: center;
-      display: block;
-      font-size: 16px; /* Slightly smaller font for mobile */
-      border-bottom: 1px solid var(--border); /* Optional border for better separation */
+      padding: 0.75rem 1rem !important;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      width: 100%;
   }
-
-  #menu li:last-child a {
-      border-bottom: none; /* Remove border on the last item */
+  #menu li a:hover {
+      background-color: var(--tertiary);
   }
+  /* Disable the underline-hover effect on mobile (looks odd in a stacked list) */
+  #menu li a::after { display: none; }
 
-  /* Styling for the backdrop (optional) */
-  .backdrop {
+  /* Click-outside backdrop. The .show + .backdrop combinator means the
+     backdrop element must be the immediate next sibling of #menu in
+     header.html. */
+  .menu-backdrop {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.5);
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.35);
       z-index: 98;
   }
-
-  #menu.show + .backdrop {
-      display: block;
-  }
+  #menu.show ~ .menu-backdrop { display: block; }
 }
 
 /* =========================================================
