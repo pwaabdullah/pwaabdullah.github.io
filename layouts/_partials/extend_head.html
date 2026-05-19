@@ -20,6 +20,12 @@
   <link rel="stylesheet" href="assets/css/extended/custom.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+{{/* ----- Force noindex on the 404 page so stale dead URLs Google still
+       has cached eventually get dropped from the index. ----- */}}
+{{- if eq .Kind "404" -}}
+<meta name="robots" content="noindex, nofollow">
+{{- end -}}
+
 {{/* ----- Search bundle (also load on /archives/ so its inline search box works) ----- */}}
 {{- if eq .Layout "archives" -}}
 <link crossorigin="anonymous" rel="preload" as="fetch" href="/index.json">
