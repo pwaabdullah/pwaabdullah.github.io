@@ -91,7 +91,7 @@ params:
     sameAs:
       - "https://www.linkedin.com/in/newabdullah/"
       - "https://github.com/pwaabdullah"
-      - "https://scholar.google.com/citations?user=iMIqKjcAAAAJ"
+      - "https://scholar.google.com/citations?user=5FpaV00AAAAJ"
       - "https://x.com/newmamun"
 
   # Social handle for twitter:site / twitter:creator meta.
@@ -152,5 +152,17 @@ markup:
   goldmark:
     renderer:
       unsafe: true
+    extensions:
+      # Preserve LaTeX inside math delimiters so MathJax (loaded in
+      # extend_head.html) can render them. Without this, Goldmark eats
+      # backslash escapes and \( ... \) becomes ( ... ) in output.
+      passthrough:
+        enable: true
+        delimiters:
+          block:
+            - ["\\[", "\\]"]
+            - ["$$", "$$"]
+          inline:
+            - ["\\(", "\\)"]
   highlight:
     noClasses: false

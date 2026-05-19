@@ -17,7 +17,7 @@ hidemeta: true
   A curated set of peer-reviewed work applying deep learning and machine learning
   to computational biology: cancer biomarker discovery, multi-cancer classification,
   and biomedical interpretability. Full list and live citation counts on
-  <a href="https://scholar.google.com/citations?user=iMIqKjcAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>.
+  <a href="https://scholar.google.com/citations?user=5FpaV00AAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>.
 </p>
 
 <article class="pub-entry">
@@ -125,7 +125,7 @@ hidemeta: true
 
 <p class="pub-footnote">
   For the complete list, conference proceedings, and live citation counts, see
-  <a href="https://scholar.google.com/citations?user=iMIqKjcAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>.
+  <a href="https://scholar.google.com/citations?user=5FpaV00AAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>.
 </p>
 
 </section>
