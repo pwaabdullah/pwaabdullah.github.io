@@ -1,8 +1,10 @@
 ---
-#title: "Abdullah Al Mamun"
+title: "About"
+hideTitle: true
 layout: "about"
 type: "page"
 summary: "about"
+description: "About Abdullah Al Mamun, PhD | Sr. ML Engineer at Atlassian (Central AI). Ex-Meta Ads ML. Background in RecSys, multi-agent AI, RL fine-tuning, and LLMs."
 ---
 
 <!-- Profile Section -->

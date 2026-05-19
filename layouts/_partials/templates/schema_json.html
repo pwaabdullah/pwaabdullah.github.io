@@ -33,44 +33,49 @@
 }
 </script>
 {{- else if (or .IsPage .IsSection) }}
-{{/* BreadcrumbList */}}
+{{/* BreadcrumbList — collect ancestor crumbs first, then render, dropping
+     any item whose name would be empty. Google Search Console rejects
+     itemListElement entries without a "name". */}}
 {{- $url := replace .Parent.Permalink ( printf "%s" site.Home.Permalink) "" }}
 {{- $lang_url := strings.TrimPrefix ( printf "%s/" .Lang) $url }}
 {{- $bc_list := (split $lang_url "/")}}
 
+{{- $crumbs := slice }}
 {{- $scratch := newScratch }}
+{{- range $index, $element := $bc_list }}
+  {{- $scratch.Add "path" (printf "%s/" $element ) | safeJS }}
+  {{- $bc_pg := site.GetPage ($scratch.Get "path") -}}
+  {{- if (and ($bc_pg) (gt (len . ) 0)) }}
+    {{- $name := $bc_pg.Name | default $bc_pg.Title | default $bc_pg.LinkTitle }}
+    {{- if $name }}
+      {{- $crumbs = $crumbs | append (dict "name" $name "url" $bc_pg.Permalink) }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- /* Self-page entry */ -}}
+{{- $selfName := .Name | default .Title | default .LinkTitle }}
+{{- if $selfName }}
+  {{- $crumbs = $crumbs | append (dict "name" $selfName "url" .Permalink) }}
+{{- end }}
+
+{{- if $crumbs }}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-  {{- range $index, $element := $bc_list }}
-
-    {{- $scratch.Add "path" (printf "%s/" $element ) | safeJS }}
-    {{- $bc_pg := site.GetPage ($scratch.Get "path") -}}
-
-    {{- if (and ($bc_pg) (gt (len . ) 0))}}
-    {{- if (and $index)}}, {{end }}
+  {{- range $i, $c := $crumbs }}{{ if $i }},{{ end }}
     {
       "@type": "ListItem",
-      "position": {{ add 1 $index  }},
-      "name": {{ $bc_pg.Name }},
-      "item": {{ $bc_pg.Permalink | safeHTML }}
+      "position": {{ add 1 $i }},
+      "name": {{ $c.name }},
+      "item": {{ $c.url | safeHTML }}
     }
-    {{- end }}
-
   {{- end }}
-  {{- /*  self-page addition  */ -}}
-  {{- if (ge (len $bc_list) 2) }}, {{end }}
-    {
-      "@type": "ListItem",
-      "position": {{len $bc_list}},
-      "name": {{ .Name }},
-      "item": {{ .Permalink | safeHTML }}
-    }
   ]
 }
 </script>
+{{- end }}
 {{- if .IsPage }}
 <script type="application/ld+json">
 {

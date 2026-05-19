@@ -1,6 +1,8 @@
 ---
-#title: "Contact"
+title: "Contact"
+hideTitle: true
 url: "/contact/"
+description: "Get in touch with Abdullah Al Mamun, PhD | Sr. ML Engineer at Atlassian."
 ---
 
 
