@@ -84,19 +84,6 @@
             </div>
             {{- end }}
         </div>
-        {{- /* Mobile hamburger toggle — hidden on desktop via CSS,
-               shown on screens ≤768px. JS at the bottom of this file
-               toggles the .show class on #menu. */}}
-        <button class="menu-toggle" id="menu-toggle" type="button"
-                aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="menu">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-        </button>
-
         {{- $currentPage := . }}
         <ul id="menu" class="menu">
             {{- range site.Menus.main }}
@@ -127,33 +114,5 @@
             </li>
             {{- end }}
         </ul>
-        {{- /* Click-outside backdrop. Sibling of #menu so CSS `~` works. */}}
-        <div class="menu-backdrop" aria-hidden="true"></div>
     </nav>
 </header>
-
-<script>
-  (function () {
-    var btn = document.getElementById('menu-toggle');
-    var menu = document.getElementById('menu');
-    if (!btn || !menu) return;
-    var backdrop = menu.parentNode.querySelector('.menu-backdrop');
-
-    function setOpen(open) {
-      menu.classList.toggle('show', open);
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    }
-    btn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      setOpen(!menu.classList.contains('show'));
-    });
-    if (backdrop) backdrop.addEventListener('click', function () { setOpen(false); });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') setOpen(false);
-    });
-    // Close after tapping a menu link (so navigation feels snappy on mobile)
-    menu.addEventListener('click', function (e) {
-      if (e.target.closest('a')) setOpen(false);
-    });
-  })();
-</script>
