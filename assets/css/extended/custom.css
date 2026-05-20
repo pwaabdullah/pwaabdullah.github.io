@@ -155,13 +155,6 @@ iframe {
 .hero-title{
   margin-bottom: 10px;
 }
-/* Hamburger Icon */
-.hamburger-icon {
-  display: none;
-  cursor: pointer;
-  font-size: 28px;
-  color: white;
-}
 
 /* Buy me a coffee */
 .buy-me-a-coffee {
