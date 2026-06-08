@@ -1,6 +1,10 @@
 ---
 title: Gallery
 layout: gallery
+build:
+  render: never
+  list: never
+  publishResources: false
 ---
 
 

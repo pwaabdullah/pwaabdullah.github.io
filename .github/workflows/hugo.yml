@@ -54,6 +54,7 @@ jobs:
           #   - https://pwaabdullah.github.io on the dev repo (no custom domain)
           # Same workflow file therefore works correctly in both repos.
           hugo \
+            --cleanDestinationDir \
             --gc \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
