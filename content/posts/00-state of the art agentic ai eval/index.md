@@ -1,26 +1,23 @@
 ---
 author: ["Abdullah Al Mamun"]
-title: "State of the Art: Agentic AI Evaluation, End-to-End"
+title: "The Missing Layer in Agentic AI: Why Evaluation Is the Next Enterprise Platform"
 date: 2026-06-09
 draft: false
 comments: true
-hideTitle: true
-hideMeta: true
+hideTitle: false
+hideMeta: false
 ShowToc: false
 disableAnchoredHeadings: true
 slug: "state-of-the-art-agentic-ai-evaluation-end-to-end"
 ---
 
-# State of the Art: Agentic AI Evaluation, End-to-End
-**Deep Research Report | June 2026**
-
 ---
 
 ## Executive Summary
 
-The original assessment, *"pieces exist, but no universally accepted complete end-to-end standard,"* is still broadly correct as of June 2026. But the landscape has moved significantly. The field is no longer just fragmented primitives; it is coalescing around a recognizable architecture. Several frontier labs, government bodies, and independent researchers have published frameworks, benchmarks, and papers in the last 12 months that together constitute a near-complete stack.
+Agentic AI is entering enterprise deployment faster than its evaluation infrastructure is maturing. Most teams can now observe traces and benchmark outcomes, but they still cannot reliably grade how agents behave in production across coordination quality, trajectory correctness, and safety compliance. That missing layer is becoming a strategic bottleneck for executive teams deciding where to place platform bets.
 
-The remaining gap is now more precisely defined. The **observability layer** (capturing traces) is largely solved by [OpenTelemetry](https://opentelemetry.io) GenAI conventions, [AgentOps](https://www.agentops.ai), and [OWASP AOS](https://aos.owasp.org). The **benchmark comparison layer** (model × task scores) is largely solved by [HAL](https://hal.cs.princeton.edu), [GAIA](https://arxiv.org/abs/2311.12983), and [SWE-bench](https://www.swebench.com) leaderboards. What does not exist is the **evaluation layer** sitting between them: an open, domain-agnostic grader that takes any OTel-compatible agent trace and scores it on coordination quality, trajectory correctness, and safety compliance, combined with a community leaderboard where anyone submits results for any agent on any task. That is the specific gap and the project opportunity.
+As of June 2026, the market has largely solved two layers: **observability** (OpenTelemetry GenAI conventions, [AgentOps](https://www.agentops.ai), [OWASP AOS](https://aos.owasp.org)) and **benchmark comparison** ([HAL](https://hal.cs.princeton.edu), [GAIA](https://arxiv.org/abs/2311.12983), [SWE-bench](https://www.swebench.com)). The unresolved layer sits between them: an open, framework-agnostic evaluation protocol that takes any OTel-compatible trace and scores agent behavior end-to-end. That gap is not only a research problem; it is now a platform opportunity with direct implications for deployment risk, governance, and competitive advantage.
 
 ---
 
