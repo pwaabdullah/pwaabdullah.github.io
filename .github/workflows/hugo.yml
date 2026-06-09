@@ -74,3 +74,39 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  promote-prod:
+    if: github.repository == 'pwaabdullah/pwaabdullah.github.io' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Configure git identity for promotion commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Configure SSH for prod push
+        env:
+          PROD_DEPLOY_KEY: ${{ secrets.PROD_DEPLOY_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$PROD_DEPLOY_KEY" > ~/.ssh/prod_promote_key
+          chmod 600 ~/.ssh/prod_promote_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          cat >> ~/.ssh/config <<'EOF'
+          Host github.com
+            IdentityFile ~/.ssh/prod_promote_key
+            IdentitiesOnly yes
+          EOF
+
+      - name: Add prod remote
+        run: git remote add prod git@github.com:pwaabdullah/newabdullah.com.git
+
+      - name: Promote current main to prod
+        run: bash scripts/promote-to-prod.sh
