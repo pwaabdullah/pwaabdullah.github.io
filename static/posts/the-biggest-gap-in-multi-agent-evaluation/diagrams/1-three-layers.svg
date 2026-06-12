@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 340" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#cbd5e1"/>
+    </marker>
+  </defs>
+  <rect width="760" height="340" fill="#ffffff"/>
+
+  <text x="380" y="44" text-anchor="middle" font-size="22" font-weight="700" fill="#0f172a">The Three Layers of Agent Evaluation</text>
+  <text x="380" y="70" text-anchor="middle" font-size="14" fill="#64748b">We built both ends. The middle is missing.</text>
+
+  <!-- Box 1: Observability -->
+  <rect x="30" y="100" width="200" height="160" rx="14" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <text x="130" y="138" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">Observability</text>
+  <text x="130" y="166" text-anchor="middle" font-size="13" fill="#475569">What happened?</text>
+  <rect x="62" y="208" width="136" height="30" rx="15" fill="#dcfce7"/>
+  <circle cx="84" cy="223" r="5" fill="#16a34a"/>
+  <text x="134" y="227" text-anchor="middle" font-size="13" font-weight="600" fill="#15803d">Solved</text>
+
+  <path d="M232 180 L278 180" stroke="#cbd5e1" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <!-- Box 2: Evaluation (the gap) -->
+  <rect x="280" y="100" width="200" height="160" rx="14" fill="#fef2f2" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="7 5"/>
+  <text x="380" y="138" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">Evaluation</text>
+  <text x="380" y="166" text-anchor="middle" font-size="13" fill="#475569">How well did it behave?</text>
+  <rect x="312" y="208" width="136" height="30" rx="15" fill="#fee2e2"/>
+  <circle cx="334" cy="223" r="5" fill="#dc2626"/>
+  <text x="386" y="227" text-anchor="middle" font-size="13" font-weight="700" fill="#b91c1c">The Gap</text>
+
+  <path d="M482 180 L528 180" stroke="#cbd5e1" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <!-- Box 3: Benchmarks -->
+  <rect x="530" y="100" width="200" height="160" rx="14" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+  <text x="630" y="138" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">Benchmarks</text>
+  <text x="630" y="166" text-anchor="middle" font-size="13" fill="#475569">Did it succeed?</text>
+  <rect x="562" y="208" width="136" height="30" rx="15" fill="#fef3c7"/>
+  <circle cx="584" cy="223" r="5" fill="#d97706"/>
+  <text x="636" y="227" text-anchor="middle" font-size="12.5" font-weight="600" fill="#b45309">Mostly solved</text>
+
+  <text x="380" y="305" text-anchor="middle" font-size="12.5" fill="#94a3b8">Observability captures the trace  ·  Evaluation grades the behavior  ·  Benchmarks check the outcome</text>
+</svg>

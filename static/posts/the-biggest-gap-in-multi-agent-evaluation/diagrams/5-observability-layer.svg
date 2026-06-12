@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 470" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a5" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect width="760" height="470" fill="#ffffff"/>
+
+  <text x="380" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#0f172a">The Observability Layer</text>
+  <text x="380" y="64" text-anchor="middle" font-size="14" fill="#64748b">Every step of one agent run, captured by the trace.</text>
+
+  <!-- edges -->
+  <path d="M380 124 L380 150" stroke="#94a3b8" stroke-width="2" marker-end="url(#a5)"/>
+  <!-- planner split -->
+  <polyline points="380,192 380,214 190,214 190,236" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#a5)"/>
+  <polyline points="380,192 380,214 570,214 570,236" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#a5)"/>
+  <!-- agent to tools -->
+  <path d="M190 292 L190 322" stroke="#94a3b8" stroke-width="2" marker-end="url(#a5)"/>
+  <path d="M570 292 L570 322" stroke="#94a3b8" stroke-width="2" marker-end="url(#a5)"/>
+  <!-- tools converge to output -->
+  <polyline points="190,366 190,398 380,398" fill="none" stroke="#94a3b8" stroke-width="2"/>
+  <polyline points="570,366 570,398 380,398" fill="none" stroke="#94a3b8" stroke-width="2"/>
+  <path d="M380 398 L380 418" stroke="#94a3b8" stroke-width="2" marker-end="url(#a5)"/>
+
+  <!-- nodes -->
+  <!-- User Request -->
+  <rect x="305" y="84" width="150" height="40" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="380" y="109" text-anchor="middle" font-size="13" fill="#334155">User Request</text>
+
+  <!-- Planner -->
+  <rect x="305" y="152" width="150" height="40" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <text x="380" y="177" text-anchor="middle" font-size="13" font-weight="600" fill="#15803d">Planner</text>
+  <circle cx="441" cy="163" r="4" fill="#16a34a"/>
+
+  <!-- Research Agent -->
+  <rect x="120" y="236" width="140" height="56" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <text x="190" y="260" text-anchor="middle" font-size="13" font-weight="600" fill="#15803d">Research</text>
+  <text x="190" y="278" text-anchor="middle" font-size="13" font-weight="600" fill="#15803d">Agent</text>
+  <circle cx="246" cy="248" r="4" fill="#16a34a"/>
+
+  <!-- Coder Agent -->
+  <rect x="500" y="236" width="140" height="56" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <text x="570" y="260" text-anchor="middle" font-size="13" font-weight="600" fill="#15803d">Coder</text>
+  <text x="570" y="278" text-anchor="middle" font-size="13" font-weight="600" fill="#15803d">Agent</text>
+  <circle cx="626" cy="248" r="4" fill="#16a34a"/>
+
+  <!-- Tools left -->
+  <rect x="130" y="324" width="120" height="42" rx="9" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="190" y="350" text-anchor="middle" font-size="12.5" fill="#334155">Tools</text>
+  <circle cx="236" cy="335" r="4" fill="#16a34a"/>
+
+  <!-- Tools right -->
+  <rect x="510" y="324" width="120" height="42" rx="9" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="570" y="350" text-anchor="middle" font-size="12.5" fill="#334155">Tools</text>
+  <circle cx="616" cy="335" r="4" fill="#16a34a"/>
+
+  <!-- Final Output -->
+  <rect x="298" y="418" width="164" height="44" rx="10" fill="#0f172a"/>
+  <text x="380" y="445" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">Final Output</text>
+
+  <!-- legend -->
+  <circle cx="556" cy="448" r="4" fill="#16a34a"/>
+  <text x="566" y="452" font-size="11.5" fill="#94a3b8">captured in the trace</text>
+</svg>

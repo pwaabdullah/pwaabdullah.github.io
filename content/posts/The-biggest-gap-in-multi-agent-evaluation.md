@@ -1,6 +1,6 @@
 ---
 author: ["Abdullah Al Mamun"]
-title: "We Can Trace AI Agents. Why Can't We Evaluate Them?"
+title: "The Biggest Gap in Agentic AI: Multi-Agent Evaluation"
 date: 2026-06-12
 draft: false
 comments: true
