@@ -624,7 +624,70 @@ while stack:
 
 ---
 
-### 16. Common `collections` ⭐
+### 16. Memoization / DP with `@lru_cache` ⭐
+
+Top-down DP is just recursion plus a cache. `@lru_cache(None)` gives you the cache for free, so you write the plain recurrence and let Python remember the answers.
+
+```python
+from functools import lru_cache
+
+@lru_cache(None)            # None = unbounded cache
+def fib(n):
+    if n < 2:
+        return n
+    return fib(n - 1) + fib(n - 2)
+```
+
+Without the decorator this recomputes the same subproblems exponentially many times. With it, each `n` is computed once, so it runs in O(n).
+
+#### Python 3.9+ shortcut
+
+```python
+from functools import cache
+
+@cache                      # identical to @lru_cache(None)
+def fib(n):
+    ...
+```
+
+#### Inside a class (the interview pattern)
+
+Decorating a method works, but `self` becomes part of the cache key and keeps
+every instance alive. Nest the helper instead:
+
+```python
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        @lru_cache(None)
+        def dp(i):
+            if i <= 2:
+                return i
+            return dp(i - 1) + dp(i - 2)
+        return dp(n)
+```
+
+#### Grid DP
+
+```python
+@lru_cache(None)
+def dp(r, c):
+    if r == 0 or c == 0:
+        return 1
+    return dp(r - 1, c) + dp(r, c - 1)
+```
+
+#### Gotchas
+
+- **Arguments must be hashable.** Pass ints or tuples, never lists or dicts.
+  Convert at the boundary: `dp(tuple(nums), 0)`.
+- **A module-level cache survives between test cases.** Reset it with
+  `dp.cache_clear()` if stale results could leak across runs.
+- `dp.cache_info()` shows hits and misses, which is the fastest way to confirm
+  the memo is actually being used.
+
+---
+
+### 17. Common `collections` ⭐
 
 ```python
 from collections import Counter, defaultdict, deque
@@ -668,7 +731,7 @@ q.popleft()
 
 ---
 
-### 17. Useful Built-ins
+### 18. Useful Built-ins
 
 ```python
 len(nums)
@@ -697,7 +760,7 @@ all(x >= 0 for x in nums)
 
 ---
 
-## 18. The 10 Syntax Patterns to Memorize First ⭐⭐⭐
+## 19. The 10 Syntax Patterns to Memorize First ⭐⭐⭐
 
 If you're just getting back into coding, **memorize these first**. Don't try to memorize the whole sheet.
 
@@ -752,7 +815,7 @@ while left < right:
 
 ---
 
-## 19. Three Loop Patterns You Should Instantly Recognize
+## 20. Three Loop Patterns You Should Instantly Recognize
 
 #### Iterate values
 
@@ -777,7 +840,7 @@ for i, x in enumerate(nums):
 
 ---
 
-## 20. Quick Mental Reference
+## 21. Quick Mental Reference
 
 When you're staring at a LeetCode problem and can't remember syntax:
 
@@ -809,6 +872,7 @@ When you're staring at a LeetCode problem and can't remember syntax:
 | Range | `range(n)` |
 | Min/max | `min()`, `max()` |
 | Absolute | `abs(x)` |
+| Memoize recursion | `@lru_cache(None)` |
 
 ---
 
