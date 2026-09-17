@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 344" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img">
+  <rect width="900" height="344" fill="#ffffff"/>
+<defs><marker id="af" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7.5,3 L0,6 Z" fill="#0d9488"/></marker><marker id="ab" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7.5,3 L0,6 Z" fill="#4f46e5"/></marker><marker id="ac" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7.5,3 L0,6 Z" fill="#ea580c"/></marker></defs>
+  <text x="450.0" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">Backpropagation on One Tiny Graph</text>
+  <text x="450.0" y="55" text-anchor="middle" font-size="13" fill="#64748b">Forward caches every value; backward multiplies local derivatives back through the same graph</text>
+<text x="60.0" y="88.0" text-anchor="start" font-size="12.5" font-weight="700" fill="#0d9488">FORWARD: compute and cache</text>
+<rect x="53.0" y="100.0" width="104.0" height="52.0" rx="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+<text x="105.0" y="121.0" text-anchor="middle" font-size="11.5" font-weight="400" fill="#475569">input</text>
+<text x="105.0" y="140.0" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">x = 2</text>
+<rect x="245.0" y="100.0" width="150.0" height="52.0" rx="10" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/>
+<text x="320.0" y="121.0" text-anchor="middle" font-size="11.5" font-weight="400" fill="#475569">z = wx + b</text>
+<text x="320.0" y="140.0" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">z = 2</text>
+<rect x="465.0" y="100.0" width="150.0" height="52.0" rx="10" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/>
+<text x="540.0" y="121.0" text-anchor="middle" font-size="11.5" font-weight="400" fill="#475569">a = σ(z)</text>
+<text x="540.0" y="140.0" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">a = 0.881</text>
+<rect x="682.0" y="100.0" width="160.0" height="52.0" rx="10" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/>
+<text x="762.0" y="121.0" text-anchor="middle" font-size="11.5" font-weight="400" fill="#475569">L = (a - y)²</text>
+<text x="762.0" y="140.0" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">L = 0.0142</text>
+<line x1="162.0" y1="126.0" x2="238.0" y2="126.0" stroke="#0d9488" stroke-width="2.4" marker-end="url(#af)"/>
+<line x1="400.0" y1="126.0" x2="458.0" y2="126.0" stroke="#0d9488" stroke-width="2.4" marker-end="url(#af)"/>
+<line x1="620.0" y1="126.0" x2="675.0" y2="126.0" stroke="#0d9488" stroke-width="2.4" marker-end="url(#af)"/>
+<text x="212.5" y="172.0" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">w = 1.5,  b = -1</text>
+<text x="651.0" y="172.0" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">y = 1</text>
+<text x="60.0" y="214.0" text-anchor="start" font-size="12.5" font-weight="700" fill="#4f46e5">BACKWARD: multiply local derivatives</text>
+<rect x="20.0" y="226.0" width="170.0" height="52.0" rx="10" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+<text x="105.0" y="247.0" text-anchor="middle" font-size="11" font-weight="400" fill="#475569">∂L/∂w = ∂L/∂z · x</text>
+<text x="105.0" y="266.0" text-anchor="middle" font-size="14" font-weight="600" fill="#4f46e5">-0.0501</text>
+<rect x="231.0" y="226.0" width="178.0" height="52.0" rx="10" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+<text x="320.0" y="247.0" text-anchor="middle" font-size="11" font-weight="400" fill="#475569">∂L/∂z = ∂L/∂a · a(1-a)</text>
+<text x="320.0" y="266.0" text-anchor="middle" font-size="14" font-weight="600" fill="#4f46e5">-0.0250</text>
+<rect x="460.0" y="226.0" width="160.0" height="52.0" rx="10" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+<text x="540.0" y="247.0" text-anchor="middle" font-size="11" font-weight="400" fill="#475569">∂L/∂a = 2(a - y)</text>
+<text x="540.0" y="266.0" text-anchor="middle" font-size="14" font-weight="600" fill="#4f46e5">-0.2384</text>
+<rect x="714.0" y="226.0" width="96.0" height="52.0" rx="10" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+<text x="762.0" y="247.0" text-anchor="middle" font-size="11" font-weight="400" fill="#475569">∂L/∂L</text>
+<text x="762.0" y="266.0" text-anchor="middle" font-size="14" font-weight="600" fill="#4f46e5">1.0</text>
+<line x1="709.0" y1="252.0" x2="627.0" y2="252.0" stroke="#4f46e5" stroke-width="2.4" marker-end="url(#ab)"/>
+<line x1="455.0" y1="252.0" x2="416.0" y2="252.0" stroke="#4f46e5" stroke-width="2.4" marker-end="url(#ab)"/>
+<line x1="226.0" y1="252.0" x2="197.0" y2="252.0" stroke="#4f46e5" stroke-width="2.4" marker-end="url(#ab)"/>
+<line x1="320" y1="158" x2="320" y2="218" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="3 4"/>
+<line x1="540" y1="158" x2="540" y2="218" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="3 4"/>
+<line x1="762" y1="158" x2="762" y2="218" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="3 4"/>
+<text x="450.0" y="308.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">∂L/∂w  =  2(a-y) · a(1-a) · x  =  -0.2384 × 0.1050 × 2  =  -0.0501</text>
+  <text x="450.0" y="330" text-anchor="middle" font-size="12.5" fill="#475569">Each backward box reuses the one to its right. That reuse is why one pass gets every parameter.</text>
+</svg>

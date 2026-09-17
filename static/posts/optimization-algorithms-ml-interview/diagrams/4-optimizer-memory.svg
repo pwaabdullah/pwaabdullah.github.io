@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 394" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img">
+  <rect width="760" height="394" fill="#ffffff"/>
+  <text x="380.0" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">What the Optimizer Costs You in VRAM</text>
+  <text x="380.0" y="55" text-anchor="middle" font-size="13" fill="#64748b">Adam keeps two extra tensors the size of your model</text>
+<line x1="210.0" y1="100" x2="210.0" y2="304" stroke="#e2e8f0" stroke-width="1"/>
+<text x="210.0" y="322.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">0 GB</text>
+<line x1="353.3" y1="100" x2="353.3" y2="304" stroke="#e2e8f0" stroke-width="1"/>
+<text x="353.3" y="322.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">20 GB</text>
+<line x1="496.7" y1="100" x2="496.7" y2="304" stroke="#e2e8f0" stroke-width="1"/>
+<text x="496.7" y="322.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">40 GB</text>
+<line x1="640.0" y1="100" x2="640.0" y2="304" stroke="#e2e8f0" stroke-width="1"/>
+<text x="640.0" y="322.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">60 GB</text>
+<line x1="210" y1="100" x2="210" y2="304" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="196.0" y="130.0" text-anchor="end" font-size="12.5" font-weight="600" fill="#475569">SGD (no state)</text>
+<text x="219.0" y="130.0" text-anchor="start" font-size="12.5" font-weight="600" fill="#64748b">0 GB</text>
+<text x="196.0" y="170.0" text-anchor="end" font-size="12.5" font-weight="600" fill="#475569">8-bit Adam</text>
+<rect x="210" y="152" width="100.3" height="26" rx="4" fill="#4f46e5"/>
+<text x="319.3" y="170.0" text-anchor="start" font-size="12.5" font-weight="600" fill="#0f172a">14 GB</text>
+<text x="196.0" y="210.0" text-anchor="end" font-size="12.5" font-weight="600" fill="#475569">SGD + momentum</text>
+<rect x="210" y="192" width="200.7" height="26" rx="4" fill="#4f46e5"/>
+<text x="419.7" y="210.0" text-anchor="start" font-size="12.5" font-weight="600" fill="#0f172a">28 GB</text>
+<text x="196.0" y="250.0" text-anchor="end" font-size="12.5" font-weight="600" fill="#475569">Lion / Muon</text>
+<rect x="210" y="232" width="200.7" height="26" rx="4" fill="#4f46e5"/>
+<text x="419.7" y="250.0" text-anchor="start" font-size="12.5" font-weight="600" fill="#0f172a">28 GB</text>
+<text x="196.0" y="290.0" text-anchor="end" font-size="12.5" font-weight="600" fill="#475569">Adam / AdamW</text>
+<rect x="210" y="272" width="401.3" height="26" rx="4" fill="#ea580c"/>
+<text x="620.3" y="290.0" text-anchor="start" font-size="12.5" font-weight="600" fill="#0f172a">56 GB</text>
+<text x="425.0" y="346.0" text-anchor="middle" font-size="12" font-weight="400" fill="#475569">optimizer state only, for a 7B-parameter model in fp32</text>
+  <text x="380.0" y="380" text-anchor="middle" font-size="12.5" fill="#475569">This is why ZeRO/FSDP sharding, 8-bit Adam, and memory-lean optimizers exist.</text>
+</svg>

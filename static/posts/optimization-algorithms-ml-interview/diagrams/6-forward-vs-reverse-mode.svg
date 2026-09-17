@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 830 424" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img">
+  <rect width="830" height="424" fill="#ffffff"/>
+<defs><marker id="af" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7.5,3 L0,6 Z" fill="#0d9488"/></marker><marker id="ab" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7.5,3 L0,6 Z" fill="#4f46e5"/></marker><marker id="ac" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7.5,3 L0,6 Z" fill="#ea580c"/></marker></defs>
+  <text x="415.0" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">Why Backprop Runs Backward</text>
+  <text x="415.0" y="55" text-anchor="middle" font-size="13" fill="#64748b">Cost scales with whichever end you seed from, and a loss has exactly one output</text>
+<circle cx="80" cy="130" r="15" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+<text x="80.0" y="135.0" text-anchor="middle" font-size="11" font-weight="600" fill="#475569">w1</text>
+<circle cx="80" cy="176" r="15" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+<text x="80.0" y="181.0" text-anchor="middle" font-size="11" font-weight="600" fill="#475569">w2</text>
+<circle cx="80" cy="222" r="15" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+<text x="80.0" y="227.0" text-anchor="middle" font-size="11" font-weight="600" fill="#475569">w3</text>
+<circle cx="80" cy="268" r="15" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+<text x="80.0" y="273.0" text-anchor="middle" font-size="11" font-weight="600" fill="#475569">w4</text>
+<circle cx="208" cy="199" r="20" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+<text x="208.0" y="204.0" text-anchor="middle" font-size="12" font-weight="600" fill="#475569">f</text>
+<circle cx="326" cy="199" r="20" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+<text x="326.0" y="204.0" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">L</text>
+<line x1="97.0" y1="130.0" x2="186.0" y2="199.0" stroke="#0d9488" stroke-width="2" marker-end="url(#af)"/>
+<line x1="97.0" y1="176.0" x2="186.0" y2="199.0" stroke="#0d9488" stroke-width="2" marker-end="url(#af)"/>
+<line x1="97.0" y1="222.0" x2="186.0" y2="199.0" stroke="#0d9488" stroke-width="2" marker-end="url(#af)"/>
+<line x1="97.0" y1="268.0" x2="186.0" y2="199.0" stroke="#0d9488" stroke-width="2" marker-end="url(#af)"/>
+<line x1="230.0" y1="199.0" x2="304.0" y2="199.0" stroke="#0d9488" stroke-width="2" marker-end="url(#af)"/>
+<circle cx="470" cy="130" r="15" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+<text x="470.0" y="135.0" text-anchor="middle" font-size="11" font-weight="600" fill="#475569">w1</text>
+<circle cx="470" cy="176" r="15" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+<text x="470.0" y="181.0" text-anchor="middle" font-size="11" font-weight="600" fill="#475569">w2</text>
+<circle cx="470" cy="222" r="15" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+<text x="470.0" y="227.0" text-anchor="middle" font-size="11" font-weight="600" fill="#475569">w3</text>
+<circle cx="470" cy="268" r="15" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+<text x="470.0" y="273.0" text-anchor="middle" font-size="11" font-weight="600" fill="#475569">w4</text>
+<circle cx="598" cy="199" r="20" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+<text x="598.0" y="204.0" text-anchor="middle" font-size="12" font-weight="600" fill="#475569">f</text>
+<circle cx="716" cy="199" r="20" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+<text x="716.0" y="204.0" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">L</text>
+<line x1="576.0" y1="199.0" x2="487.0" y2="130.0" stroke="#4f46e5" stroke-width="2" marker-end="url(#ab)"/>
+<line x1="576.0" y1="199.0" x2="487.0" y2="176.0" stroke="#4f46e5" stroke-width="2" marker-end="url(#ab)"/>
+<line x1="576.0" y1="199.0" x2="487.0" y2="222.0" stroke="#4f46e5" stroke-width="2" marker-end="url(#ab)"/>
+<line x1="576.0" y1="199.0" x2="487.0" y2="268.0" stroke="#4f46e5" stroke-width="2" marker-end="url(#ab)"/>
+<line x1="694.0" y1="199.0" x2="620.0" y2="199.0" stroke="#4f46e5" stroke-width="2" marker-end="url(#ab)"/>
+<text x="196.0" y="96.0" text-anchor="middle" font-size="14.5" font-weight="600" fill="#0d9488">Forward mode</text>
+<text x="586.0" y="96.0" text-anchor="middle" font-size="14.5" font-weight="600" fill="#4f46e5">Reverse mode (backprop)</text>
+<text x="196.0" y="300.0" text-anchor="middle" font-size="12" font-weight="400" fill="#475569">seed ONE input, get its derivative</text>
+<text x="196.0" y="320.0" text-anchor="middle" font-size="12.5" font-weight="600" fill="#b91c1c">repeat once per parameter</text>
+<text x="586.0" y="300.0" text-anchor="middle" font-size="12" font-weight="400" fill="#475569">seed the ONE output, get them all</text>
+<text x="586.0" y="320.0" text-anchor="middle" font-size="12.5" font-weight="600" fill="#4f46e5">a single pass</text>
+<line x1="410" y1="86" x2="410" y2="332" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="196.0" y="352.0" text-anchor="middle" font-size="15" font-weight="700" fill="#b91c1c">N passes</text>
+<text x="586.0" y="352.0" text-anchor="middle" font-size="15" font-weight="700" fill="#4f46e5">1 pass</text>
+<text x="415.0" y="382.0" text-anchor="middle" font-size="12.5" font-weight="600" fill="#0f172a">For a 7B-parameter model that is 7 billion passes against one. This is the whole reason it runs backward.</text>
+  <text x="415.0" y="410" text-anchor="middle" font-size="12.5" fill="#475569">Forward mode is not wrong, just the wrong direction when inputs vastly outnumber outputs.</text>
+</svg>
