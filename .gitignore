@@ -32,3 +32,4 @@ temp/
 
 # Local-only draft posts (kept on disk, never tracked)
 content/posts/personal-portfolio-audit-and-strategy.md
+content/posts/*-raw.txt

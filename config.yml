@@ -11,6 +11,13 @@ enableRobotsTXT: true
 buildDrafts: false
 buildFuture: false
 buildExpired: false
+
+# Raw working notes parked beside a draft (content/posts/*-raw.txt) are source
+# material, not content. Without this Hugo copies them into public/ and serves
+# them publicly. They are gitignored too, so CI never sees them at all; this
+# keeps a local `hugo` build honest about what actually ships.
+ignoreFiles:
+  - "content/posts/.*-raw\\.txt$"
 enableEmoji: true
 pygmentsUseClasses: true
 mainsections: ["posts", "papermod"]
