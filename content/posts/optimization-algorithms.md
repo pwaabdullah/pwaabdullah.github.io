@@ -8,7 +8,7 @@ ShowToc: true
 TocOpen: false
 math: true
 slug: "optimization-algorithms-ml-interview"
-description: "Every optimizer worth knowing, from SGD and momentum through AdaGrad, RMSProp, Adam and AdamW to Lion, Shampoo and Muon, plus learning rate schedules, warmup, gradient clipping, accumulation, checkpointing, batch size scaling, optimizer memory, and how to debug a loss that will not go down."
+description: "Every optimizer worth knowing, from SGD and momentum through AdaGrad, RMSProp, Adam and AdamW to Lion, Shampoo and Muon (as used in production LLM pretraining), plus learning rate schedules, warmup, gradient clipping, accumulation, checkpointing, batch size scaling, optimizer memory, and how to debug a loss that will not go down."
 summary: "How models actually get trained: the optimizer family tree, why Adam won and where it loses, the schedule and warmup decisions that matter more than the optimizer choice, and the practical machinery (clipping, accumulation, checkpointing, sharded states) that shows up in real training runs."
 keywords:
   - "optimization"
@@ -48,9 +48,9 @@ categories:
 | Lion | Sign of momentum only | 1x params | Large models, when memory is tight |
 | Sophia | Clipped diagonal second-order | 2x params | LLM pretraining, faster convergence |
 | Shampoo / SOAP | Matrix preconditioner | 4x+ params | Large runs where the math pays off |
-| **Muon** | Orthogonalized momentum on weight matrices | 1x params | Emerging large-model optimizer |
+| **Muon** | Orthogonalized momentum on weight matrices | 1x params | Large LLM pretraining, hybrid with AdamW |
 
-**If you remember one thing:** use **AdamW** with warmup and cosine decay, and spend your tuning budget on the **learning rate**, not on the optimizer. The choice of optimizer is worth a few percent. The learning rate is worth the difference between a working model and a `nan`.
+**If you remember one thing:** use **AdamW** with warmup and cosine decay, and spend your tuning budget on the **learning rate**, not on the optimizer. The choice of optimizer is worth a few percent. The learning rate is worth the difference between a working model and a `nan`. For a from-scratch LLM pretrain, Muon on the 2D matrices is now a real alternative, not a paper curiosity.
 
 ---
 
@@ -172,7 +172,7 @@ $$m_t = \beta_1 m_{t-1} + (1-\beta_1)g_t, \qquad v_t = \beta_2 v_{t-1} + (1-\bet
 
 $$\hat m_t = \frac{m_t}{1-\beta_1^t}, \qquad \hat v_t = \frac{v_t}{1-\beta_2^t}, \qquad \theta_{t+1} = \theta_t - \eta\frac{\hat m_t}{\sqrt{\hat v_t}+\epsilon}$$
 
-Defaults \\(\beta_1=0.9\\), \\(\beta_2=0.999\\), \\(\epsilon=10^{-8}\\) work across an astonishing range of problems, which is most of why Adam took over.
+Defaults \\(\beta_1=0.9\\), \\(\beta_2=0.999\\), \\(\epsilon=10^{-8}\\) work across an astonishing range of problems, which is most of why Adam took over. They are still a choice. GPT-3 and LLaMA-style recipes often use **\\(\beta_2=0.95\\)** so the second moment adapts faster on non-stationary LLM gradients. PyTorch's 0.999 is conservative, not a law.
 
 **Why bias correction exists.** \\(m\\) and \\(v\\) start at zero, so early on they are biased toward zero, and \\(v\\) being too small would produce enormous steps exactly when the model is most fragile. Dividing by \\(1-\beta^t\\) undoes that. Note \\(\beta_2^t\\) with \\(\beta_2 = 0.999\\) takes thousands of steps to decay, which is precisely why the first few thousand steps of Adam are delicate and why warmup exists.
 
@@ -191,6 +191,8 @@ $$\theta_{t+1} = \theta_t - \eta\frac{\hat m_t}{\sqrt{\hat v_t}+\epsilon} - \eta
 That last term is the entire difference, and it is worth real accuracy on transformers. **`torch.optim.AdamW` is the right default.** If you see `Adam(weight_decay=0.01)` in a transformer codebase, that is a bug worth raising.
 
 > **Trap:** "L2 regularization and weight decay are the same thing." True for plain SGD, false for any adaptive optimizer. That distinction is the whole reason AdamW exists.
+
+> **Trap:** decaying *every* parameter. Do not apply weight decay to biases or to LayerNorm/RMSNorm scale-and-shift. Those are not features to shrink; decaying them hurts, and every serious transformer recipe excludes them with parameter groups. LLM pretraining typically uses **0.1**, not the 0.01 you see in computer-vision snippets.
 
 ---
 
@@ -219,7 +221,7 @@ Warmup-stable-decay deserves a mention because it solves a real operational prob
 
 The shaded strip at the left is warmup, common to all four. Look at the difference in shape after that: cosine and linear both start decaying immediately and their entire path depends on knowing the final step count, while WSD spends most of training at the full rate and only pays the decay at the end. That is why WSD lets you extend a run without invalidating the schedule you already trained under.
 
-**Batch size and learning rate move together.** The **linear scaling rule** says that when you multiply batch size by \\(k\\), multiply the learning rate by \\(k\\) as well, with warmup to survive the start. The intuition: a batch \\(k\\) times larger gives a gradient estimate with lower variance, so you can afford to trust it proportionally more. It holds well up to a point and then breaks down, which is where large-batch training gets genuinely hard.
+**Batch size and learning rate move together.** The **linear scaling rule** (Goyal) says that when you multiply batch size by \\(k\\), multiply the learning rate by \\(k\\) as well, with warmup to survive the start. That rule was derived for **SGD**. **Adam often scales closer to \\(\sqrt{k}\\)**, because the second moment already divides out gradient magnitude. Blindly applying linear scaling to AdamW is a common way to blow up a large-batch run. Either rule holds only up to a point; past that, large-batch training gets genuinely hard.
 
 > **Trap:** "you changed batch size and the model got worse, why?" Because you changed the effective learning rate without meaning to. This is the single most common cause of "it worked on my machine, then we scaled it up."
 
@@ -233,11 +235,13 @@ Adam has held the crown for a decade. What is challenging it, and why:
 
 **Sophia** uses a cheap clipped estimate of diagonal curvature, a light-touch second-order method aimed at LLM pretraining, reporting meaningful step-count reductions.
 
-**Shampoo** and **SOAP** go further: instead of a per-parameter scalar, they build a **matrix** preconditioner that accounts for correlations between parameters, factorized so it stays tractable. More memory and compute per step, fewer steps needed. They earn their keep on large runs where wall-clock per step is not the bottleneck.
+**Shampoo** and **SOAP** go further: instead of a per-parameter scalar, they build a **matrix preconditioner** (a transform that rescales the gradient using curvature across a whole weight matrix, not one number per parameter), factorized so it stays tractable. More memory and compute per step, fewer steps needed. They earn their keep on large runs where wall-clock per step is not the bottleneck.
 
-**Muon** is the one worth recognizing in 2026. It takes the momentum update for a 2D weight matrix and **orthogonalizes** it (via a few Newton-Schulz iterations) before applying it, so the update makes progress in many directions at once rather than being dominated by a few large singular values. It applies only to 2D hidden weight matrices; embeddings, the output head, and all 1D parameters usually still use AdamW. Treat it as an emerging large-model tool, not a replacement default for ordinary projects.
+**Adafactor** is the older memory trick still in production: it factors Adam's second-moment tensor so optimizer state grows with \(m+n\) instead of \(m \times n\). T5 and Switch-Transformer used it; it still shows up on huge embedding tables.
 
-> **The honest answer if asked what to use:** AdamW, unless you have a specific measured reason. The frontier optimizers win on large, well-understood, heavily-tuned runs. On a normal project, an afternoon spent on the learning rate schedule will beat a week spent swapping optimizers.
+**Muon** is the one that moved from paper to production in 2025–2026 (Moonshot Moonlight, GLM-4.5-scale runs). It takes the momentum update for a 2D weight matrix and **orthogonalizes** it (via a few Newton-Schulz iterations) before applying it, so the update makes progress in many directions at once rather than being dominated by a few large singular values. It applies only to 2D hidden weight matrices; embeddings, the output head, and all 1D parameters still use AdamW. That hybrid is the actual setup, not "replace AdamW everywhere." Learning rates are larger than AdamW's (often ~0.02 vs ~3e-4) because the orthogonalized update already has bounded scale.
+
+> **The honest answer if asked what to use:** AdamW, unless you are pretraining a large transformer from scratch and have a reason to try Muon on the 2D matrices. Frontier optimizers win on large, well-understood, heavily-tuned runs. On a normal project, an afternoon spent on the learning rate schedule will beat a week spent swapping optimizers.
 
 ---
 
@@ -286,9 +290,7 @@ Checkpointing keeps only a sparse set of activations and **recomputes the rest o
 
 ![Activation memory over a 36-layer forward then backward pass. The standard run rises as a straight ramp to a peak of 36 during the forward pass then drains back down. The checkpointed run stays near 6 through the forward pass, then sawtooths between about 6 and 12 during backward as each segment is recomputed and released](diagrams/7-activation-tape.svg)
 
-The standard curve is a triangle: memory climbs through the forward pass as every layer's activations are cached, peaks at 36, then drains as backward consumes them. The checkpointed run holds only 6 checkpoints through the entire forward pass, then sawtooths during backward as it recomputes one segment at a time and releases it. Peak drops from 36 to 12, a **3x** saving, and the sawtooth is literally the recomputation you are paying for.
-
-The segment size is the knob. Keeping every \(\sqrt{n}\)-th activation balances the checkpoints you store against the buffer you need while recomputing, which is where the \(O(\sqrt{n})\) comes from.
+Peak drops from 36 to 12, a **3x** saving; the sawtooth *is* the recomputation. Keeping every \(\sqrt{n}\)-th activation balances stored checkpoints against the recompute buffer, which is where the \(O(\sqrt{n})\) comes from.
 
 ```python
 model.gradient_checkpointing_enable()          # transformers
@@ -355,6 +357,10 @@ The diagnostic table. This is what a practical interview question actually looks
 **Momentum \\(\beta = 0.9\\) means what?** Roughly an average over the last ten gradients, since \\(1/(1-\beta) = 10\\).
 
 **Why warmup specifically for Adam?** Its second-moment estimate is built from almost no data in the early steps, so the adaptive denominator is unreliable exactly when a bad step is most costly.
+
+**Do you weight-decay LayerNorm?** No. Biases and norm scale/shift stay out of the decay group. LLM pretraining typically uses 0.1 on everything else.
+
+**Linear scaling with AdamW?** The \(k \times\) LR rule is an SGD result. For Adam start from \(\sqrt{k}\) and watch the loss; linear is how large-batch AdamW runs explode.
 
 **Can the learning rate be too small?** Yes, and it is worse than it sounds. You do not just train slowly; you can settle into a poor region because you never had enough step size to escape it, and you burn your compute budget finding out.
 

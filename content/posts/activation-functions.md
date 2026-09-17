@@ -149,9 +149,11 @@ $$\text{GELU}(x)=x\,\Phi(x)$$
 
 where \(\Phi\) is the standard normal CDF. Instead of ReLU's hard gate (keep or zero), GELU weights the input by **the probability that a standard normal draw falls below it**, so the gate is smooth and stochastic in spirit.
 
-The common approximation, which is what most implementations ship:
+The common approximation, which is what BERT and GPT-2 actually used:
 
 $$0.5x\left(1+\tanh\left(\sqrt{2/\pi}\,(x+0.044715x^{3})\right)\right)$$
+
+PyTorch `nn.GELU` is the exact \(\Phi\) form; `approximate='tanh'` is the line above. They are close. Don't mix them inside one model and then wonder why a checkpoint doesn't match.
 
 It is smooth, non-monotonic near zero, and allows small negative outputs, so there are no dead units. It is the classic activation in **BERT and GPT-style transformer blocks**. Many newer LLMs moved the feedforward block to gated variants such as SwiGLU, but GELU is still the activation interviewers expect you to recognize first.
 
@@ -182,8 +184,8 @@ Swap the gate's nonlinearity and you get the family:
 | Variant | Gate | Used by |
 |---|---|---|
 | GLU | sigmoid | original formulation |
-| GeGLU | GELU | T5 v1.1, PaLM |
-| **SwiGLU** | Swish / SiLU | **LLaMA, Mistral, most modern open LLMs** |
+| GeGLU | GELU | T5 v1.1, Gemma |
+| **SwiGLU** | Swish / SiLU | **LLaMA, Mistral, Qwen, DeepSeek, PaLM, most modern open LLMs** |
 
 $$\text{SwiGLU}(x)=\text{Swish}(xW)\otimes(xV)$$
 
@@ -227,6 +229,8 @@ $$p_k=\frac{e^{z_k/T}}{\sum_j e^{z_j/T}}$$
 
 > **Trap:** the one that connects back to loss functions. Softmax is an **activation**; cross-entropy is the **loss**. And in PyTorch you must not apply softmax before `nn.CrossEntropyLoss`, because it applies `log_softmax` internally. Feeding it probabilities applies softmax twice and quietly flattens your gradients.
 
+> **Trap:** "softmax is for classification." Softmax also turns attention scores into weights over keys. Same function, different job: output softmax is a probability over classes; attention softmax is a weighting over tokens. Temperature works in both places.
+
 ---
 
 ## 7. Choosing One
@@ -260,7 +264,7 @@ The honest summary is that activation choice is rarely what limits a model. Arch
 
 **Why GELU in transformers instead of ReLU?** Smoothness and small negative outputs, which suit the deep residual stacks and large learning rates transformers use, plus no dead units. The empirical gain is small but consistent, and it's now the convention.
 
-**Is softmax an activation or a loss?** An activation. Cross-entropy is the loss. "Softmax loss" is informal shorthand for the pair.
+**Is softmax an activation or a loss?** An activation. Cross-entropy is the loss. "Softmax loss" is informal shorthand for the pair. Attention uses softmax too; that is a weighting, not a class distribution.
 
 **Why no activation on a regression output?** Any bounded activation caps the achievable range. A linear output can express any real value, which is what regression requires.
 

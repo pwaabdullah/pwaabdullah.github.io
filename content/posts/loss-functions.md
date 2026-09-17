@@ -8,7 +8,7 @@ ShowToc: true
 TocOpen: false
 math: true
 slug: "loss-functions-ml-interview"
-description: "Every loss function worth knowing for an ML interview: cross-entropy, MSE/MAE/Huber, hinge, focal, ranking, contrastive/InfoNCE, KL, and the LLM objectives (SFT, distillation, DPO, RLHF), with the PyTorch API traps and a rapid-fire Q&A."
+description: "Every loss function worth knowing for an ML interview: cross-entropy, MSE/MAE/Huber, hinge, focal, ranking, contrastive/InfoNCE, KL, and the LLM objectives (SFT, distillation, DPO, GRPO, RLHF), with the PyTorch API traps and a rapid-fire Q&A."
 summary: "A scannable reference for ML interviews: which loss to use for which task, why it works, when it breaks, the PyTorch gotchas that cause real bugs, and how to answer the question every interviewer asks."
 keywords:
   - "loss function"
@@ -20,6 +20,7 @@ keywords:
   - "InfoNCE"
   - "KL divergence"
   - "DPO"
+  - "GRPO"
   - "RLHF"
 tags:
   - "machine learning"
@@ -59,6 +60,7 @@ If you remember nothing else, remember this.
 | SFT | Token CE (masked) | Predict response only | `ignore_index=-100` |
 | Distillation | KL + CE | Match teacher's soft targets | `KLDivLoss` |
 | Preference tuning | DPO | Preferred beats rejected | custom |
+| Reasoning RL | **GRPO** | Group-relative advantage, no critic | custom |
 | RLHF | Reward - KL penalty | Maximize reward, stay near ref | custom |
 
 The four relationships that cover most questions:
@@ -195,6 +197,14 @@ You get MSE's smooth, well-scaled gradients near the optimum and MAE's robustnes
 
 > **Note:** PyTorch has both `HuberLoss(delta)` and `SmoothL1Loss(beta)`. They are the same curve up to a scale factor, which matters only if you're comparing loss values or tuning learning rate across the two.
 
+### 4.5 Quantile (pinball)
+
+When the decision cares about a tail, not the average ("will we stock out," "what's the 90th-percentile latency"):
+
+$$L_\tau(e)=\tau\max(e,0)+(1-\tau)\max(-e,0)$$
+
+\(\tau=0.5\) is MAE (the median). \(\tau=0.9\) trains a 90th-percentile forecast. Demand forecasting, pricing, and any interval estimate use this. It is the loss; coverage of the resulting intervals is the metric.
+
 ![Two panels. Left: MSE as a steep parabola, MAE as a V, and Huber tracking MSE near zero then going linear. Right: the gradients. MSE's gradient is a straight line reaching plus or minus 6 at the edges, while MAE and Huber are capped at plus or minus 1](diagrams/1-regression-losses.svg)
 
 The right panel is the one that matters, because the gradient is what the optimizer actually sees. MSE's gradient grows linearly with the error and never stops, so a single point with an error of 10 pushes ten times harder than a point with an error of 1. That is outlier sensitivity, stated mechanically. MAE and Huber cap their gradient magnitude, so no individual point can dominate the update no matter how wrong it is.
@@ -229,7 +239,7 @@ Ranking cares about **relative order**, not absolute labels. A model scores item
 
 $$L_{margin}=\max(0,m-y(s_i-s_j)) \qquad L_{logistic}=-\log\sigma(s_i-s_j)$$
 
-The margin version stops once \(s_i \geq s_j+m\). The logistic version keeps pushing the gap wider with diminishing returns, and is the Bradley-Terry preference model. Note this is the same mathematical shape that DPO uses on preferred vs rejected responses.
+The margin version stops once \(s_i \geq s_j+m\). The logistic version keeps pushing the gap wider with diminishing returns. That logistic form is the **Bradley-Terry** model: \(P(i \succ j)=\sigma(s_i-s_j)\), "probability i beats j is a sigmoid of the score gap." DPO uses the same shape on preferred vs rejected responses.
 
 **Listwise** (ListNet, ListMLE, LambdaRank/LambdaMART) optimizes the full list. LambdaRank's trick is weighting each pair by how much swapping it would change NDCG, which smuggles a non-differentiable ranking metric into the gradient.
 
@@ -267,7 +277,7 @@ Use every other item in the batch as a negative:
 
 $$L=-\log\frac{\exp(sim(q,p^+)/\tau)}{\sum_j\exp(sim(q,p_j)/\tau)}$$
 
-A batch of \(N\) gives you \(N-1\) negatives for free, with no mining pipeline. This is why **large batches matter so much** for contrastive training, and it's the objective behind CLIP and most dense retrievers.
+A batch of \(N\) gives you \(N-1\) negatives for free, with no mining pipeline. This is why **large batches matter so much** for contrastive training, and it's the objective behind CLIP and most dense retrievers. When the catalog is millions of items you cannot softmax over all of them; **sampled softmax** (in-batch negatives are the cheap version) approximates that sum with a subset. Two-tower retrieval in search and ads actually trains this way.
 
 Look closely: this is softmax cross-entropy where the "classes" are the candidates in the batch. The temperature \(\tau\) controls sharpness. Small \(\tau\) concentrates the gradient on the hardest negatives; too small and training destabilizes.
 
@@ -360,15 +370,36 @@ $$L=-\log\sigma\left(\beta\left[\log\frac{\pi_\theta(y_w \mid x)}{\pi_{ref}(y_w 
 
 This is the pairwise logistic loss from section 5, with the score being the log-ratio against the reference. DPO's contribution is showing that the RLHF objective has a closed-form optimum you can hit with a supervised loss, so **no explicit reward model and no PPO loop are needed**. \(\beta\) controls how far the policy may drift.
 
-**Where industry is now:** DPO is the interview baseline because it is simple and stable. Current post-training stacks also use variants such as IPO, KTO, ORPO, SimPO, and GRPO, especially for reasoning models and online preference data. You do not need every formula in a general ML interview; you do need the distinction: SFT learns from demonstrations, DPO-style methods learn from preference pairs, and PPO/GRPO-style methods learn from sampled outputs scored by a reward signal.
+**Where industry is now:** post-training is a stack, not one loss. SFT on demonstrations, then a preference method (DPO, IPO, SimPO, KTO) on pairs, then on-policy RL (GRPO, sometimes PPO) when you have a verifier or a reward model and need the model to keep exploring. You do not need every variant formula; you do need that three-rung distinction.
 
-### 8.5 RLHF
+### 8.5 GRPO
+
+PPO needs a **critic** (a value model, often another full copy of the policy) to estimate how good a response was relative to expectation. GRPO throws the critic away.
+
+For each prompt, sample a **group** of \(G\) responses, score each one (unit tests, a math checker, or a reward model), and set the advantage from the group's own mean and spread:
+
+$$\hat{A}_i=\frac{r_i-\mathrm{mean}(r)}{\mathrm{std}(r)}$$
+
+Above-average samples get pushed up, below-average ones get pushed down. Same clipped-surrogate idea as PPO, plus a KL term to a reference, minus the value network. That is the memory win, and it is why DeepSeek-R1 made GRPO the default recipe for reasoning RL.
+
+It needs a reward that actually separates the group. If all \(G\) answers score 1 or all score 0, advantage is ~0 and nothing learns. Math and code work well because a checker can split right from wrong; open-ended chat usually still wants a preference method or a learned reward.
+
+### 8.6 RLHF (PPO)
 
 A reward model scores generations, and a KL penalty keeps the policy near the reference:
 
 $$R_{total}=R_{reward}-\beta D_{KL}(\pi_\theta\|\pi_{ref})$$
 
 Maximize reward, but don't wander. Without the KL term the policy **reward-hacks**: it finds degenerate text that scores well under an imperfect reward model and is useless to humans.
+
+| Method | Signal | Extra model | Use it when |
+|---|---|---|---|
+| SFT | demonstrations | none | You have good answers to imitate |
+| DPO | preferred vs rejected pairs | frozen reference | You have preference data, want a supervised loss |
+| GRPO | group of scored rollouts | none (no critic) | Verifiable reward (math, code), reasoning models |
+| PPO | scored rollouts | **critic + reward + ref** | On-policy RL when you can afford four models |
+
+The interview version: SFT copies, DPO prefers, GRPO/PPO explore. GRPO is PPO with the baseline taken from the group instead of a learned critic.
 
 ---
 
@@ -391,7 +422,7 @@ Never answer with just a name. Walk the ladder, out loud, in about thirty second
 1. **What's the task?** Classification, regression, ranking, retrieval, generation.
 2. **What's the target?** Continuous value, class, probability, relative preference, embedding, token sequence.
 3. **What's wrong with the data?** Outliers, class imbalance, label noise, multiple labels per example, a need for calibrated probabilities.
-4. **What does the loss actually optimize?** Tie it back to the metric you'll be judged on.
+4. **What does the loss actually optimize?** Tie it back to the metric you'll be judged on. Several heads at once (CTR + conversion, an auxiliary MoE load-balancing term) start as a weighted sum; most production recsys still hand-tunes those weights.
 5. **When does it fail?** This is the step that separates senior from junior answers.
 
 A good answer sounds like:
@@ -421,6 +452,8 @@ Task, loss, reason, failure mode. Anyone can name a loss; the reason and the fai
 **Weighted loss vs resampling for imbalance?** Weighting keeps every example and changes its gradient contribution; resampling changes the data the model sees. Weighting is cheaper and deterministic; resampling can work better when the imbalance is extreme enough that weights become unstable.
 
 **Why does contrastive training need big batches?** In InfoNCE the negatives come from the batch, so batch size *is* the number of negatives, which directly sets the difficulty of the task.
+
+**DPO vs PPO vs GRPO?** DPO is supervised on preference pairs, no sampling loop. PPO is on-policy RL with a learned critic. GRPO is that RL loop with the critic replaced by a group baseline. Preference data → DPO; verifiable reward and a reasoning model → GRPO.
 
 **Two models, same architecture, different loss. Which is better?** Unanswerable from the loss values alone unless the loss is identical and the data identical. Compare on the evaluation metric.
 

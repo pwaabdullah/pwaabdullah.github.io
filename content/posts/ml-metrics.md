@@ -56,23 +56,39 @@ Most metric confusion comes from mixing layers. A model can win on all four or w
 
 With 1% positives, a model that predicts "negative" every time scores **99% accuracy** and is worth nothing. Accuracy is only meaningful when classes are roughly balanced and both errors cost about the same, which is rarely true in production.
 
-The confusion matrix is the real object. Everything else is a ratio of its cells:
+The confusion matrix is the real object. Four cells, that's everything:
+
+|  | Predicted positive | Predicted negative |
+|---|---|---|
+| **Actually positive** | TP (caught it) | FN (missed it) |
+| **Actually negative** | FP (false alarm) | TN (correctly ignored) |
+
+Everything else is a ratio of those cells:
 
 $$\text{Precision}=\frac{TP}{TP+FP} \qquad \text{Recall}=\frac{TP}{TP+FN} \qquad F_1=\frac{2PR}{P+R}$$
 
 - **Precision**: of the things I flagged, how many were right? Optimize when a false positive is expensive (blocking a legitimate transaction, spam-filtering a real email).
-- **Recall**: of the things I should have caught, how many did I? Optimize when a false negative is expensive (missing a tumor, missing fraud).
-- **F1**: the harmonic mean, which stays low if either is low. Use it when you need one number and the classes are imbalanced.
+- **Recall** (also called sensitivity / TPR): of the things I should have caught, how many did I? Optimize when a false negative is expensive (missing a tumor, missing fraud).
+- **F1**: the *harmonic* mean of precision and recall. Harmonic means stay low if either input is low, so F1 of precision 1.0 and recall 0.01 is ~0.02, not "about 0.5." Use it when you need one number and the classes are imbalanced.
+
+Precision and recall **ignore TN**. That is why they still mean something at 1% positives, and why accuracy does not.
 
 **\\(F_\beta\\)** generalizes this: \\(\beta > 1\\) weights recall, \\(\beta < 1\\) weights precision. If someone asks "which matters more," the real answer is the cost ratio of the two error types, which is a product question, not an ML one.
+
+**Micro vs macro F1** is the multiclass follow-up. **Micro** pools every example into one confusion matrix, so frequent classes dominate. **Macro** averages per-class F1 equally, so a rare class counts as much as a common one. Use macro when the rare class is the point (a rare disease, a rare intent); use micro when you care about overall decisions. Weighted F1 weights by support and often hides the rare-class failure you actually needed to see.
 
 ### ROC-AUC vs PR-AUC
 
 ![Two panels showing the same classifier. The ROC curve hugs the top-left corner with AUC 0.95. The precision-recall curve for the same model starts near 1 but falls steadily, giving AUC 0.43, with a dashed baseline at 1 percent](diagrams/1-roc-vs-pr.svg)
 
+A classifier outputs a score, not a label. Sweep the threshold from 0 to 1 and you get a curve, not a point.
+
+- **ROC** plots recall (TPR) against false-positive rate \(\text{FPR}=FP/(FP+TN)\). AUC is the probability that a random positive ranks above a random negative.
+- **PR** plots precision against recall on the same sweep.
+
 That is one model, 20,000 samples, 1% positives, scored two ways. **ROC-AUC 0.95, PR-AUC 0.43.** Neither number is wrong; they answer different questions.
 
-The reason is in the baselines. A random classifier traces the diagonal on ROC **no matter what the prevalence is**, because TPR and FPR are each computed within a class and never see the ratio between them. On the PR curve, random sits at the prevalence itself, 0.01 here. So ROC grades you against a fixed bar while PR grades you against how rare the positive actually is.
+The reason is in the baselines. A random classifier traces the diagonal on ROC **no matter what the prevalence is**, because TPR and FPR are each computed *within* a class and never see the ratio between them. On the PR curve, random sits at the prevalence itself, 0.01 here. So ROC grades you against a fixed bar while PR grades you against how rare the positive actually is.
 
 **Use PR-AUC when positives are rare and finding them is the point** (fraud, disease, moderation). Use ROC-AUC when classes are roughly balanced, or when you genuinely care about overall ranking rather than the positive class. Reporting only ROC-AUC on a 1% problem is the most common way to oversell a model, and a good interviewer will ask for the PR number.
 
@@ -89,6 +105,8 @@ One trained model, every operating point it can be run at. Training fixed this c
 ### Calibration
 
 A model is calibrated if, among predictions of 0.7, about 70% are actually positive. AUC does not care about this at all: it only cares about **ranking**, so you can have perfect AUC and badly miscalibrated probabilities.
+
+**AUC vs log loss** is the production version of that sentence. AUC asks "is the right item higher?" Log loss (the metric, same formula as BCE) asks "is the number 0.7 actually 70%?" A CTR model can rank ads well and still be unusable in an auction, because bidding multiplies \(p\) by value. Ads ranking reports both: AUC for order, log loss for whether \(pCTR\) is trustworthy. (Sometimes log loss is divided by the entropy of the average CTR and called **normalized entropy**, so 1.0 means "no better than predicting the base rate.") Same split in fraud, credit, and any expected-value system.
 
 Calibration matters whenever the probability feeds a downstream decision: expected-value calculations, bidding, risk scoring, thresholding on cost. Measure it by bucketing predictions into \\(M\\) bins and asking, within each bin, whether stated confidence matched observed accuracy:
 
@@ -133,7 +151,9 @@ The \\(\log_2(i+1)\\) denominator is the **position discount**: rank 1 divides b
 
 > **Worth knowing:** production systems usually use the **exponential gain** form, \\(\frac{2^{rel_i}-1}{\log_2(i+1)}\\), which separates "highly relevant" from "somewhat relevant" much more sharply. If asked which form you mean, naming the exponential-gain variant and saying graded relevance should not be linear is the stronger answer.
 
-**NDCG is the default** for search and recommendation because it handles graded relevance (not just relevant/irrelevant) and applies a position discount, so an improvement at rank 1 counts for more than the same improvement at rank 9. **MRR** is the right choice when there is exactly one correct answer and you only care where it landed, which is why it shows up in QA and retrieval-for-RAG.
+**NDCG is the default** for search and recommendation because it handles graded relevance (not just relevant/irrelevant) and applies a position discount, so an improvement at rank 1 counts for more than the same improvement at rank 9. **MRR** is the right choice when there is exactly one correct answer and you only care where it landed, which is why it shows up in QA and retrieval-for-RAG. Recsys people also say **HitRate@k**; it is Recall@k with a different name.
+
+**Position bias.** Users click what is on top, so logged clicks mix relevance with "the old ranker put it first." Offline NDCG on raw clicks overstates models that imitate the current ranking. Production eval uses a randomized bucket, inverse-propensity scoring, or an A/B. This is the usual reason a recsys wins offline and loses the launch.
 
 **Beyond accuracy**, and increasingly what actually gets measured in industry: **coverage** (what fraction of the catalog ever gets shown), **diversity**, **novelty**, and **popularity bias**. A recommender that maximizes NDCG by showing everyone the same ten blockbusters is optimal on paper and a failure as a product.
 
@@ -150,10 +170,10 @@ This is where metric choice is hardest, because the output space is open-ended.
 | Language modeling | Perplexity | Only comparable at fixed tokenizer and data |
 | Code | **pass@k** | Actually runs the tests. The gold standard |
 | QA (extractive) | Exact match, token F1 | Fine when answers are short and closed |
-| Open generation | **LLM-as-judge**, human preference | Best available, with real caveats |
+| Open generation | **Win rate** (human or LLM-as-judge) | The number that actually decides a ship |
 | RAG | Faithfulness, context precision/recall | Separates retrieval failure from generation failure |
 
-**Why BLEU and ROUGE persist despite being weak:** they are cheap, deterministic, and reproducible. They are reasonable regression detectors and poor quality measures. Reporting a BLEU gain as a quality win is a claim a good interviewer will push on.
+**Why BLEU and ROUGE persist despite being weak:** they are cheap, deterministic, and reproducible. They are reasonable regression detectors ("did this PR make translation worse?") and poor quality measures. Reporting a BLEU gain as a quality win is a claim a good interviewer will push on. For open-ended systems the number product actually ships on is **win rate against a fixed baseline**, from humans or a judge validated against humans.
 
 **pass@k is the model to imitate.** It does not compare text to a reference; it **executes the code against tests**. Sample \\(n\\) solutions per problem, count the \\(c\\) that pass, and report the unbiased estimate that at least one of \\(k\\) samples works:
 
@@ -189,7 +209,10 @@ Offline metrics are a proxy. The A/B test is the measurement.
 - **Novelty effect.** Any UI change lifts engagement for a week or two. Run long enough to see it decay, or you will ship a wiggle.
 - **Peeking.** Checking daily and stopping when p goes below 0.05 inflates false positives badly. Fix the horizon in advance or use a sequential test designed for it.
 - **Multiple comparisons.** Twenty metrics at \\(p<0.05\\) means one false positive on average, every time, by construction.
+- **Sample ratio mismatch (SRM).** A 50/50 assignment that lands 49/51 is not "close enough." Randomization or logging is broken, and every metric after that is untrustworthy. Check SRM before you read the rest of the readout.
 - **Feedback loops.** A recommender that shows more of X generates more X engagement data, which trains the next model to show even more X. The metric goes up while the product narrows.
+
+For ranking changes, **interleaving** (show a mixed list from control and treatment in one session) often detects a winner with far less traffic than a page-level A/B. Use it to screen, then confirm with a standard experiment.
 
 ---
 
@@ -236,11 +259,15 @@ The order that works:
 
 **ROC-AUC or PR-AUC?** PR-AUC when positives are rare and you care about finding them. ROC-AUC when classes are roughly balanced or you care about ranking overall.
 
+**Micro or macro F1?** Macro if the rare class is the point. Micro if you care about overall decisions. Weighted F1 is the one that quietly hides rare-class failure.
+
+**AUC is high, log loss is bad. Ship it?** Only if you need order, not a probability. If \(p\) goes into a bid, a risk score, or a threshold on cost, fix calibration first.
+
 **Offline metric improved, online did nothing. Why?** Distribution shift between logged and live traffic, a proxy that does not track the real objective, position/presentation effects your offline data cannot see, or an effect too small to detect at your traffic.
 
 **Why report p99 instead of the mean?** The mean hides the tail, and the tail is the experience people complain about. If a page issues 100 calls, a p99 per call means roughly a **63%** chance that at least one is slow, so the p99 becomes the typical page.
 
-**How do you evaluate a system with no ground truth?** Human preference on a sample, LLM-as-judge validated against those humans, proxy signals (user edits, retries, thumbs-down, abandonment), and online A/B. Then say plainly which of those you trust.
+**How do you evaluate a system with no ground truth?** Human preference on a sample, LLM-as-judge validated against those humans, proxy signals (user edits, retries, thumbs-down, abandonment), and online A/B. The number that decides a ship is usually **win rate against a fixed baseline**, not BLEU. Then say plainly which of those you trust.
 
 **Can a metric be gamed?** Assume yes. Engagement rewards outrage, ROUGE rewards copying, an LLM judge rewards verbosity. This is Goodhart's law, and the practical defense is guardrails plus periodic human review.
 
