@@ -1,7 +1,7 @@
 ---
 author: ["Abdullah Al Mamun"]
 title: "All About Optimization: From Gradient Descent to Muon"
-date: 2026-09-16
+date: 2026-09-15
 draft: false
 comments: true
 ShowToc: true
@@ -43,12 +43,12 @@ categories:
 | Nesterov | Momentum that looks ahead | 1x params | A small free improvement on momentum |
 | AdaGrad | Per-parameter step from total past gradient | 1x params | Sparse features. Historical |
 | RMSProp | Same, but a decaying average | 1x params | RNNs. Mostly superseded |
-| **Adam** | Momentum plus RMSProp, bias corrected | **2x params** | The default that works everywhere |
+| **Adam** | Momentum plus RMSProp, bias corrected | **2x params** | The strong baseline for deep nets |
 | **AdamW** | Adam with decoupled weight decay | 2x params | **Transformers. The real default** |
 | Lion | Sign of momentum only | 1x params | Large models, when memory is tight |
 | Sophia | Clipped diagonal second-order | 2x params | LLM pretraining, faster convergence |
 | Shampoo / SOAP | Matrix preconditioner | 4x+ params | Large runs where the math pays off |
-| **Muon** | Orthogonalized momentum on weight matrices | 1x params | Frontier LLM training, 2025 onward |
+| **Muon** | Orthogonalized momentum on weight matrices | 1x params | Emerging large-model optimizer |
 
 **If you remember one thing:** use **AdamW** with warmup and cosine decay, and spend your tuning budget on the **learning rate**, not on the optimizer. The choice of optimizer is worth a few percent. The learning rate is worth the difference between a working model and a `nan`.
 
@@ -235,7 +235,7 @@ Adam has held the crown for a decade. What is challenging it, and why:
 
 **Shampoo** and **SOAP** go further: instead of a per-parameter scalar, they build a **matrix** preconditioner that accounts for correlations between parameters, factorized so it stays tractable. More memory and compute per step, fewer steps needed. They earn their keep on large runs where wall-clock per step is not the bottleneck.
 
-**Muon** is the one worth knowing in 2026. It takes the momentum update for a 2D weight matrix and **orthogonalizes** it (via a few Newton-Schulz iterations) before applying it, so the update makes progress in many directions at once rather than being dominated by a few large singular values. It applies only to the 2D hidden weight matrices; embeddings, the output head, and all 1D parameters still use AdamW. It has moved from speedrun benchmarks into genuine frontier training runs.
+**Muon** is the one worth recognizing in 2026. It takes the momentum update for a 2D weight matrix and **orthogonalizes** it (via a few Newton-Schulz iterations) before applying it, so the update makes progress in many directions at once rather than being dominated by a few large singular values. It applies only to 2D hidden weight matrices; embeddings, the output head, and all 1D parameters usually still use AdamW. Treat it as an emerging large-model tool, not a replacement default for ordinary projects.
 
 > **The honest answer if asked what to use:** AdamW, unless you have a specific measured reason. The frontier optimizers win on large, well-understood, heavily-tuned runs. On a normal project, an afternoon spent on the learning rate schedule will beat a week spent swapping optimizers.
 

@@ -1,7 +1,7 @@
 ---
 author: ["Abdullah Al Mamun"]
 title: "Every Loss Function You Must Know as an ML Engineer"
-date: 2026-09-16
+date: 2026-09-10
 draft: false
 comments: true
 ShowToc: true
@@ -111,7 +111,7 @@ The last equality is the useful one: with a one-hot target, cross-entropy is jus
 
 > **Terminology:** cross-entropy, negative log-likelihood (NLL), and log loss all name the same quantity. Keras says *categorical cross-entropy* for the multiclass case and *binary cross-entropy* for two classes; PyTorch says `CrossEntropyLoss` and `BCEWithLogitsLoss`. Interviewers switch between these names without warning, so treat them as synonyms.
 
-> **Trap:** `nn.CrossEntropyLoss` already applies `log_softmax` internally. Feeding it softmax outputs applies softmax twice, which flattens your gradients and quietly hurts accuracy. It also expects **class indices**, not one-hot vectors. This is the single most common PyTorch bug in interview code-review questions.
+> **Trap:** `nn.CrossEntropyLoss` already applies `log_softmax` internally. Feeding it softmax outputs applies softmax twice, which flattens your gradients and quietly hurts accuracy. In the normal hard-label case it expects **class indices**. It can accept soft-label probability targets too, but do not pass one-hot vectors by habit; class indices are simpler, faster, and less bug-prone.
 
 **Why not argmax before the loss?** Argmax has zero gradient almost everywhere and is undefined at ties, so nothing would propagate. Train on continuous probabilities, use argmax only at inference to produce a discrete label.
 
@@ -129,13 +129,13 @@ An image tagged `{dog, outdoor, grass}` is multilabel. Softmax is wrong here bec
 
 ### 3.4 Label Smoothing
 
-Instead of a hard target of 1 for the correct class, use \(1-\epsilon\) and spread \(\epsilon\) across the rest:
+Instead of a hard one-hot target, mix the label with a small uniform distribution:
 
 $$y_k^{LS} = (1-\epsilon)y_k + \frac{\epsilon}{K}$$
 
-Hard targets push the correct logit toward infinity, which produces overconfident, poorly calibrated models. Smoothing caps that pressure and usually improves generalization and calibration. It costs one argument: `CrossEntropyLoss(label_smoothing=0.1)`.
+Hard targets push the correct logit toward infinity, which produces overconfident models. Smoothing caps that pressure and often improves generalization and top-level calibration. It costs one argument: `CrossEntropyLoss(label_smoothing=0.1)`.
 
-> **Trap:** it hurts when you need the raw probabilities downstream, as in distillation or retrieval calibration, because it deliberately distorts them.
+> **Trap:** it can hurt when the exact target distribution matters, as in distillation or carefully calibrated retrieval/ranking. It deliberately changes the target distribution, so treat calibration as something to measure, not something to assume.
 
 ### 3.5 Hinge Loss
 
@@ -312,7 +312,7 @@ It is \(\geq 0\), zero only when \(P=Q\), and **not symmetric**, so it is a dive
 | Forward \(D_{KL}(P\|Q)\) | mass-covering | \(Q\) spreads to cover all of \(P\), including low-density regions |
 | Reverse \(D_{KL}(Q\|P)\) | mode-seeking | \(Q\) collapses onto one mode of \(P\) |
 
-Forward KL is infinite wherever \(P>0\) and \(Q=0\), so \(Q\) must cover everything. Reverse KL is happy to ignore whole modes, which is why VAEs using reverse KL produce blurry, mode-collapsed samples.
+Forward KL is infinite wherever \(P>0\) and \(Q=0\), so \(Q\) must cover everything. Reverse KL is happy to ignore whole modes. That is why reverse-KL-style variational fits are often called **mode-seeking**; whether the final samples are blurry or mode-collapsed depends on the model family and decoder, not on the KL sentence alone.
 
 ![A two-humped target distribution P shaded in gray. The forward KL fit is a single wide flat Gaussian stretched across both humps, sitting low over each. The reverse KL fit is a tall narrow Gaussian sitting exactly on the taller right hump and ignoring the left one entirely](diagrams/4-forward-vs-reverse-kl.svg)
 
@@ -358,7 +358,9 @@ Given a prompt \(x\), preferred \(y_w\), rejected \(y_l\), and a frozen referenc
 
 $$L=-\log\sigma\left(\beta\left[\log\frac{\pi_\theta(y_w \mid x)}{\pi_{ref}(y_w \mid x)}-\log\frac{\pi_\theta(y_l \mid x)}{\pi_{ref}(y_l \mid x)}\right]\right)$$
 
-This is the pairwise logistic loss from section 5, with the score being the log-ratio against the reference. DPO's contribution is showing that the RLHF objective has a closed-form optimum you can hit with a supervised loss, so **no reward model and no RL loop are needed**. \(\beta\) controls how far the policy may drift.
+This is the pairwise logistic loss from section 5, with the score being the log-ratio against the reference. DPO's contribution is showing that the RLHF objective has a closed-form optimum you can hit with a supervised loss, so **no explicit reward model and no PPO loop are needed**. \(\beta\) controls how far the policy may drift.
+
+**Where industry is now:** DPO is the interview baseline because it is simple and stable. Current post-training stacks also use variants such as IPO, KTO, ORPO, SimPO, and GRPO, especially for reasoning models and online preference data. You do not need every formula in a general ML interview; you do need the distinction: SFT learns from demonstrations, DPO-style methods learn from preference pairs, and PPO/GRPO-style methods learn from sampled outputs scored by a reward signal.
 
 ### 8.5 RLHF
 

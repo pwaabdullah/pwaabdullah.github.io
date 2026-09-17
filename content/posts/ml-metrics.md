@@ -94,7 +94,7 @@ Calibration matters whenever the probability feeds a downstream decision: expect
 
 $$ECE=\sum_{m=1}^{M}\frac{\lvert B_m\rvert}{n}\Bigl\lvert \text{acc}(B_m)-\text{conf}(B_m)\Bigr\rvert$$
 
-A perfectly calibrated model scores 0. Plotting the same per-bin comparison gives you a reliability diagram. Fix miscalibration with Platt scaling or isotonic regression, both fitted on held-out data. Note that [label smoothing](/posts/loss-functions-ml-interview/) deliberately trades calibration away, so do not use it when downstream code reads the probabilities.
+A perfectly calibrated model scores 0. Plotting the same per-bin comparison gives you a reliability diagram. Fix miscalibration with Platt scaling, isotonic regression, or temperature scaling, fitted on held-out data. Note that [label smoothing](/posts/loss-functions-ml-interview/) changes the target distribution, so measure calibration instead of assuming the probabilities are usable downstream.
 
 ---
 
@@ -107,7 +107,7 @@ A perfectly calibrated model scores 0. Plotting the same per-bin comparison give
 | MAPE | \\(\frac{100}{n}\sum\|\frac{y-\hat y}{y}\|\\) | Scale-free, breaks near zero |
 | \\(R^2\\) | \\(1-\frac{SS_{res}}{SS_{tot}}\\) | Fraction of variance explained |
 
-This mirrors [MSE vs MAE in the loss post](/posts/loss-functions-ml-interview/): RMSE is outlier-sensitive because squaring, MAE is not. RMSE is always at least as large as MAE, and the gap between them tells you how heavy-tailed your errors are.
+This mirrors [MSE vs MAE in the loss post](/posts/loss-functions-ml-interview/): RMSE is outlier-sensitive because squaring, while MAE is less sensitive because errors grow linearly. RMSE is always at least as large as MAE, and the gap between them tells you how heavy-tailed your errors are.
 
 > **Traps worth knowing.** MAPE is **undefined at \\(y=0\\)** and asymmetric: under-prediction caps at 100% error while over-prediction is unbounded, so optimizing MAPE quietly biases your forecasts low. And \\(R^2\\) **can be negative**, which just means you are doing worse than predicting the mean. On a test set that is a real and common outcome, not a bug.
 

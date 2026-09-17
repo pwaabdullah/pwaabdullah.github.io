@@ -1,7 +1,7 @@
 ---
 author: ["Abdullah Al Mamun"]
 title: "Every Activation Function You Need to Know"
-date: 2026-09-16
+date: 2026-09-11
 draft: false
 comments: true
 ShowToc: true
@@ -43,14 +43,14 @@ categories:
 | Leaky ReLU | \(\max(\alpha x, x)\) | \((-\infty,\infty)\) | When units are dying | `nn.LeakyReLU` |
 | PReLU | learnable \(\alpha\) | \((-\infty,\infty)\) | When you can afford the params | `nn.PReLU` |
 | ELU | \(x\) or \(\alpha(e^x-1)\) | \((-\alpha,\infty)\) | Smooth, negative-capable | `nn.ELU` |
-| GELU | \(x\,\Phi(x)\) | \(\approx(-0.17,\infty)\) | Transformers (BERT, GPT) | `nn.GELU` |
+| GELU | \(x\,\Phi(x)\) | \(\approx(-0.17,\infty)\) | BERT/GPT-style transformer blocks | `nn.GELU` |
 | SiLU / Swish | \(x\,\sigma(x)\) | \(\approx(-0.28,\infty)\) | Deep nets, EfficientNet | `nn.SiLU` |
 | SwiGLU | gated Swish | unbounded | Modern LLM feedforward blocks | custom |
 | Tanh | \(\tanh(x)\) | \((-1,1)\) | RNN/LSTM gates, zero-centered need | `nn.Tanh` |
-| Sigmoid | \(1/(1+e^{-x})\) | \((0,1)\) | **Output** for binary/multilabel | `nn.Sigmoid` |
-| Softmax | \(e^{z_k}/\sum_j e^{z_j}\) | \((0,1)\), sums to 1 | **Output** for multiclass | `nn.Softmax` |
+| Sigmoid | \(1/(1+e^{-x})\) | \((0,1)\) | Probability view for binary/multilabel | `nn.Sigmoid` |
+| Softmax | \(e^{z_k}/\sum_j e^{z_j}\) | \((0,1)\), sums to 1 | Probability view for multiclass | `nn.Softmax` |
 
-**The short version:** ReLU in hidden layers unless you have a reason; GELU or SwiGLU in transformers; sigmoid and softmax only at the output; tanh when you specifically need a zero-centered bounded signal.
+**The short version:** ReLU in hidden layers unless you have a reason; GELU or SwiGLU in transformers; sigmoid and softmax only when you need probabilities for inference or a custom loss; tanh when you specifically need a zero-centered bounded signal.
 
 ---
 
@@ -153,7 +153,7 @@ The common approximation, which is what most implementations ship:
 
 $$0.5x\left(1+\tanh\left(\sqrt{2/\pi}\,(x+0.044715x^{3})\right)\right)$$
 
-It is smooth, non-monotonic near zero, and allows small negative outputs, so there are no dead units. This is the activation in **BERT and the GPT family**, and the default choice for transformer feedforward blocks.
+It is smooth, non-monotonic near zero, and allows small negative outputs, so there are no dead units. It is the classic activation in **BERT and GPT-style transformer blocks**. Many newer LLMs moved the feedforward block to gated variants such as SwiGLU, but GELU is still the activation interviewers expect you to recognize first.
 
 ### 4.5 SiLU / Swish
 
@@ -199,13 +199,15 @@ Hidden-layer activations shape what the network can represent. Output activation
 
 | Task | Output activation | Paired loss |
 |---|---|---|
-| Binary classification | Sigmoid | BCE |
-| Multiclass, one label | Softmax | Cross-entropy |
-| Multilabel | Sigmoid per label | BCE per label |
+| Binary classification | Sigmoid conceptually; raw logits in PyTorch | `BCEWithLogitsLoss` |
+| Multiclass, one label | Softmax conceptually; raw logits in PyTorch | `CrossEntropyLoss` |
+| Multilabel | Sigmoid per label conceptually; raw logits in PyTorch | `BCEWithLogitsLoss` |
 | Regression | **None** (linear) | MSE / MAE / Huber |
 | Bounded regression | Sigmoid or tanh, rescaled | MSE |
 
 > **Trap:** putting ReLU on a regression output. It silently makes negative predictions impossible. If the target can be negative, the model can never be right, and the loss curve looks plausible while it happens.
+
+> **Trap:** in PyTorch, the output activation is often *inside the loss*. `BCEWithLogitsLoss` contains sigmoid and `CrossEntropyLoss` contains `log_softmax`. At inference you may apply sigmoid or softmax to read probabilities; during training with these losses, feed raw logits.
 
 ### Softmax, Properly
 
