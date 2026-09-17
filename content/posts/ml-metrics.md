@@ -90,7 +90,11 @@ One trained model, every operating point it can be run at. Training fixed this c
 
 A model is calibrated if, among predictions of 0.7, about 70% are actually positive. AUC does not care about this at all: it only cares about **ranking**, so you can have perfect AUC and badly miscalibrated probabilities.
 
-Calibration matters whenever the probability feeds a downstream decision: expected-value calculations, bidding, risk scoring, thresholding on cost. Measure it with **ECE** (expected calibration error) or a reliability diagram; fix it with Platt scaling or isotonic regression. Note that [label smoothing](/posts/loss-functions-ml-interview/) deliberately trades calibration away, so do not use it when downstream code reads the probabilities.
+Calibration matters whenever the probability feeds a downstream decision: expected-value calculations, bidding, risk scoring, thresholding on cost. Measure it by bucketing predictions into \\(M\\) bins and asking, within each bin, whether stated confidence matched observed accuracy:
+
+$$ECE=\sum_{m=1}^{M}\frac{\lvert B_m\rvert}{n}\Bigl\lvert \text{acc}(B_m)-\text{conf}(B_m)\Bigr\rvert$$
+
+A perfectly calibrated model scores 0. Plotting the same per-bin comparison gives you a reliability diagram. Fix miscalibration with Platt scaling or isotonic regression, both fitted on held-out data. Note that [label smoothing](/posts/loss-functions-ml-interview/) deliberately trades calibration away, so do not use it when downstream code reads the probabilities.
 
 ---
 
@@ -113,13 +117,21 @@ This mirrors [MSE vs MAE in the loss post](/posts/loss-functions-ml-interview/):
 
 Order is what matters, not the raw score. All of these are measured **@k**, because nobody scrolls.
 
-| Metric | What it captures |
-|---|---|
-| Precision@k | How many of the top \\(k\\) were relevant |
-| Recall@k | How much of the relevant set made the top \\(k\\) |
-| MRR | \\(1/\text{rank}\\) of the first relevant item, averaged |
-| MAP | Average precision across all relevant positions |
-| **NDCG@k** | Graded relevance, discounted by position, normalized |
+| Metric | In one sentence | Formula |
+|---|---|---|
+| Precision@k | What fraction of what I showed was relevant | \\(\frac{\text{relevant in top }k}{k}\\) |
+| Recall@k | What fraction of everything relevant I showed | \\(\frac{\text{relevant in top }k}{\text{total relevant}}\\) |
+| MRR | How far down was the first correct answer | \\(\frac{1}{\lvert Q\rvert}\sum_q \frac{1}{\text{rank}_q}\\) |
+| MAP | Precision measured at every relevant hit, averaged | \\(\text{AP}=\frac{\sum_k P(k)\cdot rel(k)}{\text{total relevant}}\\) |
+| **NDCG@k** | Graded relevance, discounted by position, normalized | see below |
+
+**NDCG is the one worth being able to write from memory**, because it is the metric interviewers ask for by name. Two steps:
+
+$$DCG@k=\sum_{i=1}^{k}\frac{rel_i}{\log_2(i+1)} \qquad NDCG@k=\frac{DCG@k}{IDCG@k}$$
+
+The \\(\log_2(i+1)\\) denominator is the **position discount**: rank 1 divides by 1, rank 2 by 1.58, rank 9 by 3.32. That is precisely what makes a win at the top worth more than the same win further down. \\(IDCG@k\\) is the DCG of the perfect ordering, which normalizes into \\([0,1]\\) so queries with different numbers of relevant results stay comparable.
+
+> **Worth knowing:** production systems usually use the **exponential gain** form, \\(\frac{2^{rel_i}-1}{\log_2(i+1)}\\), which separates "highly relevant" from "somewhat relevant" much more sharply. If asked which form you mean, naming the exponential-gain variant and saying graded relevance should not be linear is the stronger answer.
 
 **NDCG is the default** for search and recommendation because it handles graded relevance (not just relevant/irrelevant) and applies a position discount, so an improvement at rank 1 counts for more than the same improvement at rank 9. **MRR** is the right choice when there is exactly one correct answer and you only care where it landed, which is why it shows up in QA and retrieval-for-RAG.
 
@@ -143,7 +155,11 @@ This is where metric choice is hardest, because the output space is open-ended.
 
 **Why BLEU and ROUGE persist despite being weak:** they are cheap, deterministic, and reproducible. They are reasonable regression detectors and poor quality measures. Reporting a BLEU gain as a quality win is a claim a good interviewer will push on.
 
-**pass@k is the model to imitate.** It does not compare text to a reference; it **executes the code against tests**. Wherever you can replace similarity-to-a-reference with did-it-actually-work, do it. That is the same transcript-versus-outcome distinction from the [agent evaluation post](/posts/the-biggest-gap-in-multi-agent-evaluation/).
+**pass@k is the model to imitate.** It does not compare text to a reference; it **executes the code against tests**. Sample \\(n\\) solutions per problem, count the \\(c\\) that pass, and report the unbiased estimate that at least one of \\(k\\) samples works:
+
+$$\text{pass@}k=\mathbb{E}\left[1-\frac{\binom{n-c}{k}}{\binom{n}{k}}\right]$$
+
+Read the ratio directly: it is the probability that **all** \\(k\\) draws land among the failures, so one minus it is the probability at least one succeeds. You sample \\(n\\) well above \\(k\\) and estimate because computing it from exactly \\(k\\) samples is far too noisy. Wherever you can replace similarity-to-a-reference with did-it-actually-work, do it. That is the same transcript-versus-outcome distinction from the [agent evaluation post](/posts/the-biggest-gap-in-multi-agent-evaluation/).
 
 **LLM-as-judge**, with the caveats stated up front because they will be asked:
 - **Position bias**: judges favor the first option. Randomize order, or score both ways.
