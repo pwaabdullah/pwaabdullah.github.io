@@ -147,6 +147,10 @@ Once \(y f(x)\geq1\) the loss is exactly zero. Being correct isn't enough; the m
 
 **CE vs hinge:** cross-entropy gives calibrated probabilities and keeps pushing forever; hinge gives a margin and stops caring once satisfied. Choose CE when you need probabilities, hinge when you need a clean decision boundary.
 
+![Loss plotted against margin. The 0-1 loss is a dashed step from 1 to 0 at margin zero. Cross-entropy and hinge are smooth upper bounds above it. Hinge reaches exactly zero at margin 1 and stays there, while cross-entropy keeps decreasing and never quite reaches zero](diagrams/2-classification-surrogates.svg)
+
+The dashed step is what you actually care about: wrong costs 1, right costs 0. It is also flat everywhere, so its gradient is zero and you cannot optimize it. Both curves above it are differentiable **upper bounds** you optimize instead, and the difference between them is visible at margin 1: hinge touches zero and flatlines, contributing nothing further, while cross-entropy keeps sloping down forever, still asking for more confidence on examples it already classifies correctly.
+
 ### 3.6 Focal Loss
 
 For heavy imbalance, where easy negatives drown the signal (Lin et al., RetinaNet):
@@ -156,6 +160,10 @@ $$FL(p_t)=-\alpha(1-p_t)^\gamma\log(p_t)$$
 The \((1-p_t)^\gamma\) factor shrinks the contribution of examples the model already gets right. At \(\gamma=2\), an example at \(p_t=0.9\) contributes 100x less than it would under plain CE. Typical settings are \(\gamma=2\), \(\alpha=0.25\).
 
 **When to reach for it:** dense object detection, fraud, ad click prediction, anywhere the negative-to-positive ratio runs into the thousands.
+
+![Focal loss against the probability given to the correct class, for gamma 0, 2 and 5. All curves are high at low probability and fall toward zero, but larger gamma pulls the curve down far faster. A marked point at p equals 0.9 shows cross-entropy at 0.105 versus focal at 0.00105](diagrams/3-focal-loss.svg)
+
+Read the right-hand side, where the easy examples live. At \(p_t=0.9\) plain cross-entropy still charges 0.105, and multiplied across a hundred thousand easy negatives that is most of your gradient. Focal loss at \(\gamma=2\) charges 0.00105 for the same example, a hundredfold reduction, while the hard examples on the left are barely touched. That selective suppression is the whole mechanism.
 
 > **Trap:** focal loss is not the only answer to imbalance, and leading with it can read as pattern-matching. Mention the cheaper options first: class weights, `pos_weight` in `BCEWithLogitsLoss`, resampling, or just moving the decision threshold. Focal loss earns its place when easy negatives dominate, not merely when classes are unequal.
 
@@ -186,6 +194,10 @@ $$L_\delta(e)=\begin{cases}\frac{1}{2}e^2 & |e|\leq\delta\\ \delta(|e|-\frac{1}{
 You get MSE's smooth, well-scaled gradients near the optimum and MAE's robustness far from it. The price is a hyperparameter \(\delta\) that sets where "outlier" begins.
 
 > **Note:** PyTorch has both `HuberLoss(delta)` and `SmoothL1Loss(beta)`. They are the same curve up to a scale factor, which matters only if you're comparing loss values or tuning learning rate across the two.
+
+![Two panels. Left: MSE as a steep parabola, MAE as a V, and Huber tracking MSE near zero then going linear. Right: the gradients. MSE's gradient is a straight line reaching plus or minus 6 at the edges, while MAE and Huber are capped at plus or minus 1](diagrams/1-regression-losses.svg)
+
+The right panel is the one that matters, because the gradient is what the optimizer actually sees. MSE's gradient grows linearly with the error and never stops, so a single point with an error of 10 pushes ten times harder than a point with an error of 1. That is outlier sensitivity, stated mechanically. MAE and Huber cap their gradient magnitude, so no individual point can dominate the update no matter how wrong it is.
 
 ### 4.4 L1 / L2 as Regularization
 
@@ -301,6 +313,10 @@ It is \(\geq 0\), zero only when \(P=Q\), and **not symmetric**, so it is a dive
 | Reverse \(D_{KL}(Q\|P)\) | mode-seeking | \(Q\) collapses onto one mode of \(P\) |
 
 Forward KL is infinite wherever \(P>0\) and \(Q=0\), so \(Q\) must cover everything. Reverse KL is happy to ignore whole modes, which is why VAEs using reverse KL produce blurry, mode-collapsed samples.
+
+![A two-humped target distribution P shaded in gray. The forward KL fit is a single wide flat Gaussian stretched across both humps, sitting low over each. The reverse KL fit is a tall narrow Gaussian sitting exactly on the taller right hump and ignoring the left one entirely](diagrams/4-forward-vs-reverse-kl.svg)
+
+Both fits are the best single Gaussian available, computed by minimizing each direction numerically against the same target. Forward KL lands at \(\mu=0.6,\ \sigma=2.0\): it smears across both modes and puts real probability mass in the valley between them, where the target has almost none. Reverse KL lands at \(\mu=2.0,\ \sigma=0.6\), which is *exactly* the right mode's own parameters; it fits that mode perfectly and pretends the other does not exist. Same target, same family, opposite failure. Which one you want depends on whether missing a mode or hallucinating between modes is the worse outcome for your application.
 
 **Shows up in:** knowledge distillation, VAEs, RLHF policy constraints, and any distribution matching.
 
