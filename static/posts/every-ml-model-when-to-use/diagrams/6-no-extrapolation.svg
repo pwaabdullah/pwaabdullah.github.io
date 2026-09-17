@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 360" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img">
+  <rect width="820" height="360" fill="#ffffff"/>
+  <text x="410" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">Trees Do Not Extrapolate</text>
+  <text x="410" y="55" text-anchor="middle" font-size="13" fill="#64748b">Train on houses up to 3,000 sq ft, then ask about 5,000</text>
+
+  <rect x="400" y="78" width="340" height="202" fill="#fff7ed" opacity="0.7"/>
+  <text x="570" y="98" text-anchor="middle" font-size="11.5" font-weight="600" fill="#c2410c">outside the training range</text>
+
+  <line x1="70" y1="230" x2="740" y2="230" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="70" y1="180" x2="740" y2="180" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="70" y1="130" x2="740" y2="130" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="62" y="234" text-anchor="end" font-size="11" fill="#64748b">$200k</text>
+  <text x="62" y="184" text-anchor="end" font-size="11" fill="#64748b">$400k</text>
+  <text x="62" y="134" text-anchor="end" font-size="11" fill="#64748b">$600k</text>
+
+  <line x1="70" y1="280" x2="740" y2="280" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="70" y1="78" x2="70" y2="280" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="70" y="300" text-anchor="middle" font-size="11" fill="#64748b">1,000</text>
+  <text x="400" y="300" text-anchor="middle" font-size="11" fill="#64748b">3,000 sq ft</text>
+  <text x="740" y="300" text-anchor="middle" font-size="11" fill="#64748b">5,000</text>
+
+  <line x1="400" y1="78" x2="400" y2="280" stroke="#c2410c" stroke-width="1.6" stroke-dasharray="5 4"/>
+
+  <circle cx="96" cy="248" r="3.2" fill="#94a3b8"/>
+  <circle cx="128" cy="241" r="3.2" fill="#94a3b8"/>
+  <circle cx="158" cy="236" r="3.2" fill="#94a3b8"/>
+  <circle cx="190" cy="228" r="3.2" fill="#94a3b8"/>
+  <circle cx="222" cy="224" r="3.2" fill="#94a3b8"/>
+  <circle cx="252" cy="214" r="3.2" fill="#94a3b8"/>
+  <circle cx="284" cy="210" r="3.2" fill="#94a3b8"/>
+  <circle cx="314" cy="202" r="3.2" fill="#94a3b8"/>
+  <circle cx="346" cy="196" r="3.2" fill="#94a3b8"/>
+  <circle cx="376" cy="188" r="3.2" fill="#94a3b8"/>
+
+  <path d="M80,252 L400,180 L740,108" fill="none" stroke="#4f46e5" stroke-width="2.6"/>
+  <path d="M80,252 L400,180 L740,180" fill="none" stroke="#ea580c" stroke-width="2.6"/>
+
+  <circle cx="740" cy="108" r="5" fill="#4f46e5" stroke="#fff" stroke-width="1.5"/>
+  <circle cx="740" cy="180" r="5" fill="#ea580c" stroke="#fff" stroke-width="1.5"/>
+
+  <text x="560" y="122" text-anchor="middle" font-size="12.5" font-weight="600" fill="#4f46e5">linear: keeps going</text>
+  <text x="560" y="200" text-anchor="middle" font-size="12.5" font-weight="600" fill="#ea580c">tree: stuck at $400k</text>
+
+  <text x="410" y="340" text-anchor="middle" font-size="12.5" fill="#475569">A leaf predicts the mean of the training rows that fell into it. Past the last split there is no new leaf, so the answer never changes.</text>
+</svg>
