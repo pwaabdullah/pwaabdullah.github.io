@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 506" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img">
+  <rect width="880" height="506" fill="#ffffff"/>
+<defs><marker id="a" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#94a3b8"/></marker><marker id="q" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#0f172a"/></marker><marker id="b" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#4f46e5"/></marker><marker id="c" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#ea580c"/></marker><marker id="d" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#0d9488"/></marker></defs>
+  <text x="440.0" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">Cosine, Dot Product, and Why It Matters</text>
+  <text x="440.0" y="55" text-anchor="middle" font-size="13" fill="#64748b">The long vector wins on dot product and loses on cosine</text>
+<line x1="90" y1="330" x2="420" y2="330" stroke="#94a3b8" stroke-width="1.4"/>
+<line x1="90" y1="330" x2="90" y2="110" stroke="#94a3b8" stroke-width="1.4"/>
+<line x1="90" y1="330" x2="208.4" y2="330" stroke="#0f172a" stroke-width="3" marker-end="url(#q)"/>
+<text x="216.4" y="348.0" text-anchor="start" font-size="12" font-weight="600" fill="#0f172a">query</text>
+<line x1="90" y1="330" x2="312.0" y2="263.4" stroke="#ea580c" stroke-width="2.6" marker-end="url(#c)"/>
+<text x="322.0" y="257.4" text-anchor="start" font-size="11.5" font-weight="600" fill="#ea580c">popular generic item</text>
+<line x1="90" y1="330" x2="156.6" y2="326.3" stroke="#4f46e5" stroke-width="2.6" marker-end="url(#b)"/>
+<text x="166.6" y="320.3" text-anchor="start" font-size="11.5" font-weight="600" fill="#4f46e5">niche exact match</text>
+<line x1="90" y1="330" x2="171.4" y2="248.6" stroke="#0d9488" stroke-width="2.6" marker-end="url(#d)"/>
+<text x="181.4" y="242.6" text-anchor="start" font-size="11.5" font-weight="600" fill="#0d9488">loosely related</text>
+<text x="255.0" y="96.0" text-anchor="middle" font-size="13" font-weight="700" fill="#475569">three candidates against one query</text>
+<text x="255.0" y="372.0" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">length encodes how popular or verbose an item is</text>
+<text x="500.0" y="96.0" text-anchor="start" font-size="13" font-weight="700" fill="#475569">the two rankings disagree</text>
+<text x="500.0" y="132.0" text-anchor="start" font-size="12.5" font-weight="600" fill="#4f46e5">by cosine (angle only)</text>
+<rect x="500" y="150" width="330" height="30" rx="7" fill="#f8fafc" stroke="#4f46e5" stroke-width="1.8"/>
+<text x="512.0" y="170.0" text-anchor="start" font-size="12" font-weight="700" fill="#64748b">1.</text>
+<text x="534.0" y="170.0" text-anchor="start" font-size="12" font-weight="600" fill="#0f172a">niche exact match</text>
+<text x="818.0" y="170.0" text-anchor="end" font-size="12.5" font-weight="700" fill="#4f46e5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">1.00</text>
+<rect x="500" y="186" width="330" height="30" rx="7" fill="#f8fafc" stroke="#ea580c" stroke-width="1.8"/>
+<text x="512.0" y="206.0" text-anchor="start" font-size="12" font-weight="700" fill="#64748b">2.</text>
+<text x="534.0" y="206.0" text-anchor="start" font-size="12" font-weight="600" fill="#0f172a">popular generic item</text>
+<text x="818.0" y="206.0" text-anchor="end" font-size="12.5" font-weight="700" fill="#ea580c" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">0.96</text>
+<rect x="500" y="222" width="330" height="30" rx="7" fill="#f8fafc" stroke="#0d9488" stroke-width="1.8"/>
+<text x="512.0" y="242.0" text-anchor="start" font-size="12" font-weight="700" fill="#64748b">3.</text>
+<text x="534.0" y="242.0" text-anchor="start" font-size="12" font-weight="600" fill="#0f172a">loosely related</text>
+<text x="818.0" y="242.0" text-anchor="end" font-size="12.5" font-weight="700" fill="#0d9488" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">0.71</text>
+<text x="500.0" y="300.0" text-anchor="start" font-size="12.5" font-weight="600" fill="#ea580c">by dot product (angle and length)</text>
+<rect x="500" y="318" width="330" height="30" rx="7" fill="#f8fafc" stroke="#ea580c" stroke-width="1.8"/>
+<text x="512.0" y="338.0" text-anchor="start" font-size="12" font-weight="700" fill="#64748b">1.</text>
+<text x="534.0" y="338.0" text-anchor="start" font-size="12" font-weight="600" fill="#0f172a">popular generic item</text>
+<text x="818.0" y="338.0" text-anchor="end" font-size="12.5" font-weight="700" fill="#ea580c" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">3.00</text>
+<rect x="500" y="354" width="330" height="30" rx="7" fill="#f8fafc" stroke="#0d9488" stroke-width="1.8"/>
+<text x="512.0" y="374.0" text-anchor="start" font-size="12" font-weight="700" fill="#64748b">2.</text>
+<text x="534.0" y="374.0" text-anchor="start" font-size="12" font-weight="600" fill="#0f172a">loosely related</text>
+<text x="818.0" y="374.0" text-anchor="end" font-size="12.5" font-weight="700" fill="#0d9488" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">1.10</text>
+<rect x="500" y="390" width="330" height="30" rx="7" fill="#f8fafc" stroke="#4f46e5" stroke-width="1.8"/>
+<text x="512.0" y="410.0" text-anchor="start" font-size="12" font-weight="700" fill="#64748b">3.</text>
+<text x="534.0" y="410.0" text-anchor="start" font-size="12" font-weight="600" fill="#0f172a">niche exact match</text>
+<text x="818.0" y="410.0" text-anchor="end" font-size="12.5" font-weight="700" fill="#4f46e5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">0.90</text>
+<text x="665.0" y="462.0" text-anchor="middle" font-size="12.5" font-weight="600" fill="#be123c">Same vectors. The niche match is first by cosine and last by dot.</text>
+  <text x="440.0" y="492" text-anchor="middle" font-size="12.5" fill="#475569">Normalize your vectors and the question disappears: cosine, dot and Euclidean then rank identically.</text>
+</svg>
