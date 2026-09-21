@@ -60,7 +60,9 @@ This is the warm-up question, and the answer is one line of algebra. Stack two l
 
 $$W_2(W_1x+b_1)+b_2 = (W_2W_1)x + (W_2b_1+b_2)$$
 
-The result is a single affine map. A hundred stacked linear layers have exactly the representational power of one. **Depth buys you nothing without a nonlinearity**, which is the entire reason activations exist.
+The result is a single affine map. A hundred stacked linear layers have exactly the representational power of one.
+
+**Say it like this: without a nonlinearity between them, a hundred layers can only do what one layer can do.** That is the entire reason activations exist.
 
 What makes a good one:
 
@@ -77,9 +79,13 @@ That last property is where most of them fail, and it's what the next two sectio
 
 ### 3.1 Sigmoid
 
+Sigmoid takes any number, however big or small, and squeezes it into the range 0 to 1. That output reads like a probability, which is why it was the default for years.
+
+**Say it like this: sigmoid is a squasher.** Anything far from zero comes out as almost exactly 0 or almost exactly 1, and that flattening is both its appeal and its downfall.
+
 $$\sigma(x)=\frac{1}{1+e^{-x}}, \qquad \sigma'(x)=\sigma(x)(1-\sigma(x))$$
 
-Squashes into \((0,1)\), which reads like a probability. That made it the default for years. It has three problems that ended it as a hidden-layer choice.
+That second formula is the derivative, and it's where all the trouble lives. Three problems killed sigmoid as a hidden-layer choice.
 
 **Vanishing gradients.** The derivative peaks at \(\sigma'(0)=0.25\) and falls toward zero in both tails. Backprop multiplies these together, so across \(n\) layers the gradient is scaled by at most \(0.25^n\). Ten layers gives you a factor of roughly \(10^{-6}\) in the best case, and far worse once units saturate. Early layers stop learning.
 
@@ -91,11 +97,15 @@ Squashes into \((0,1)\), which reads like a probability. That made it the defaul
 
 ### 3.2 Tanh
 
+Tanh is sigmoid, recentred. Same S-shape, but the output runs from -1 to 1 instead of 0 to 1, so values can be negative and they average around zero.
+
+**Say it like this: tanh is sigmoid that can say "no" as well as "yes".**
+
 $$\tanh(x)=\frac{e^{x}-e^{-x}}{e^{x}+e^{-x}}, \qquad \tanh'(x)=1-\tanh^2(x)$$
 
-A rescaled sigmoid: \(\tanh(x)=2\sigma(2x)-1\). Range \((-1,1)\), and crucially it is **zero-centered**, which fixes sigmoid's second problem. Its derivative peaks at 1 rather than 0.25, so it vanishes more slowly.
+Literally a rescaled sigmoid: \(\tanh(x)=2\sigma(2x)-1\). Being **zero-centered** fixes sigmoid's second problem, and its derivative peaks at 1 rather than 0.25, so it vanishes more slowly.
 
-It still saturates in both tails, so it is still a poor deep hidden-layer choice. It survives where a **bounded, zero-centered** signal is the point: LSTM and GRU cell states, and anywhere you need an output in \((-1,1)\).
+It still flattens out in both tails though, so it's still a bad pick deep in a stack. Where it's still around is anywhere you specifically want a **bounded, zero-centered** signal: LSTM and GRU cell states, or any output that needs to sit between -1 and 1.
 
 ![Two panels. Left: sigmoid and tanh curves, both flattening into horizontal tails. Right: their derivatives, sharp peaks at zero falling to near zero in the shaded saturated regions beyond x = plus or minus 3. Tanh peaks at 1.0, sigmoid at only 0.25](diagrams/1-saturating-activations.svg)
 
@@ -107,9 +117,13 @@ The right panel is the whole problem in one picture. Outside roughly \([-3,3]\) 
 
 ### 4.1 ReLU
 
+ReLU is the simplest rule in this post. If the number is positive, keep it. If it is negative, make it zero. That is the whole function.
+
+**Say it like this: ReLU keeps positives and zeros negatives, and that one line of logic is what made deep networks trainable.**
+
 $$\text{ReLU}(x)=\max(0,x), \qquad \text{ReLU}'(x)=\begin{cases}1 & x>0\\ 0 & x\lt 0\end{cases}$$
 
-The change that made deep networks trainable. For positive inputs the gradient is exactly **1**, so it neither shrinks nor grows as it propagates: no saturation, no vanishing. It is also a single comparison, so it's essentially free, and it produces **sparse** activations since roughly half the units output zero.
+Why did that matter so much? For positive inputs the gradient is exactly **1**. Not close to 1, exactly 1, so it passes through a layer without shrinking or growing. No saturation, no vanishing. It's also just a comparison against zero, so it costs nothing, and about half your units output zero, which gives you **sparse** activations for free.
 
 **Dying ReLU** is the price. If a unit's pre-activation is negative for every input in the data (typically after a large gradient step drives its bias strongly negative), its output is 0, so its gradient is 0, so it never updates again. It is permanently dead, not merely inactive.
 
@@ -119,11 +133,15 @@ The change that made deep networks trainable. For positive inputs the gradient i
 
 ### 4.2 Leaky ReLU and PReLU
 
+Leaky ReLU is ReLU with one change: instead of flattening negatives to a hard zero, it lets a trickle through.
+
+**Say it like this: Leaky ReLU leaves the door open a crack, so a dead unit can find its way back.**
+
 $$\text{LeakyReLU}(x)=\max(\alpha x, x), \quad \alpha \approx 0.01$$
 
-Give the negative side a small slope so the gradient is never exactly zero and dead units can recover. **PReLU** makes \(\alpha\) a learned parameter instead of a constant.
+A small slope on the negative side means the gradient is never exactly zero, so a unit that lands there can still update. **PReLU** makes \(\alpha\) a learned parameter instead of a constant.
 
-In practice the improvement over plain ReLU is real but modest, and inconsistent across tasks. It's the first thing to try when you have measured a dying-unit problem, not a default.
+In practice the gain over plain ReLU is real but small, and it doesn't show up consistently across tasks. Reach for it when you've actually measured dead units, not as a default.
 
 ![Two panels. Left: ReLU as a flat line then a 45 degree ramp, with Leaky ReLU dashed below it on the negative side. Right: the derivatives as step functions. ReLU is exactly 1 for positive inputs and exactly 0 in the shaded negative region where units can die, while Leaky ReLU holds a small 0.1 slope there](diagrams/2-relu-family.svg)
 
@@ -133,21 +151,29 @@ Stack the two behaviors across depth and the gap is not subtle:
 
 ![Log-scale plot of gradient factor against layer depth. ReLU stays flat at 1 across all ten layers, while sigmoid's best case falls geometrically from 0.25 to about one millionth by layer ten](diagrams/3-gradient-through-depth.svg)
 
-Both curves are best cases, which is what makes the comparison fair and the result stark. Sigmoid is generous here (real units saturate and do worse), yet it still gives up roughly six orders of magnitude over ten layers, while ReLU gives up nothing. This is the vanishing gradient problem, and it is the single biggest reason deep learning became practical.
+Both curves are best cases, which is what makes this fair and also what makes it damning. Sigmoid is being flattered here, since real units saturate and do worse than their own ceiling, and it still throws away six orders of magnitude over ten layers. ReLU throws away nothing. That gap is the vanishing gradient problem, and closing it is the biggest single reason deep learning started working.
 
 ### 4.3 ELU and SELU
 
+ELU keeps ReLU's positive side untouched and replaces the hard zero with a smooth curve that settles at a small negative value.
+
+**Say it like this: ELU is ReLU with a soft landing instead of a cliff.**
+
 $$\text{ELU}(x)=\begin{cases}x & x>0\\ \alpha(e^{x}-1) & x\leq 0\end{cases}$$
 
-Smooth everywhere, with negative outputs that push the mean activation toward zero, recovering some of the zero-centering benefit. Costs an `exp` on the negative branch.
+Smooth everywhere, and those negative outputs drag the mean activation back toward zero, so you get some of tanh's zero-centering benefit back. You pay an `exp` on the negative branch for it.
 
 **SELU** is ELU with two specific fixed constants chosen so that activations converge to zero mean and unit variance across layers, making the network *self-normalizing*. The catch is that the guarantee only holds with `lecun_normal` initialization, `AlphaDropout`, and a plain feedforward stack. Break any of those and it's just a scaled ELU. That fine print is why it never displaced BatchNorm.
 
 ### 4.4 GELU
 
-$$\text{GELU}(x)=x\,\Phi(x)$$
+ReLU makes a hard call at zero: keep the value or kill it. GELU makes a soft one. It scales each input by how likely that input is to matter, so values near zero fade out gradually instead of being chopped off.
 
-where \(\Phi\) is the standard normal CDF. Instead of ReLU's hard gate (keep or zero), GELU weights the input by **the probability that a standard normal draw falls below it**, so the gate is smooth and stochastic in spirit.
+**Say it like this: ReLU is a switch, GELU is a dimmer.**
+
+Written down, "how likely it is to matter" is the standard normal CDF \(\Phi\), which just asks what fraction of a bell curve sits below \(x\):
+
+$$\text{GELU}(x)=x\,\Phi(x)$$
 
 The common approximation, which is what BERT and GPT-2 actually used:
 
@@ -155,9 +181,13 @@ $$0.5x\left(1+\tanh\left(\sqrt{2/\pi}\,(x+0.044715x^{3})\right)\right)$$
 
 PyTorch `nn.GELU` is the exact \(\Phi\) form; `approximate='tanh'` is the line above. They are close. Don't mix them inside one model and then wonder why a checkpoint doesn't match.
 
-It is smooth, non-monotonic near zero, and allows small negative outputs, so there are no dead units. It is the classic activation in **BERT and GPT-style transformer blocks**. Many newer LLMs moved the feedforward block to gated variants such as SwiGLU, but GELU is still the activation interviewers expect you to recognize first.
+It's smooth, it dips slightly below zero near the origin, and it never fully kills a unit, so nothing dies. This is the classic activation in **BERT and GPT-style transformer blocks**. Plenty of newer LLMs moved their feedforward block to gated variants like SwiGLU, but GELU is still the one interviewers expect you to name first.
 
 ### 4.5 SiLU / Swish
+
+SiLU does GELU's job with a cheaper gate. Instead of consulting a bell curve to decide how much of each input to keep, it just uses sigmoid.
+
+**Say it like this: SiLU is GELU's cheaper twin.**
 
 $$\text{SiLU}(x)=x\,\sigma(x)$$
 
@@ -167,6 +197,8 @@ Found by architecture search and published as Swish. Shaped very much like GELU:
 
 ### 4.6 Mish
 
+Same idea one more time, just with a different smooth function doing the gating.
+
 $$\text{Mish}(x)=x\tanh(\text{softplus}(x))$$
 
 Same smooth non-monotonic family, slightly more expensive, occasionally better in vision. Worth recognizing, rarely worth reaching for.
@@ -175,7 +207,11 @@ Same smooth non-monotonic family, slightly more expensive, occasionally better i
 
 ## 5. Gated Activations: What LLMs Actually Use
 
-Modern LLM feedforward blocks mostly don't use a plain activation. They use a **gated linear unit**, where one projection produces the signal and a second produces a multiplicative gate:
+Modern LLM feedforward blocks mostly don't use a plain activation at all. They compute two things from the same input: the signal, and a separate set of numbers that decides how much of that signal to let through. Then they multiply.
+
+**Say it like this: a gated block computes the value and a volume knob, then turns the knob.**
+
+That is a **gated linear unit**: one projection produces the signal, a second produces the gate.
 
 $$\text{GLU}(x)=(xW)\otimes\sigma(xV)$$
 
@@ -189,7 +225,7 @@ Swap the gate's nonlinearity and you get the family:
 
 $$\text{SwiGLU}(x)=\text{Swish}(xW)\otimes(xV)$$
 
-**Why gating helps:** the multiplicative interaction lets the layer suppress or amplify features conditionally, which a pointwise function applied to a single projection cannot do. Empirically it's worth a consistent perplexity improvement at equal parameter count.
+**Why does gating help?** Multiplying lets the layer turn a feature up or down depending on the input, which a plain pointwise function applied to one projection simply can't do. In practice it buys a consistent perplexity win at the same parameter count.
 
 > **Trap:** the good follow-up is "doesn't that add parameters?" Yes. A gated block needs **three** weight matrices where a standard feedforward needs two. Implementations compensate by shrinking the hidden dimension, typically to \(\tfrac{2}{3}\) of what it would otherwise be, so total parameters stay roughly fixed and the comparison against a standard block is fair. If you can name that \(\tfrac{2}{3}\) adjustment, you have clearly read the architecture rather than the summary.
 
@@ -212,6 +248,10 @@ Hidden-layer activations shape what the network can represent. Output activation
 > **Trap:** in PyTorch, the output activation is often *inside the loss*. `BCEWithLogitsLoss` contains sigmoid and `CrossEntropyLoss` contains `log_softmax`. At inference you may apply sigmoid or softmax to read probabilities; during training with these losses, feed raw logits.
 
 ### Softmax, Properly
+
+Softmax turns a row of arbitrary scores into a row of probabilities: exponentiate each one so they all become positive, then divide by the total so they sum to 1.
+
+**Say it like this: softmax turns scores into shares of a pie.** The exponential is what makes a slightly higher score win a much bigger slice.
 
 $$p_k=\frac{e^{z_k}}{\sum_j e^{z_j}}$$
 
@@ -244,7 +284,7 @@ The decision, in order:
 5. **RNN or LSTM?** Tanh and sigmoid, because the gating mechanism is defined in terms of bounded, zero-centered signals.
 6. **Anything else?** Start with ReLU and only move if you have a measurement that says to.
 
-The honest summary is that activation choice is rarely what limits a model. Architecture, data, and optimization dominate. Knowing that, and saying it, is a stronger interview answer than an enthusiastic ranking of exotic activations.
+Honestly though, activation choice is rarely the thing holding a model back. Architecture, data and optimization matter far more. Saying that out loud is a better interview answer than an enthusiastic ranking of exotic activations.
 
 ---
 

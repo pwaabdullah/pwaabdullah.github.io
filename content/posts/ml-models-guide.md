@@ -29,7 +29,7 @@ categories:
   - "ML Fundamentals"
 ---
 
-*Part of a series with [loss functions](/posts/loss-functions-ml-interview/), [activation functions](/posts/activation-functions/), [optimization](/posts/optimization-algorithms-ml-interview/) and [metrics](/posts/ml-metrics-guide/). Those cover how a model trains and how you judge it. This one is about picking the right model in the first place, and knowing what it is actually doing.*
+*Part of a series with [loss functions](/posts/loss-functions-ml-interview/), [activation functions](/posts/activation-functions/), [optimization](/posts/optimization-algorithms-ml-interview/) and [metrics](/posts/ml-metrics-guide/). Those cover how a model trains and how you judge it. This one is about picking the right model in the first place, and knowing what it's actually doing.*
 
 If you can't say which model fits a problem and roughly what it does internally, the title on your badge is doing a lot of work. So let's fix that.
 
@@ -60,7 +60,7 @@ If you can't say which model fits a problem and roughly what it does internally,
 
 Before any modeling, build the dumbest thing that produces a number: predict the majority class, predict the mean, or run logistic regression on your five most obvious features.
 
-This takes twenty minutes and buys you two things you cannot get any other way. It tells you **whether the problem is even hard** (if logistic regression hits 0.94 AUC, your fancy model is fighting for scraps), and it gives you a floor that makes every later result interpretable. "XGBoost got 0.91" means nothing on its own. "XGBoost got 0.91, logistic got 0.89" means something very specific: you spent two weeks for two points.
+This takes twenty minutes and buys you two things you can't get any other way. It tells you **whether the problem is even hard** (if logistic regression hits 0.94 AUC, your fancy model is fighting for scraps), and it gives you a floor that makes every later result interpretable. "XGBoost got 0.91" means nothing on its own. "XGBoost got 0.91, logistic got 0.89" means something very specific: you spent two weeks for two points.
 
 > **Interview tell:** candidates who jump straight to "I'd use a neural network" without asking about data size, feature types, or latency have usually not shipped anything. The first question is always about the data, never about the model.
 
@@ -81,9 +81,9 @@ I generated 420 points where the true rule is a staircase, fit both, and measure
 
 So the default **serious model you train yourself** on a table is still boosting. Trees still beat from-scratch nets on typical tabular data, for the four reasons above, and that has not flipped.
 
-The 2025–2026 caveat is **tabular foundation models**. **TabPFN** is a transformer pretrained on millions of synthetic tables. You do not train it on your data: you feed labeled rows as context and it predicts in one forward pass. On small and medium tables it often matches a tuned GBDT with zero tuning. It wants a GPU, it is not a drop-in for a 50-million-row production ranker, and you still need GBDT when you care about CPU latency, monotonic constraints, or retraining on a laptop. Interview answer: *small table, try TabPFN; large production table, still LightGBM or XGBoost.*
+The 2025–2026 caveat is **tabular foundation models**. **TabPFN** is a transformer pretrained on millions of synthetic tables. You don't train it on your data: you feed labeled rows as context and it predicts in one forward pass. On small and medium tables it often matches a tuned GBDT with zero tuning. It wants a GPU, it's not a drop-in for a 50-million-row production ranker, and you still need GBDT when you care about CPU latency, monotonic constraints, or retraining on a laptop. Interview answer: *small table, try TabPFN; large production table, still LightGBM or XGBoost.*
 
-Reach for a net you train yourself on tabular only when a net is uniquely good at the job: huge data, representation sharing across tasks, high-cardinality embeddings, or mixed inputs where the table is only one part of the model. AutoGluon is the "I have compute and I want the last points" button; it is an ensemble, not a model choice.
+Reach for a net you train yourself on tabular only when a net is uniquely good at the job: huge data, representation sharing across tasks, high-cardinality embeddings, or mixed inputs where the table is only one part of the model. AutoGluon is the "I have compute and I want the last points" button; it's an ensemble, not a model choice.
 
 ---
 
@@ -93,25 +93,29 @@ Each of these gets the same treatment: what it actually does, when to reach for 
 
 ### 3.1 Linear and Logistic Regression
 
+**Say it like this: it draws one straight line through the data, and that's all it can ever do.**
+
 **Inside:** multiply each feature by a weight, add them up, add a bias. For binary classification, squash that sum through a sigmoid to get a probability; for multiclass, use softmax. Training just searches for the weights that minimize your [loss](/posts/loss-functions-ml-interview/).
 
 $$\hat y = w_1x_1 + w_2x_2 + \dots + b \qquad p = \sigma(\hat y)$$
 
-**Reach for it when:** you need a baseline, you need to explain a decision to a regulator or a PM, you need calibrated probabilities, you need to extrapolate, or you have far more features than rows (text with TF-IDF is the classic case, and it is still shockingly competitive).
+**Reach for it when:** you need a baseline, you need to explain a decision to a regulator or a PM, you need calibrated probabilities, you need to extrapolate, or you have far more features than rows (text with TF-IDF is the classic case, and it's still shockingly competitive).
 
 The production version is usually **Ridge / Lasso / Elastic Net**, not vanilla least squares. L2 (Ridge) is the default when features are collinear; L1 (Lasso) when you want a sparse subset; Elastic Net when you want a bit of both. Same model family, the regularizer is the difference between a baseline that works and one that explodes.
 
-**It breaks when:** the relationship is non-linear or features interact. Linear models cannot learn "risky only if young *and* new customer" unless you hand-build that interaction. They also want scaled inputs.
+**It breaks when:** the relationship is non-linear or features interact. Linear models can't learn "risky only if young *and* new customer" unless you hand-build that interaction. They also want scaled inputs.
 
-The coefficient is the whole selling point: "each extra year of age multiplies the odds by 1.03" is a sentence a human can act on. SHAP on a boosting model is a local explanation of one prediction; a coefficient is a global statement about the world. Interviewers treat those as different things, because they are.
+The coefficient is the whole selling point: "each extra year of age multiplies the odds by 1.03" is a sentence a human can act on. SHAP on a boosting model is a local explanation of one prediction; a coefficient is a global statement about the world. Interviewers treat those as different things, because they're.
 
 ### 3.2 Decision Trees
+
+**Say it like this: a tree plays twenty questions, picking each question greedily.**
 
 **Inside:** look at every feature and every possible split point, pick the one that best separates the target, split the data in two, and recurse. "Best" means largest drop in impurity (Gini or entropy for classification, variance for regression). What you end up with is a flowchart of if-statements.
 
 ![Left, a scatter plot with the first split drawn as a horizontal line at y equals 0.35, gini falling from 0.49 to 0.25. Right, the resulting flowchart: a root question, two child questions, and four leaves showing the class purity and sample count of each](diagrams/3-tree-split.svg)
 
-Look at the leaves on the right. The two on the left both predict class 0, which seems pointless until you read the percentages: 96% pure and 75% pure. **A split earns its place by making the groups purer, not by flipping the answer.** That is literally what the algorithm optimizes, and it is why trees keep splitting long after the prediction has stopped changing.
+Look at the leaves on the right. The two on the left both predict class 0, which seems pointless until you read the percentages: 96% pure and 75% pure. **A split earns its place by making the groups purer, not by flipping the answer.** That is literally what the algorithm optimizes, and it's why trees keep splitting long after the prediction has stopped changing.
 
 **Reach for it when:** you want something a non-technical stakeholder can literally read, or you need a fast, scale-free model on mixed data types.
 
@@ -120,6 +124,8 @@ Look at the leaves on the right. The two on the left both predict class 0, which
 That instability sounds like a fatal flaw. It is actually the opening for the next two models.
 
 ### 3.3 Random Forest: Average Away the Variance
+
+**Say it like this: build a lot of mediocre trees that are wrong in different directions, then average the wrongness away.**
 
 **Inside:** train hundreds of trees, each on a bootstrap sample of the rows, and at each split let each tree consider only a random subset of features. Then average their predictions.
 
@@ -131,9 +137,11 @@ Both sources of randomness matter. Bootstrapping decorrelates the trees; restric
 
 ![A price-versus-square-footage plot. Training points sit between 1,000 and 3,000 sq ft. A blue linear fit continues rising through the shaded region past 3,000. An orange tree prediction goes flat at $400k the moment it leaves the training range, labelled stuck at $400k at 5,000 sq ft](diagrams/6-no-extrapolation.svg)
 
-A leaf predicts the mean of the training rows that landed in it. Past the last split there is no new leaf, so the answer never changes. If your product actually needs "what happens at values we have not seen," use a linear term, or an explicit trend feature, or don't use a tree.
+A leaf predicts the mean of the training rows that landed in it. Past the last split there's no new leaf, so the answer never changes. If your product actually needs "what happens at values we have not seen," use a linear term, or an explicit trend feature, or don't use a tree.
 
 ### 3.4 Gradient Boosting: The Tabular Champion
+
+**Say it like this: each new tree's only job is to clean up what the trees before it got wrong.**
 
 **Inside:** build trees **sequentially**, where each new tree is trained to predict the errors the ensemble has made so far. More precisely it fits the negative gradient of the loss, which for squared error is exactly the residual. Add each new tree's output, scaled by a learning rate, to the running prediction.
 
@@ -162,7 +170,9 @@ Three production facts that interviews probe:
 
 ### 3.5 kNN, Which Is Now Vector Search
 
-**Inside:** there is no training. Store the data. At prediction time, find the \(k\) closest points by distance and let them vote, or average them.
+**Say it like this: there's no model. You keep the data and look up the nearest neighbours when someone asks.**
+
+**Inside:** there's no training. Store the data. At prediction time, find the \(k\) closest points by distance and let them vote, or average them.
 
 People file kNN under "simple thing from the textbook." That is a mistake, because with embeddings attached it became one of the most important systems in modern ML. Encode your items as vectors, and "find the nearest neighbors" *is* semantic search, *is* recommendation candidate generation, *is* image search, *is* dedup.
 
@@ -170,15 +180,17 @@ The catch is that exact kNN scans everything, which is \(O(N)\) per query and ho
 
 **Reach for it when:** similarity is the task, or you need a candidate set to rank later.
 
-**It breaks when:** the embedding is bad (the algorithm cannot fix a space where the wrong things are close), or dimensionality is high and everything becomes roughly equidistant.
+**It breaks when:** the embedding is bad (the algorithm can't fix a space where the wrong things are close), or dimensionality is high and everything becomes roughly equidistant.
 
 ### 3.6 K-Means and Clustering
+
+**Say it like this: drop k pins, let every point join its nearest pin, move each pin to the middle of its group, repeat.**
 
 **Inside:** pick \(k\) centroids, assign every point to its nearest one, move each centroid to the mean of its members, repeat until nothing moves. Use `k-means++` for initialization; random init gets stuck.
 
 **Reach for it when:** you want rough segments for exploration, or you need to compress a space into a few prototypes.
 
-**It breaks when:** clusters are not roughly spherical and similar in size, which is most real data, or when you cannot justify \(k\). The elbow method is more of a vibe than a criterion; silhouette score is better. When clusters are irregular or there's genuine noise, **HDBSCAN** is the better tool because it finds the number of clusters itself and is allowed to label points as noise instead of forcing everything into a group.
+**It breaks when:** clusters are not roughly spherical and similar in size, which is most real data, or when you can't justify \(k\). The elbow method is more of a vibe than a criterion; silhouette score is better. When clusters are irregular or there's genuine noise, **HDBSCAN** is the better tool because it finds the number of clusters itself and is allowed to label points as noise instead of forcing everything into a group.
 
 > **Say this out loud in an interview:** clustering has no ground truth, so "it worked" means a human looked at the clusters and they meant something. Treat it as exploration, not as a result.
 
@@ -188,7 +200,7 @@ Not the default, but two of these are real production tools:
 
 - **SVM** finds the boundary with the widest margin, and the kernel trick lets it draw curved boundaries cheaply by computing similarities without ever building the high-dimensional space. Elegant, and it dominated the 2000s. It scales badly past ~100k rows and boosting beats it on the problems it used to own.
 - **Naive Bayes** assumes every feature is independent given the class, which is obviously false and works anyway. Genuinely useful as a text baseline you can train in one second.
-- **Isolation Forest** isolates outliers in fewer random splits than normal points. The unsupervised default for "is this row weird," used in fraud, infra, and manufacturing. It is not a rare-class classifier; if you have labels, that is a different problem.
+- **Isolation Forest** isolates outliers in fewer random splits than normal points. The unsupervised default for "is this row weird," used in fraud, infra, and manufacturing. It isn't a rare-class classifier; if you have labels, that is a different problem.
 - **GAM / EBM** (explainable boosting): an additive of one shape-function per feature. Like linear regression, except each "coefficient" is a curve you can plot. Used when legal or risk needs more accuracy than logistic and still a picture per feature.
 - **HMM** and **LDA** are names you should recognize. Sequence modeling went to transformers, topic modeling went to embeddings plus clustering.
 
@@ -198,7 +210,7 @@ Not the default, but two of these are real production tools:
 
 Here is the rule that survives contact with reality:
 
-> **Reach for deep learning when your input is raw, high-dimensional, and structured**: pixels, waveforms, text, graphs. Those are the cases where the features cannot be hand-written, so a model that learns its own features wins. When your input is already a table of meaningful columns, humans already did the feature engineering, and trees use that better.
+> **Reach for deep learning when your input is raw, high-dimensional, and structured**: pixels, waveforms, text, graphs. Those are the cases where the features can't be hand-written, so a model that learns its own features wins. When your input is already a table of meaningful columns, humans already did the feature engineering, and trees use that better.
 
 ### 4.1 The Plain Neural Net
 
@@ -207,6 +219,8 @@ Stacked layers of "multiply by a weight matrix, add a bias, apply a nonlinearity
 On tabular data an MLP is usually a slower, fussier GBDT. Its real job is to be a component of something bigger.
 
 ### 4.2 CNNs: How a Model Sees
+
+**Say it like this: one small pattern detector, dragged across the whole image, reused everywhere.**
 
 **Inside:** instead of connecting every pixel to every neuron, slide a small learned filter across the image and record how strongly it responds at each position.
 
@@ -224,7 +238,7 @@ CNN vs ViT in one line: CNN is still the right default on small image sets; ViT 
 
 RNNs and LSTMs process a sequence one step at a time, carrying a hidden state. LSTMs added gates so the state could hold information for longer. They were the standard for years.
 
-They lost for a reason that has nothing to do with accuracy: **they cannot be parallelized across time**. Step 50 needs step 49 finished. When transformers arrived and could process an entire sequence at once on a GPU, the scaling argument ended the debate.
+They lost for a reason that has nothing to do with accuracy: **they can't be parallelized across time**. Step 50 needs step 49 finished. When transformers arrived and could process an entire sequence at once on a GPU, the scaling argument ended the debate.
 
 Do not reach for an LSTM on new work unless you have a specific constraint that makes recurrence useful. What replaced it, and how attention actually functions, is the next post.
 
@@ -236,7 +250,7 @@ And a note that saves real time: for **time series forecasting on business data*
 
 You will lose more accuracy to these than to picking the second-best algorithm.
 
-**Leakage** is the number one killer, and it always looks like great results. Your model sees something at training time it will not have at prediction time. Classic forms: a column computed *after* the outcome (`account_closed_date` predicting churn), a random split on temporal data so the model trains on the future, rows from the same user split across train and test, or **target encoding computed on the whole dataset**. **If your AUC is suspiciously high, look for leakage before you celebrate.**
+**Leakage** is the number one killer, and it always looks like great results. Your model sees something at training time it won't have at prediction time. Classic forms: a column computed *after* the outcome (`account_closed_date` predicting churn), a random split on temporal data so the model trains on the future, rows from the same user split across train and test, or **target encoding computed on the whole dataset**. **If your AUC is suspiciously high, look for leakage before you celebrate.**
 
 **Your validation split must match how the model will be used.** Time-dependent problem means a time-based split. Grouped data (multiple rows per customer) means a group split. A random split on either quietly inflates every number you report.
 
@@ -250,7 +264,7 @@ You will lose more accuracy to these than to picking the second-best algorithm.
 
 ## 6. What It Costs to Run
 
-Accuracy you cannot serve is not accuracy.
+Accuracy you can't serve isn't accuracy.
 
 | Model | Train | Predict | Size | Typical use |
 |---|---|---|---|---|
@@ -274,13 +288,13 @@ The questions that decide the architecture: what's the latency budget, how often
 
 **Random forest or gradient boosting?** Forest when you want a strong answer with no tuning and no overfitting worry. Boosting when you want maximum accuracy and will actually tune. Boosting usually wins by a few points.
 
-**Why do trees beat neural nets on tabular data?** Tabular features are individually meaningful and targets are jagged. Trees split per-column and model sharp thresholds natively; nets are rotation-invariant and biased toward smooth functions, which is the wrong prior here. From-scratch nets still lose on ordinary tables. TabPFN is a different move: it is a pretrained prior, not a net you train on the table.
+**Why do trees beat neural nets on tabular data?** Tabular features are individually meaningful and targets are jagged. Trees split per-column and model sharp thresholds natively; nets are rotation-invariant and biased toward smooth functions, which is the wrong prior here. From-scratch nets still lose on ordinary tables. TabPFN is a different move: it's a pretrained prior, not a net you train on the table.
 
 **Bagging vs boosting in one line?** Bagging trains independently in parallel and averages to cut variance. Boosting trains sequentially on the previous errors to cut bias.
 
-**Can a random forest overfit?** Barely, by adding trees. It overfits through very deep individual trees and through leakage. Boosting overfits easily, which is why early stopping is not optional.
+**Can a random forest overfit?** Barely, by adding trees. It overfits through very deep individual trees and through leakage. Boosting overfits easily, which is why early stopping isn't optional.
 
-**Why won't my tree model extrapolate?** A tree predicts the mean of a training leaf. Outside the training range there is no leaf, so it returns the boundary value forever. Use a linear model or an explicit trend term when extrapolation matters.
+**Why won't my tree model extrapolate?** A tree predicts the mean of a training leaf. Outside the training range there's no leaf, so it returns the boundary value forever. Use a linear model or an explicit trend term when extrapolation matters.
 
 **When would you actually pick linear regression over boosting?** When you must explain coefficients, when data is tiny, when you need extrapolation, when you need calibrated probabilities without a second stage, or when p is much larger than n.
 
@@ -290,7 +304,7 @@ The questions that decide the architecture: what's the latency budget, how often
 
 **Unsupervised anomaly detection?** Isolation Forest first. k-means is a clustering tool that people misuse as an anomaly detector.
 
-**Is kNN obsolete?** The opposite. With embeddings and an ANN index it is the retrieval layer under semantic search and RAG.
+**Is kNN obsolete?** The opposite. With embeddings and an ANN index it's the retrieval layer under semantic search and RAG.
 
 **Only 500 labeled examples?** Pretrained model plus fine-tuning, simple models with heavy regularization, cross-validation instead of a single holdout, and a serious look at whether you can get more labels.
 

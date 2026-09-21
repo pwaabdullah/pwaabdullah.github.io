@@ -93,17 +93,35 @@ By convention we **minimize** losses. The same quantity negated and maximized is
 
 ### 3.1 Binary Cross-Entropy
 
-The model outputs a logit \(z\), squashed to a probability \(p=\sigma(z)=1/(1+e^{-z})\). For \(y\in\{0,1\}\):
+Cross-entropy only ever looks at one number: the probability your model put on the answer that actually turned out to be correct. Everything else is ignored.
+
+Say the true label is *spam*. Your model gave spam a 90% chance, so the loss is 0.11. If it had given spam only a 1% chance, the loss would be 4.61. Same email, same right answer, a bill **44 times bigger** for being confidently wrong.
+
+| Probability you gave the true class | Loss |
+|---|---|
+| 99% | 0.01 |
+| 90% | 0.11 |
+| 50% | 0.69 |
+| 10% | 2.30 |
+| 1% | 4.61 |
+
+**Say it like this: cross-entropy is a surprise tax. The more surprised you should have been by the right answer, the more you pay.**
+
+The model spits out a raw score (a logit \(z\)), sigmoid turns it into a probability \(p=\sigma(z)=1/(1+e^{-z})\), and for a yes/no label \(y\in\{0,1\}\) the bill comes to:
 
 $$L=-[y\log p+(1-y)\log(1-p)]$$
 
-**Intuition.** BCE punishes being confident and wrong. With \(y=1\): \(p=0.9\) is a small loss, \(p=0.1\) is a large one, and \(p=0.001\) is enormous. The log is what makes confident mistakes so expensive, and it is exactly what connects BCE to maximum likelihood, since minimizing \(-\log P(y \mid x)\) is maximizing \(P(y \mid x)\).
+**Why the log?** Look at the table again: the cost doesn't rise smoothly as you get worse, it accelerates. Going from 90% to 50% costs you 0.58. Going from 10% to 1% costs you 2.31, four times as much for the same size drop in probability. That acceleration is what stops a model from ever being confidently wrong.
+
+The log is also what ties this to maximum likelihood: minimizing \(-\log P(y \mid x)\) is the same thing as maximizing \(P(y \mid x)\).
 
 > **Trap:** use `BCEWithLogitsLoss`, not `Sigmoid` followed by `BCELoss`. The fused version applies the log-sum-exp trick and stays stable when logits are large; the manual version silently produces `inf` or `nan`. If someone shows you training code with a sigmoid feeding `BCELoss`, that is the bug they're asking about.
 
 ### 3.2 Multiclass Cross-Entropy
 
-For \(K\) mutually exclusive classes, softmax turns logits into probabilities and CE scores the correct one:
+Same idea, more than two options. Softmax turns the row of scores into probabilities that add to 1, then cross-entropy looks at just one of them: the one belonging to the right answer.
+
+**Say it like this: with a one-hot label, cross-entropy only ever looks at the correct class. Everything else gets multiplied by zero.**
 
 $$p_k=\frac{e^{z_k}}{\sum_j e^{z_j}}, \qquad L=-\sum_{k=1}^{K}y_k\log p_k = -\log p_c$$
 
@@ -131,7 +149,9 @@ An image tagged `{dog, outdoor, grass}` is multilabel. Softmax is wrong here bec
 
 ### 3.4 Label Smoothing
 
-Instead of a hard one-hot target, mix the label with a small uniform distribution:
+Telling a model the answer is 100% certain is a lie, and it trains the model to be arrogant. Label smoothing shaves a little off the correct class and spreads it over the rest.
+
+**Say it like this: label smoothing stops the model from being too sure of itself.**
 
 $$y_k^{LS} = (1-\epsilon)y_k + \frac{\epsilon}{K}$$
 
@@ -141,7 +161,11 @@ Hard targets push the correct logit toward infinity, which produces overconfiden
 
 ### 3.5 Hinge Loss
 
-The SVM objective, with \(y\in\{-1,+1\}\):
+Hinge loss doesn't want you to be right. It wants you to be right *with room to spare*. Once you clear the margin it stops caring about that example entirely.
+
+**Say it like this: cross-entropy always wants more confidence. Hinge stops asking once you're safely past the line.**
+
+With labels written as \(y\in\{-1,+1\}\):
 
 $$L=\max(0,1-y f(x))$$
 
@@ -155,7 +179,11 @@ The dashed step is what you actually care about: wrong costs 1, right costs 0. I
 
 ### 3.6 Focal Loss
 
-For heavy imbalance, where easy negatives drown the signal (Lin et al., RetinaNet):
+When 99.9% of your examples are boring negatives the model gets them all right, each contributes a tiny loss, and a hundred thousand tiny losses still drown out the handful of hard cases you actually care about. Focal loss turns the volume down on the easy ones.
+
+**Say it like this: focal loss ignores the examples you've already nailed so the hard ones can be heard.**
+
+From Lin et al., RetinaNet:
 
 $$FL(p_t)=-\alpha(1-p_t)^\gamma\log(p_t)$$
 
@@ -175,21 +203,31 @@ Read the right-hand side, where the easy examples live. At \(p_t=0.9\) plain cro
 
 ### 4.1 MSE (L2)
 
+Take how far off you were, square it, average. Squaring is the whole personality of this loss: being twice as wrong costs you four times as much.
+
+**Say it like this: MSE hates big mistakes far more than it dislikes small ones.**
+
 $$MSE=\frac{1}{N}\sum_i(y_i-\hat y_i)^2$$
 
-Squaring means an error of 2 costs 4 while an error of 10 costs 100, so large errors dominate. That makes MSE **sensitive to outliers**. Minimizing it is maximum likelihood under Gaussian noise, and it estimates the **conditional mean** \(E[Y \mid X]\).
+An error of 2 costs 4 while an error of 10 costs 100, so large errors dominate. That makes MSE **sensitive to outliers**. Minimizing it is maximum likelihood under Gaussian noise, and it estimates the **conditional mean** \(E[Y \mid X]\).
 
 ### 4.2 MAE (L1)
 
+Same thing without the squaring. Just how far off, averaged.
+
+**Say it like this: with MAE, being twice as wrong costs exactly twice as much, no more.**
+
 $$MAE=\frac{1}{N}\sum_i|y_i-\hat y_i|$$
 
-Linear penalty, so outliers pull less. It corresponds to Laplace noise and estimates the **conditional median**.
+A linear penalty means outliers pull less. It corresponds to Laplace noise and estimates the **conditional median**.
 
 > **Say it correctly:** L1 is *less sensitive* to outliers than L2, not immune. Outliers still contribute. The gradient is constant in magnitude regardless of error size, which is also why L1 can oscillate near the optimum and is non-differentiable at exactly zero.
 
 ### 4.3 Huber
 
-Quadratic near zero, linear in the tails:
+Huber takes MSE's smooth behaviour where the errors are small and MAE's steadiness where they're large, and switches between them at a threshold you pick.
+
+**Say it like this: Huber is MSE near the middle and MAE out in the tails.**
 
 $$L_\delta(e)=\begin{cases}\frac{1}{2}e^2 & |e|\leq\delta\\ \delta(|e|-\frac{1}{2}\delta) & |e|>\delta\end{cases}$$
 
@@ -211,7 +249,9 @@ The right panel is the one that matters, because the gradient is what the optimi
 
 ### 4.4 L1 / L2 as Regularization
 
-The same norms appear as penalties on **parameters** rather than on predictions:
+Same two formulas, completely different job. Above, L1 and L2 measured how wrong your *predictions* were. Here they measure how large your *weights* are, and you add that to the loss to discourage the model from leaning too hard on any one thing.
+
+**Say it like this: used on residuals they're losses, used on weights they're regularizers. Same maths, different target.**
 
 $$R_{L1}(\theta)=\lambda\sum_i|\theta_i| \qquad R_{L2}(\theta)=\lambda\sum_i\theta_i^2$$
 
@@ -255,6 +295,10 @@ The defining property: you only care about **relative distances** in that space,
 
 ### 6.1 Contrastive (pair)
 
+Pull the pairs that belong together closer. Push the pairs that don't apart, but only until they're far enough, then stop bothering.
+
+**Say it like this: contrastive loss pulls similar things together and shoves different things apart, up to a point.**
+
 With \(y=1\) for similar, \(y=0\) for dissimilar, and distance \(d\):
 
 $$L=y\,d^2+(1-y)\max(0,m-d)^2$$
@@ -262,6 +306,10 @@ $$L=y\,d^2+(1-y)\max(0,m-d)^2$$
 Similar pairs are pulled together; dissimilar pairs are pushed apart only until they exceed margin \(m\). Without that margin, the model would waste capacity pushing already-distant negatives further apart forever.
 
 ### 6.2 Triplet
+
+Instead of judging pairs, judge three things at once: a reference item, something that matches it, and something that doesn't.
+
+**Say it like this: triplet loss says the match has to be closer than the mismatch, by a clear margin.**
 
 Anchor \(a\), positive \(p\), negative \(n\):
 
@@ -273,7 +321,9 @@ The positive must be closer than the negative by at least \(m\).
 
 ### 6.3 InfoNCE / Multiple Negatives
 
-Use every other item in the batch as a negative:
+Mining hard negatives is a pain. So don't. Everything else in the batch is already a negative, sitting right there for free.
+
+**Say it like this: InfoNCE is softmax where the classes are the other items in your batch.**
 
 $$L=-\log\frac{\exp(sim(q,p^+)/\tau)}{\sum_j\exp(sim(q,p_j)/\tau)}$$
 
@@ -282,6 +332,10 @@ A batch of \(N\) gives you \(N-1\) negatives for free, with no mining pipeline. 
 Look closely: this is softmax cross-entropy where the "classes" are the candidates in the batch. The temperature \(\tau\) controls sharpness. Small \(\tau\) concentrates the gradient on the hardest negatives; too small and training destabilizes.
 
 ### 6.4 Cosine Similarity
+
+Measures whether two vectors point the same way, and completely ignores how long they are.
+
+**Say it like this: cosine cares about direction, not magnitude.**
 
 $$\cos(z_1,z_2)=\frac{z_1\cdot z_2}{\|z_1\|\|z_2\|}$$
 
@@ -338,7 +392,9 @@ Both fits are the best single Gaussian available, computed by minimizing each di
 
 ### 8.1 Pretraining: Token Cross-Entropy
 
-Autoregressive models predict each token from its prefix:
+All of LLM pretraining is one task repeated trillions of times: look at the text so far, guess the next token, get scored on how much probability you gave the token that actually came next.
+
+**Say it like this: pretraining is cross-entropy over the vocabulary, at every single position.**
 
 $$L=-\frac{1}{T}\sum_{t=1}^{T}\log P(x_t \mid x_{\lt t})$$
 
@@ -354,7 +410,9 @@ Same token cross-entropy, but the loss is **masked to the response tokens**. Pro
 
 ### 8.3 Distillation
 
-The student matches the teacher's full distribution rather than just the hard label:
+A hard label says "cat". A teacher model says "70% cat, 25% dog, 5% car", which quietly tells the student that cats resemble dogs and not cars. Distillation trains on that richer answer instead of the one-word one.
+
+**Say it like this: the teacher's wrong answers carry information, and distillation is how the student gets it.**
 
 $$L = \alpha\, T^2 D_{KL}(P_{teacher}^{T}\|P_{student}^{T}) + (1-\alpha)\,CE(y, P_{student})$$
 
@@ -386,7 +444,9 @@ It needs a reward that actually separates the group. If all \(G\) answers score 
 
 ### 8.6 RLHF (PPO)
 
-A reward model scores generations, and a KL penalty keeps the policy near the reference:
+Let the model write things, have a reward model score them, and push it toward higher scores. The catch is that it will happily find nonsense that scores well, so you tie it to where it started.
+
+**Say it like this: maximize reward, but don't wander off.**
 
 $$R_{total}=R_{reward}-\beta D_{KL}(\pi_\theta\|\pi_{ref})$$
 
