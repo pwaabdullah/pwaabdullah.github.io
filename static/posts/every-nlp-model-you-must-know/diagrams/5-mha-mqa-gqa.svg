@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 470" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img">
+  <rect width="800" height="470" fill="#ffffff"/>
+
+  <text x="400.0" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">Shrinking the KV Cache</text>
+  <text x="400.0" y="55" text-anchor="middle" font-size="13" fill="#64748b">Same attention maths, fewer copies of the keys and values to store</text>
+<text x="220.0" y="86.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">MHA</text>
+<text x="220.0" y="102.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">every head its own K,V</text>
+<rect x="70" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="85.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q1</text>
+<rect x="108" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="123.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q2</text>
+<rect x="146" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="161.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q3</text>
+<rect x="184" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="199.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q4</text>
+<rect x="222" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="237.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q5</text>
+<rect x="260" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="275.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q6</text>
+<rect x="298" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="313.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q7</text>
+<rect x="336" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="351.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q8</text>
+<rect x="68.0" y="178" width="34" height="26" rx="5" fill="#fff7ed" stroke="#4f46e5" stroke-width="1.8"/>
+<text x="85.0" y="196.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">K,V</text>
+<line x1="85" y1="144" x2="85.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<rect x="106.0" y="178" width="34" height="26" rx="5" fill="#fff7ed" stroke="#4f46e5" stroke-width="1.8"/>
+<text x="123.0" y="196.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">K,V</text>
+<line x1="123" y1="144" x2="123.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<rect x="144.0" y="178" width="34" height="26" rx="5" fill="#fff7ed" stroke="#4f46e5" stroke-width="1.8"/>
+<text x="161.0" y="196.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">K,V</text>
+<line x1="161" y1="144" x2="161.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<rect x="182.0" y="178" width="34" height="26" rx="5" fill="#fff7ed" stroke="#4f46e5" stroke-width="1.8"/>
+<text x="199.0" y="196.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">K,V</text>
+<line x1="199" y1="144" x2="199.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<rect x="220.0" y="178" width="34" height="26" rx="5" fill="#fff7ed" stroke="#4f46e5" stroke-width="1.8"/>
+<text x="237.0" y="196.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">K,V</text>
+<line x1="237" y1="144" x2="237.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<rect x="258.0" y="178" width="34" height="26" rx="5" fill="#fff7ed" stroke="#4f46e5" stroke-width="1.8"/>
+<text x="275.0" y="196.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">K,V</text>
+<line x1="275" y1="144" x2="275.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<rect x="296.0" y="178" width="34" height="26" rx="5" fill="#fff7ed" stroke="#4f46e5" stroke-width="1.8"/>
+<text x="313.0" y="196.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">K,V</text>
+<line x1="313" y1="144" x2="313.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<rect x="334.0" y="178" width="34" height="26" rx="5" fill="#fff7ed" stroke="#4f46e5" stroke-width="1.8"/>
+<text x="351.0" y="196.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">K,V</text>
+<line x1="351" y1="144" x2="351.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<text x="220.0" y="226.0" text-anchor="middle" font-size="12.5" font-weight="600" fill="#4f46e5">cache: 8 sets</text>
+<text x="220.0" y="246.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">MQA</text>
+<text x="220.0" y="262.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">all heads share one</text>
+<rect x="70" y="276" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="85.0" y="294.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q1</text>
+<rect x="108" y="276" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="123.0" y="294.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q2</text>
+<rect x="146" y="276" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="161.0" y="294.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q3</text>
+<rect x="184" y="276" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="199.0" y="294.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q4</text>
+<rect x="222" y="276" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="237.0" y="294.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q5</text>
+<rect x="260" y="276" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="275.0" y="294.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q6</text>
+<rect x="298" y="276" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="313.0" y="294.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q7</text>
+<rect x="336" y="276" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="351.0" y="294.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q8</text>
+<rect x="201.0" y="338" width="34" height="26" rx="5" fill="#fff7ed" stroke="#be123c" stroke-width="1.8"/>
+<text x="218.0" y="356.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#be123c">K,V</text>
+<line x1="85" y1="304" x2="218.0" y2="336" stroke="#94a3b8" stroke-width="1.3"/>
+<line x1="123" y1="304" x2="218.0" y2="336" stroke="#94a3b8" stroke-width="1.3"/>
+<line x1="161" y1="304" x2="218.0" y2="336" stroke="#94a3b8" stroke-width="1.3"/>
+<line x1="199" y1="304" x2="218.0" y2="336" stroke="#94a3b8" stroke-width="1.3"/>
+<line x1="237" y1="304" x2="218.0" y2="336" stroke="#94a3b8" stroke-width="1.3"/>
+<line x1="275" y1="304" x2="218.0" y2="336" stroke="#94a3b8" stroke-width="1.3"/>
+<line x1="313" y1="304" x2="218.0" y2="336" stroke="#94a3b8" stroke-width="1.3"/>
+<line x1="351" y1="304" x2="218.0" y2="336" stroke="#94a3b8" stroke-width="1.3"/>
+<text x="220.0" y="386.0" text-anchor="middle" font-size="12.5" font-weight="600" fill="#be123c">cache: 1 set</text>
+<text x="580.0" y="86.0" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">GQA</text>
+<text x="580.0" y="102.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">groups of 4 share</text>
+<rect x="430" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="445.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q1</text>
+<rect x="468" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="483.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q2</text>
+<rect x="506" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="521.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q3</text>
+<rect x="544" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="559.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q4</text>
+<rect x="582" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="597.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q5</text>
+<rect x="620" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="635.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q6</text>
+<rect x="658" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="673.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q7</text>
+<rect x="696" y="116" width="30" height="26" rx="5" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="711.0" y="134.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#4f46e5">Q8</text>
+<rect x="485.0" y="178" width="34" height="26" rx="5" fill="#fff7ed" stroke="#ea580c" stroke-width="1.8"/>
+<text x="502.0" y="196.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#ea580c">K,V</text>
+<line x1="445" y1="144" x2="502.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<line x1="483" y1="144" x2="502.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<line x1="521" y1="144" x2="502.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<line x1="559" y1="144" x2="502.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<rect x="637.0" y="178" width="34" height="26" rx="5" fill="#fff7ed" stroke="#ea580c" stroke-width="1.8"/>
+<text x="654.0" y="196.0" text-anchor="middle" font-size="10.5" font-weight="600" fill="#ea580c">K,V</text>
+<line x1="597" y1="144" x2="654.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<line x1="635" y1="144" x2="654.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<line x1="673" y1="144" x2="654.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<line x1="711" y1="144" x2="654.0" y2="176" stroke="#94a3b8" stroke-width="1.3"/>
+<text x="580.0" y="226.0" text-anchor="middle" font-size="12.5" font-weight="600" fill="#ea580c">cache: 2 sets</text>
+<line x1="405" y1="90" x2="405" y2="400" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="430.0" y="300.0" text-anchor="start" font-size="13" font-weight="600" fill="#0f172a">GQA is the current default.</text>
+<text x="430.0" y="322.0" text-anchor="start" font-size="12" font-weight="400" fill="#475569">It keeps most of MQA's memory saving</text>
+<text x="430.0" y="340.0" text-anchor="start" font-size="12" font-weight="400" fill="#475569">while staying close to MHA on quality,</text>
+<text x="430.0" y="358.0" text-anchor="start" font-size="12" font-weight="400" fill="#475569">which is why LLaMA-2 70B and Mistral</text>
+<text x="430.0" y="376.0" text-anchor="start" font-size="12" font-weight="400" fill="#475569">both use it.</text>
+<text x="400.0" y="426.0" text-anchor="middle" font-size="12.5" font-weight="400" fill="#475569">None of these make the model smarter. They exist because the KV cache outgrows the weights on long context.</text>
+  <text x="400.0" y="456" text-anchor="middle" font-size="12.5" fill="#475569">MQA cuts the cache by the head count and costs quality. GQA splits the difference.</text>
+</svg>

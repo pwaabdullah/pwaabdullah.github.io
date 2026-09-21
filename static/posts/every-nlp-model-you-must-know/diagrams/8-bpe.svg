@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 930 562" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img">
+  <rect width="930" height="562" fill="#ffffff"/>
+<text x="48.0" y="96.0" text-anchor="start" font-size="13.5" font-weight="600" fill="#0f172a">1. Train: merge the most frequent pair</text>
+<text x="48.0" y="118.0" text-anchor="start" font-size="11.5" font-weight="400" fill="#64748b">start with every word split into characters</text>
+<text x="48.0" y="142.0" text-anchor="start" font-size="12.5" font-weight="400" fill="#475569" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">l o w &lt;/w&gt;</text>
+<text x="268.0" y="142.0" text-anchor="start" font-size="11" font-weight="400" fill="#64748b">&#215;5</text>
+<text x="48.0" y="163.0" text-anchor="start" font-size="12.5" font-weight="400" fill="#475569" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">l o w e r &lt;/w&gt;</text>
+<text x="268.0" y="163.0" text-anchor="start" font-size="11" font-weight="400" fill="#64748b">&#215;2</text>
+<text x="48.0" y="184.0" text-anchor="start" font-size="12.5" font-weight="400" fill="#475569" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">n e w e s t &lt;/w&gt;</text>
+<text x="268.0" y="184.0" text-anchor="start" font-size="11" font-weight="400" fill="#64748b">&#215;6</text>
+<text x="48.0" y="205.0" text-anchor="start" font-size="12.5" font-weight="400" fill="#475569" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">w i d e s t &lt;/w&gt;</text>
+<text x="268.0" y="205.0" text-anchor="start" font-size="11" font-weight="400" fill="#64748b">&#215;3</text>
+<circle cx="60" cy="241" r="10" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="60.0" y="245.0" text-anchor="middle" font-size="11" font-weight="700" fill="#4f46e5">1</text>
+<text x="80.0" y="245.0" text-anchor="start" font-size="12" font-weight="600" fill="#475569" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">"e" + "s"</text>
+<text x="224.0" y="245.0" text-anchor="start" font-size="12" font-weight="600" fill="#4f46e5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">&#8594; "es"</text>
+<text x="318.0" y="245.0" text-anchor="start" font-size="10.5" font-weight="400" fill="#64748b">seen 9&#215;</text>
+<circle cx="60" cy="267" r="10" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="60.0" y="271.0" text-anchor="middle" font-size="11" font-weight="700" fill="#4f46e5">2</text>
+<text x="80.0" y="271.0" text-anchor="start" font-size="12" font-weight="600" fill="#475569" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">"es" + "t"</text>
+<text x="224.0" y="271.0" text-anchor="start" font-size="12" font-weight="600" fill="#4f46e5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">&#8594; "est"</text>
+<text x="318.0" y="271.0" text-anchor="start" font-size="10.5" font-weight="400" fill="#64748b">seen 9&#215;</text>
+<circle cx="60" cy="293" r="10" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="60.0" y="297.0" text-anchor="middle" font-size="11" font-weight="700" fill="#4f46e5">3</text>
+<text x="80.0" y="297.0" text-anchor="start" font-size="12" font-weight="600" fill="#475569" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">"est" + "&lt;/w&gt;"</text>
+<text x="224.0" y="297.0" text-anchor="start" font-size="12" font-weight="600" fill="#4f46e5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">&#8594; "est&lt;/w&gt;"</text>
+<text x="318.0" y="297.0" text-anchor="start" font-size="10.5" font-weight="400" fill="#64748b">seen 9&#215;</text>
+<circle cx="60" cy="319" r="10" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="60.0" y="323.0" text-anchor="middle" font-size="11" font-weight="700" fill="#4f46e5">4</text>
+<text x="80.0" y="323.0" text-anchor="start" font-size="12" font-weight="600" fill="#475569" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">"l" + "o"</text>
+<text x="224.0" y="323.0" text-anchor="start" font-size="12" font-weight="600" fill="#4f46e5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">&#8594; "lo"</text>
+<text x="318.0" y="323.0" text-anchor="start" font-size="10.5" font-weight="400" fill="#64748b">seen 7&#215;</text>
+<circle cx="60" cy="345" r="10" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.6"/>
+<text x="60.0" y="349.0" text-anchor="middle" font-size="11" font-weight="700" fill="#4f46e5">5</text>
+<text x="80.0" y="349.0" text-anchor="start" font-size="12" font-weight="600" fill="#475569" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">"lo" + "w"</text>
+<text x="224.0" y="349.0" text-anchor="start" font-size="12" font-weight="600" fill="#4f46e5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">&#8594; "low"</text>
+<text x="318.0" y="349.0" text-anchor="start" font-size="10.5" font-weight="400" fill="#64748b">seen 7&#215;</text>
+<text x="48.0" y="370.0" text-anchor="start" font-size="11.5" font-weight="400" fill="#64748b">now the corpus looks like this</text>
+<text x="48.0" y="392.0" text-anchor="start" font-size="12.5" font-weight="600" fill="#4f46e5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">low &lt;/w&gt;</text>
+<text x="268.0" y="392.0" text-anchor="start" font-size="11" font-weight="400" fill="#64748b">&#215;5</text>
+<text x="48.0" y="413.0" text-anchor="start" font-size="12.5" font-weight="600" fill="#4f46e5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">low e r &lt;/w&gt;</text>
+<text x="268.0" y="413.0" text-anchor="start" font-size="11" font-weight="400" fill="#64748b">&#215;2</text>
+<text x="48.0" y="434.0" text-anchor="start" font-size="12.5" font-weight="600" fill="#4f46e5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">n e w est&lt;/w&gt;</text>
+<text x="268.0" y="434.0" text-anchor="start" font-size="11" font-weight="400" fill="#64748b">&#215;6</text>
+<text x="48.0" y="455.0" text-anchor="start" font-size="12.5" font-weight="600" fill="#4f46e5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">w i d est&lt;/w&gt;</text>
+<text x="268.0" y="455.0" text-anchor="start" font-size="11" font-weight="400" fill="#64748b">&#215;3</text>
+<text x="430.0" y="96.0" text-anchor="start" font-size="13.5" font-weight="600" fill="#0f172a">2. Use it on a word the corpus never contained</text>
+<text x="430.0" y="122.0" text-anchor="start" font-size="20" font-weight="700" fill="#ea580c" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">"lowest"</text>
+<text x="430.0" y="176.0" text-anchor="start" font-size="12.5" font-weight="600" fill="#475569">word-level</text>
+<rect x="526" y="158" width="300" height="30" rx="7" fill="#fef2f2" stroke="#be123c" stroke-width="1.5"/>
+<text x="676.0" y="178.0" text-anchor="middle" font-size="13" font-weight="700" fill="#be123c" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">[UNK]</text>
+<text x="526.0" y="206.0" text-anchor="start" font-size="11" font-weight="400" fill="#64748b">the word is simply not in the vocabulary</text>
+<text x="430.0" y="250.0" text-anchor="start" font-size="12.5" font-weight="600" fill="#475569">character</text>
+<rect x="526" y="232" width="300" height="30" rx="7" fill="#f8fafc" stroke="#475569" stroke-width="1.5"/>
+<text x="676.0" y="252.0" text-anchor="middle" font-size="13" font-weight="700" fill="#475569" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">l  o  w  e  s  t</text>
+<text x="526.0" y="280.0" text-anchor="start" font-size="11" font-weight="400" fill="#64748b">6 tokens, none of which mean anything</text>
+<text x="430.0" y="324.0" text-anchor="start" font-size="12.5" font-weight="600" fill="#475569">BPE</text>
+<rect x="526" y="306" width="300" height="30" rx="7" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+<text x="676.0" y="326.0" text-anchor="middle" font-size="13" font-weight="700" fill="#4f46e5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">low  est&lt;/w&gt;</text>
+<text x="526.0" y="354.0" text-anchor="start" font-size="11" font-weight="400" fill="#64748b">2 tokens, and both were learned above</text>
+<rect x="430" y="386" width="396" height="74" rx="9" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="446.0" y="410.0" text-anchor="start" font-size="12.5" font-weight="600" fill="#0d9488">That is the whole point.</text>
+<text x="446.0" y="430.0" text-anchor="start" font-size="11.5" font-weight="400" fill="#475569">"lowest" never appeared, but "low" and "est" both did,</text>
+<text x="446.0" y="447.0" text-anchor="start" font-size="11.5" font-weight="400" fill="#475569">so the model still gets meaningful pieces.</text>
+<line x1="408" y1="80" x2="408" y2="476" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="465.0" y="510.0" text-anchor="middle" font-size="12" font-weight="400" fill="#475569">WordPiece picks merges by how much they improve corpus likelihood, not raw count. SentencePiece runs on raw text</text>
+<text x="465.0" y="528.0" text-anchor="middle" font-size="12" font-weight="400" fill="#475569">including the spaces, so it works on languages that do not use them. Same idea, different merge rule.</text>
+  <text x="465" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">How BPE Builds a Vocabulary</text>
+  <text x="465" y="55" text-anchor="middle" font-size="13" fill="#64748b">Five merges on a four-word corpus, then a word it has never seen</text>
+  <text x="465" y="550" text-anchor="middle" font-size="12.5" fill="#475569">Every merge here was computed by running the algorithm, not chosen for the diagram.</text>
+</svg>

@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 930 404" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img">
+  <rect width="930" height="404" fill="#ffffff"/>
+<text x="124.0" y="88.0" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">original</text>
+<text x="124.0" y="104.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">what the model said</text>
+<rect x="45.5" y="160.6" width="17.0" height="89.4" rx="2" fill="#ea580c"/>
+<rect x="65.5" y="211.7" width="17.0" height="38.3" rx="2" fill="#4f46e5"/>
+<rect x="85.5" y="224.5" width="17.0" height="25.5" rx="2" fill="#4f46e5"/>
+<rect x="105.5" y="230.8" width="17.0" height="19.2" rx="2" fill="#4f46e5"/>
+<rect x="125.5" y="237.2" width="17.0" height="12.8" rx="2" fill="#4f46e5"/>
+<rect x="145.5" y="239.4" width="17.0" height="10.6" rx="2" fill="#4f46e5"/>
+<rect x="165.5" y="241.5" width="17.0" height="8.5" rx="2" fill="#4f46e5"/>
+<rect x="185.5" y="241.5" width="17.0" height="8.5" rx="2" fill="#4f46e5"/>
+<line x1="44" y1="250" x2="204" y2="250" stroke="#94a3b8" stroke-width="1.4"/>
+<text x="54.0" y="266.0" text-anchor="middle" font-size="9.5" font-weight="400" fill="#64748b">mat</text>
+<text x="194.0" y="266.0" text-anchor="middle" font-size="9.5" font-weight="400" fill="#64748b">chair</text>
+<text x="124.0" y="288.0" text-anchor="middle" font-size="12" font-weight="600" fill="#ea580c">"mat" 42%</text>
+<text x="124.0" y="306.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">all 8 alive</text>
+<text x="298.0" y="88.0" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">temperature 0.7</text>
+<text x="298.0" y="104.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">sharper, safer</text>
+<rect x="219.5" y="128.7" width="17.0" height="121.3" rx="2" fill="#ea580c"/>
+<rect x="239.5" y="213.8" width="17.0" height="36.2" rx="2" fill="#4f46e5"/>
+<rect x="259.5" y="229.7" width="17.0" height="20.3" rx="2" fill="#4f46e5"/>
+<rect x="279.5" y="236.6" width="17.0" height="13.4" rx="2" fill="#4f46e5"/>
+<rect x="299.5" y="242.5" width="17.0" height="7.5" rx="2" fill="#4f46e5"/>
+<rect x="319.5" y="244.2" width="17.0" height="5.8" rx="2" fill="#4f46e5"/>
+<rect x="339.5" y="245.8" width="17.0" height="4.2" rx="2" fill="#4f46e5"/>
+<rect x="359.5" y="245.8" width="17.0" height="4.2" rx="2" fill="#4f46e5"/>
+<line x1="218" y1="250" x2="378" y2="250" stroke="#94a3b8" stroke-width="1.4"/>
+<text x="228.0" y="266.0" text-anchor="middle" font-size="9.5" font-weight="400" fill="#64748b">mat</text>
+<text x="368.0" y="266.0" text-anchor="middle" font-size="9.5" font-weight="400" fill="#64748b">chair</text>
+<text x="298.0" y="288.0" text-anchor="middle" font-size="12" font-weight="600" fill="#ea580c">"mat" 57%</text>
+<text x="298.0" y="306.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">all 8 alive</text>
+<text x="472.0" y="88.0" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">temperature 1.5</text>
+<text x="472.0" y="104.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">flatter, wilder</text>
+<rect x="393.5" y="185.3" width="17.0" height="64.7" rx="2" fill="#ea580c"/>
+<rect x="413.5" y="213.2" width="17.0" height="36.8" rx="2" fill="#4f46e5"/>
+<rect x="433.5" y="222.0" width="17.0" height="28.0" rx="2" fill="#4f46e5"/>
+<rect x="453.5" y="226.8" width="17.0" height="23.2" rx="2" fill="#4f46e5"/>
+<rect x="473.5" y="232.3" width="17.0" height="17.7" rx="2" fill="#4f46e5"/>
+<rect x="493.5" y="234.4" width="17.0" height="15.6" rx="2" fill="#4f46e5"/>
+<rect x="513.5" y="236.5" width="17.0" height="13.5" rx="2" fill="#4f46e5"/>
+<rect x="533.5" y="236.5" width="17.0" height="13.5" rx="2" fill="#4f46e5"/>
+<line x1="392" y1="250" x2="552" y2="250" stroke="#94a3b8" stroke-width="1.4"/>
+<text x="402.0" y="266.0" text-anchor="middle" font-size="9.5" font-weight="400" fill="#64748b">mat</text>
+<text x="542.0" y="266.0" text-anchor="middle" font-size="9.5" font-weight="400" fill="#64748b">chair</text>
+<text x="472.0" y="288.0" text-anchor="middle" font-size="12" font-weight="600" fill="#475569">"mat" 30%</text>
+<text x="472.0" y="306.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">all 8 alive</text>
+<text x="646.0" y="88.0" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">top-k = 4</text>
+<text x="646.0" y="104.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">keep 4, always</text>
+<rect x="567.5" y="139.6" width="17.0" height="110.4" rx="2" fill="#ea580c"/>
+<rect x="587.5" y="202.7" width="17.0" height="47.3" rx="2" fill="#4f46e5"/>
+<rect x="607.5" y="218.5" width="17.0" height="31.5" rx="2" fill="#4f46e5"/>
+<rect x="627.5" y="226.3" width="17.0" height="23.7" rx="2" fill="#4f46e5"/>
+<rect x="647.5" y="250.0" width="17.0" height="1.5" rx="2" fill="#e2e8f0"/>
+<rect x="667.5" y="250.0" width="17.0" height="1.5" rx="2" fill="#e2e8f0"/>
+<rect x="687.5" y="250.0" width="17.0" height="1.5" rx="2" fill="#e2e8f0"/>
+<rect x="707.5" y="250.0" width="17.0" height="1.5" rx="2" fill="#e2e8f0"/>
+<line x1="566" y1="250" x2="726" y2="250" stroke="#94a3b8" stroke-width="1.4"/>
+<text x="576.0" y="266.0" text-anchor="middle" font-size="9.5" font-weight="400" fill="#64748b">mat</text>
+<text x="716.0" y="266.0" text-anchor="middle" font-size="9.5" font-weight="400" fill="#64748b">chair</text>
+<text x="646.0" y="288.0" text-anchor="middle" font-size="12" font-weight="600" fill="#ea580c">"mat" 52%</text>
+<text x="646.0" y="306.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">4 killed</text>
+<text x="820.0" y="88.0" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">top-p = 0.9</text>
+<text x="820.0" y="104.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">keep 6, adapts</text>
+<rect x="741.5" y="152.8" width="17.0" height="97.2" rx="2" fill="#ea580c"/>
+<rect x="761.5" y="208.3" width="17.0" height="41.7" rx="2" fill="#4f46e5"/>
+<rect x="781.5" y="222.2" width="17.0" height="27.8" rx="2" fill="#4f46e5"/>
+<rect x="801.5" y="229.2" width="17.0" height="20.8" rx="2" fill="#4f46e5"/>
+<rect x="821.5" y="236.1" width="17.0" height="13.9" rx="2" fill="#4f46e5"/>
+<rect x="841.5" y="238.4" width="17.0" height="11.6" rx="2" fill="#4f46e5"/>
+<rect x="861.5" y="250.0" width="17.0" height="1.5" rx="2" fill="#e2e8f0"/>
+<rect x="881.5" y="250.0" width="17.0" height="1.5" rx="2" fill="#e2e8f0"/>
+<line x1="740" y1="250" x2="900" y2="250" stroke="#94a3b8" stroke-width="1.4"/>
+<text x="750.0" y="266.0" text-anchor="middle" font-size="9.5" font-weight="400" fill="#64748b">mat</text>
+<text x="890.0" y="266.0" text-anchor="middle" font-size="9.5" font-weight="400" fill="#64748b">chair</text>
+<text x="820.0" y="288.0" text-anchor="middle" font-size="12" font-weight="600" fill="#ea580c">"mat" 46%</text>
+<text x="820.0" y="306.0" text-anchor="middle" font-size="11" font-weight="400" fill="#64748b">2 killed</text>
+<text x="465.0" y="342.0" text-anchor="middle" font-size="12.5" font-weight="400" fill="#475569">The prompt is "The cat sat on the ___". Same model, same forward pass, same logits. Only the sampling settings differ.</text>
+<text x="465.0" y="364.0" text-anchor="middle" font-size="12.5" font-weight="600" fill="#0f172a">Temperature reshapes the distribution. Top-k and top-p delete part of it. That is the whole difference.</text>
+  <text x="465.0" y="32" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">The Knobs That Decide What It Says</text>
+  <text x="465.0" y="55" text-anchor="middle" font-size="13" fill="#64748b">One next-token distribution, five settings</text>
+  <text x="465.0" y="390" text-anchor="middle" font-size="12.5" fill="#475569">Greedy always takes the orange bar. Sampling picks from whatever survives.</text>
+</svg>
