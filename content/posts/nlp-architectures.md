@@ -7,7 +7,9 @@ comments: true
 ShowToc: true
 TocOpen: false
 math: true
-slug: "every-nlp-model-you-must-know"
+slug: "what-you-must-know-about-nlp-llm"
+aliases:
+  - "/posts/every-nlp-model-you-must-know/"
 description: "The architecture story of NLP: one-hot, bag of words, n-grams and TF-IDF, then word2vec and GloVe, then RNNs, LSTMs and seq2seq, then attention and the transformer, then every variant that matters (MQA, GQA, sliding window, RoPE, ALiBi, pre-LN, RMSNorm, SwiGLU, MoE, Mamba) and what each one fixed and broke."
 summary: "Each generation of NLP tech solved the previous one's problem and created a new one. This is that chain, from counting words to modern transformer variants, with what each choice costs you."
 keywords:
