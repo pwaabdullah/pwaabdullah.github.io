@@ -1,13 +1,15 @@
 ---
 author: ["Abdullah Al Mamun"]
-title: "Every ML Model You Must Know, and When to Actually Use It"
+title: "Every ML Model You Must Know"
 date: 2026-09-17
 draft: false
 comments: true
 ShowToc: true
 TocOpen: false
 math: true
-slug: "every-ml-model-when-to-use"
+slug: "every-ml-model-you-must-know"
+aliases:
+  - "/posts/every-ml-model-when-to-use/"
 description: "A field guide to picking ML models: why gradient boosting is still what you ship on production tables, where TabPFN changed the small-data story, how trees, forests, boosting, kNN and k-means actually work inside, when deep learning is genuinely the answer, and the data problems that sink more projects than model choice ever does."
 summary: "Which model for which problem, what each one is really doing under the hood, and where each breaks. Written for engineers shipping models and sitting interviews, not for a syllabus."
 keywords:

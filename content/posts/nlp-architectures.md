@@ -32,7 +32,7 @@ categories:
   - "ML Fundamentals"
 ---
 
-*Part two of the modelling pair, after [every ML model and when to use it](/posts/every-ml-model-when-to-use/). That one covered tables and images. This one is language, and it's all architecture: no training recipes, no prompting, no RAG. Just what the models are and why they ended up shaped this way.*
+*Part two of the modelling pair, after [every ML model you must know](/posts/every-ml-model-you-must-know/). That one covered tables and images. This one is language, and it's all architecture: no training recipes, no prompting, no RAG. Just what the models are and why they ended up shaped this way.*
 
 Here's the thing about NLP: it has been solving the same problem for sixty years. Text is symbols, maths needs numbers, and every era of NLP is just a different answer to *how do you turn one into the other*.
 
@@ -118,7 +118,7 @@ That second factor is the whole trick. A word in every document gets \\(\log(N/N
 **Pros:** fast, sparse, interpretable (you can read which words drove a prediction), and genuinely hard to beat on small labelled text sets.
 **Cons:** no semantics whatsoever. To TF-IDF, "excellent" and "superb" are two unrelated columns.
 
-> **Trap:** "TF-IDF is obsolete." It is not. It's the baseline you run in twenty minutes before you spend two weeks on a transformer, and it is embarrassingly competitive on narrow domains with a few thousand labelled examples. See [the model selection post](/posts/every-ml-model-when-to-use/).
+> **Trap:** "TF-IDF is obsolete." It is not. It's the baseline you run in twenty minutes before you spend two weeks on a transformer, and it is embarrassingly competitive on narrow domains with a few thousand labelled examples. See [the model selection post](/posts/every-ml-model-you-must-know/).
 
 ---
 
