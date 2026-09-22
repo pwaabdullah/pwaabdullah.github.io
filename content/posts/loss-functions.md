@@ -235,7 +235,7 @@ You get MSE's smooth, well-scaled gradients near the optimum and MAE's robustnes
 
 > **Note:** PyTorch has both `HuberLoss(delta)` and `SmoothL1Loss(beta)`. They are the same curve up to a scale factor, which matters only if you're comparing loss values or tuning learning rate across the two.
 
-### 4.5 Quantile (pinball)
+### 4.4 Quantile (pinball)
 
 When the decision cares about a tail, not the average ("will we stock out," "what's the 90th-percentile latency"):
 
@@ -247,7 +247,7 @@ $$L_\tau(e)=\tau\max(e,0)+(1-\tau)\max(-e,0)$$
 
 The right panel is the one that matters, because the gradient is what the optimizer actually sees. MSE's gradient grows linearly with the error and never stops, so a single point with an error of 10 pushes ten times harder than a point with an error of 1. That is outlier sensitivity, stated mechanically. MAE and Huber cap their gradient magnitude, so no individual point can dominate the update no matter how wrong it is.
 
-### 4.4 L1 / L2 as Regularization
+### 4.5 L1 / L2 as Regularization
 
 Same two formulas, completely different job. Above, L1 and L2 measured how wrong your *predictions* were. Here they measure how large your *weights* are, and you add that to the loss to discourage the model from leaning too hard on any one thing.
 
@@ -283,13 +283,20 @@ The margin version stops once \(s_i \geq s_j+m\). The logistic version keeps pus
 
 **Listwise** (ListNet, ListMLE, LambdaRank/LambdaMART) optimizes the full list. LambdaRank's trick is weighting each pair by how much swapping it would change NDCG, which smuggles a non-differentiable ranking metric into the gradient.
 
+**What you actually run.** You do not listwise-rank a hundred million items. Search, ads and recsys are two stages:
+
+1. **Retrieve** a few hundred candidates with a [two-tower](/posts/embeddings-representation-layer-of-ai/) trained on InfoNCE. Cheap, approximate, no cross features.
+2. **Rerank** that shortlist with a model that *can* see query and item together. Pairwise (or LambdaRank/listwise) on clicks is the usual loss here. GBDT still ships for tabular features; a cross-encoder for text.
+
+Pointwise is the baseline and often good enough when you already have a calibrated relevance score. Pairwise is the default once order is the product. Listwise earns its keep on a short list when NDCG is the number you are judged on. Using listwise over the whole catalog is a tell that you have not served one of these.
+
 > **Trap:** "why not just train pointwise regression on relevance labels?" Because ranking metrics only depend on order, and pointwise loss wastes capacity fitting absolute scores nobody looks at. Getting all scores wrong by a constant is free in NDCG and expensive in MSE.
 
 ---
 
 ## 6. Contrastive and Metric Learning
 
-Here the output is an **embedding space**, not a prediction. Similar things should land close together, dissimilar things far apart. This powers semantic search, retrieval, face recognition, RAG, and CLIP-style multimodal models.
+Here the output is an **embedding space**, not a prediction. Similar things should land close together, dissimilar things far apart. This powers semantic search, retrieval, face recognition, recommendation candidate generation, and CLIP-style multimodal models.
 
 The defining property: you only care about **relative distances** in that space, never the coordinate values themselves. That is also why contrastive learning needs no labels. If you can construct a pair you know is related, you have a training signal, which is what makes it the workhorse of self-supervised learning.
 
@@ -512,6 +519,8 @@ Task, loss, reason, failure mode. Anyone can name a loss; the reason and the fai
 **Weighted loss vs resampling for imbalance?** Weighting keeps every example and changes its gradient contribution; resampling changes the data the model sees. Weighting is cheaper and deterministic; resampling can work better when the imbalance is extreme enough that weights become unstable.
 
 **Why does contrastive training need big batches?** In InfoNCE the negatives come from the batch, so batch size *is* the number of negatives, which directly sets the difficulty of the task.
+
+**Pointwise, pairwise, or listwise?** Pointwise if you have an absolute label and don't care about order. Pairwise for "A should beat B" (clicks, preferences). Listwise when you are judged on NDCG on a *short* list. At catalog scale you retrieve with a two-tower, then rank the shortlist. You never listwise over a hundred million items.
 
 **DPO vs PPO vs GRPO?** DPO is supervised on preference pairs, no sampling loop. PPO is on-policy RL with a learned critic. GRPO is that RL loop with the critic replaced by a group baseline. Preference data → DPO; verifiable reward and a reasoning model → GRPO.
 

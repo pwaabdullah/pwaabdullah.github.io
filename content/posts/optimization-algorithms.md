@@ -273,7 +273,7 @@ One bad batch produces a huge gradient, which produces a huge step, which throws
 
 $$g \leftarrow g\cdot\min\left(1, \frac{c}{\|g\|}\right)$$
 
-One bad batch produces a huge gradient, which produces a huge step, which lands the model somewhere terrible, and the loss goes to `nan`. Clipping caps the damage. Essentially every transformer run uses `clip_grad_norm_` with \\(c=1.0\\).
+In practice, clip the **global norm**, not each tensor independently. Essentially every transformer run uses `clip_grad_norm_` with \\(c=1.0\\).
 
 > **Trap:** clipping addresses **exploding** gradients. It does nothing for vanishing gradients, which are an architecture and initialization problem ([see the activation post](/posts/activation-functions/)). Confusing the two is a common tell.
 

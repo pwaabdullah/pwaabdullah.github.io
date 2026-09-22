@@ -129,7 +129,7 @@ You have two encoders. One turns the query (or user, or context) into a vector. 
 
 > **Trap:** in-batch negatives are sampled by popularity, because popular items appear in more batches. Left alone, the model learns to suppress popular items in a way that doesn't reflect reality. Production systems apply a **logQ correction**, subtracting the log sampling probability from the logits. Knowing that this correction exists is a strong signal you've actually trained one of these.
 
-**Cons worth saying out loud:** the two towers can't see each other, so no feature can depend on the query and item jointly. That ceiling is real, and it's exactly why retrieval is followed by a reranker that *can* look at both together.
+**Cons worth saying out loud:** the two towers can't see each other, so no feature can depend on the query and item jointly. That ceiling is real, and it's exactly why retrieval is followed by a reranker that *can* look at both together. The reranker is a different loss: pairwise or listwise on the shortlist, not InfoNCE over the catalog ([ranking losses](/posts/loss-functions-ml-interview/)).
 
 ### 3.5 Encoder models and LLM-derived embeddings
 
@@ -250,7 +250,7 @@ FAISS is a library: it builds an index in memory and searches it, and that's the
 
 **Cosine or dot product?** If the vectors are L2-normalized they rank identically, so it doesn't matter. If they aren't, dot product lets magnitude count, which usually means popularity. Text similarity normalizes; recommendation sometimes deliberately doesn't.
 
-**Why a two-tower model instead of one model over the pair?** Because the towers are independent, you can embed the whole catalogue offline and only run the query tower live. A joint model would need a forward pass per candidate, which is impossible at retrieval scale. You use the joint model afterwards, as the reranker.
+**Why a two-tower model instead of one model over the pair?** Because the towers are independent, you can embed the whole catalogue offline and only run the query tower live. A joint model would need a forward pass per candidate, which is impossible at retrieval scale. You use the joint model afterwards, as the reranker, usually with a pairwise or listwise loss on that shortlist.
 
 **Where do the negatives come from in two-tower training?** In-batch negatives: everything else in the batch. Then a logQ correction, because in-batch sampling is biased toward popular items.
 

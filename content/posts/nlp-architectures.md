@@ -34,6 +34,8 @@ categories:
 
 *Part two of the modelling pair, after [every ML model you must know](/posts/every-ml-model-you-must-know/). That one covered tables and images. This one is language, and it's all architecture: no training recipes, no prompting, no RAG. Just what the models are and why they ended up shaped this way.*
 
+Read the table in section 2, then the Q&A at the end. Go deep only where you're shaky. The body is the chain of *why*, not extra facts to recite.
+
 Here's the thing about NLP: it has been solving the same problem for sixty years. Text is symbols, maths needs numbers, and every era of NLP is just a different answer to *how do you turn one into the other*.
 
 What makes the story worth knowing is that each answer broke in a specific way, and the next thing was built to fix exactly that break. Learn it as a chain and you never have to memorize it.
@@ -364,7 +366,7 @@ Every transformer you've heard of is one of three shapes, and the difference is 
 
 **The interesting part is why decoder-only won.** It's not that causal attention is better at understanding, because it plainly isn't. It's that next-token prediction is a task you can run on any text in existence, one architecture then covers every task if you phrase the task as text, and one causal stack is simpler to scale than two towers. Uniformity beat specialization.
 
-### 9.2 Two ways to compare two texts
+### 9.1 Two ways to compare two texts
 
 If the job is "does this document match this query", there are two architectures and the difference is a real design decision.
 

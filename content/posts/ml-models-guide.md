@@ -42,7 +42,7 @@ If you can't say which model fits a problem and roughly what it does internally,
 | Your data | Start here | Then try | Skip |
 |---|---|---|---|
 | Tabular, typical / large | logistic / linear regression | **gradient boosting** (XGBoost, LightGBM, CatBoost) | a net as the first move |
-| Tabular, small (<~50k rows) | logistic / linear | **TabPFN**, then GBDT | training a net from scratch |
+| Tabular, small (<~10k rows) | logistic / linear | **TabPFN**, then GBDT | training a net from scratch |
 | Tabular, must explain it | logistic / linear (Ridge) | GAM / EBM, then GBDT + SHAP | anything deep |
 | Images | fine-tune a pretrained CNN or ViT | train from scratch if you truly have the data | classical CV features |
 | Text classification | TF-IDF + logistic (as a baseline) | fine-tune a small encoder | RNN, LSTM |
@@ -83,7 +83,7 @@ I generated 420 points where the true rule is a staircase, fit both, and measure
 
 So the default **serious model you train yourself** on a table is still boosting. Trees still beat from-scratch nets on typical tabular data, for the four reasons above, and that has not flipped.
 
-The 2025–2026 caveat is **tabular foundation models**. **TabPFN** is a transformer pretrained on millions of synthetic tables. You don't train it on your data: you feed labeled rows as context and it predicts in one forward pass. On small and medium tables it often matches a tuned GBDT with zero tuning. It wants a GPU, it's not a drop-in for a 50-million-row production ranker, and you still need GBDT when you care about CPU latency, monotonic constraints, or retraining on a laptop. Interview answer: *small table, try TabPFN; large production table, still LightGBM or XGBoost.*
+The 2025–2026 caveat is **tabular foundation models**. **TabPFN** is a transformer pretrained on millions of synthetic tables. You don't train it on your data: you feed labeled rows as context and it predicts in one forward pass. The strongest published evidence is on small-to-medium tables, roughly up to 10k rows and hundreds of features, where it can match or beat heavily tuned baselines with almost no tuning. It wants a GPU, it's not a drop-in for a 50-million-row production ranker, and you still need GBDT when you care about CPU latency, monotonic constraints, or retraining on a laptop. Interview answer: *small table, try TabPFN; large production table, still LightGBM or XGBoost.*
 
 Reach for a net you train yourself on tabular only when a net is uniquely good at the job: huge data, representation sharing across tasks, high-cardinality embeddings, or mixed inputs where the table is only one part of the model. AutoGluon is the "I have compute and I want the last points" button; it's an ensemble, not a model choice.
 
@@ -107,7 +107,7 @@ The production version is usually **Ridge / Lasso / Elastic Net**, not vanilla l
 
 **It breaks when:** the relationship is non-linear or features interact. Linear models can't learn "risky only if young *and* new customer" unless you hand-build that interaction. They also want scaled inputs.
 
-The coefficient is the whole selling point: "each extra year of age multiplies the odds by 1.03" is a sentence a human can act on. SHAP on a boosting model is a local explanation of one prediction; a coefficient is a global statement about the world. Interviewers treat those as different things, because they're.
+The coefficient is the whole selling point: "each extra year of age multiplies the odds by 1.03" is a sentence a human can act on. SHAP on a boosting model is a local explanation of one prediction; a coefficient is a global statement about the world. Interviewers treat those as different things, because they are.
 
 ### 3.2 Decision Trees
 
@@ -179,6 +179,8 @@ Three production facts that interviews probe:
 People file kNN under "simple thing from the textbook." That is a mistake, because with embeddings attached it became one of the most important systems in modern ML. Encode your items as vectors, and "find the nearest neighbors" *is* semantic search, *is* recommendation candidate generation, *is* image search, *is* dedup.
 
 The catch is that exact kNN scans everything, which is \(O(N)\) per query and hopeless at a billion vectors. So production uses **approximate** nearest neighbor: HNSW builds a navigable graph you can greedily walk, and libraries like FAISS and ScaNN make it fast. You trade a sliver of recall for orders of magnitude of speed.
+
+This section is the algorithm. How you *learn* the space, how you choose cosine vs dot product, and how you actually serve a hundred million vectors is the [embeddings post](/posts/embeddings-representation-layer-of-ai/). If you stop here you will give a textbook kNN answer.
 
 **Reach for it when:** similarity is the task, or you need a candidate set to rank later.
 
@@ -286,7 +288,7 @@ The questions that decide the architecture: what's the latency budget, how often
 
 **Default model for a new tabular problem?** Logistic or linear regression as the baseline, then LightGBM or XGBoost with early stopping. On a small table, add TabPFN to that bake-off. That covers most of what you will ever be handed.
 
-**TabPFN or XGBoost?** TabPFN when the table is small or medium and you want a strong answer with no tuning. XGBoost/LightGBM when the table is large, you need CPU inference, monotonic constraints, or a model you retrain in production every day.
+**TabPFN or XGBoost?** TabPFN when the table is small-to-medium and you want a strong answer with almost no tuning. XGBoost/LightGBM when the table is large, you need CPU inference, monotonic constraints, or a model you retrain in production every day.
 
 **Random forest or gradient boosting?** Forest when you want a strong answer with no tuning and no overfitting worry. Boosting when you want maximum accuracy and will actually tune. Boosting usually wins by a few points.
 
@@ -306,7 +308,7 @@ The questions that decide the architecture: what's the latency budget, how often
 
 **Unsupervised anomaly detection?** Isolation Forest first. k-means is a clustering tool that people misuse as an anomaly detector.
 
-**Is kNN obsolete?** The opposite. With embeddings and an ANN index it's the retrieval layer under semantic search and RAG.
+**Is kNN obsolete?** The opposite. With embeddings and an ANN index it's the retrieval layer under semantic search, recommendations, image search and dedup. The algorithm is here; how you train and serve it is the [embeddings post](/posts/embeddings-representation-layer-of-ai/).
 
 **Only 500 labeled examples?** Pretrained model plus fine-tuning, simple models with heavy regularization, cross-validation instead of a single holdout, and a serious look at whether you can get more labels.
 
